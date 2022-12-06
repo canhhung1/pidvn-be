@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.is.device_management.DeviceManagementMapper">
+
+    <resultMap id="getDevices-result"
+               type="pidvn.modules.is.device_management.models.DeviceVo">
+        <result column="mng_code" property="mngCode" javaType="String"/>
+        <result column="device_type" property="deviceType" javaType="Integer"/>
+        <result column="device_type_name" property="deviceTypeName" javaType="String"/>
+        <result column="status_name" property="statusName" javaType="String"/>
+    </resultMap>
+    <select id="getDevices" resultMap="getDevices-result">
+        SELECT
+            D.*, T.name as device_type_name, S.name as status_name
+        FROM dm_device D
+        left join dm_device_type T on D.device_type = T.id
+        left join dm_device_status S on D.status = S.id
+        where 1 = 1
+        <if test="model != null">
+            and D.model like '%' #{model} '%'
+        </if>
+
+        <if test="mngCode != null">
+            and D.mng_code like '%' #{mngCode} '%'
+        </if>
+
+        <if test="serial != null">
+            and D.serial like '%' #{serial} '%'
+        </if>
+
+        <if test="imei != null">
+            and D.serial like '%' #{imei} '%'
+        </if>
+
+        <if test="deviceType != null">
+            and D.device_type = #{deviceType}
+        </if>
+
+        <if test="status != null">
+            and D.status = #{status}
+        </if>
+    </select>
+
+
+    <resultMap id="getHistories-result"
+               type="pidvn.modules.is.device_management.models.HistoryVo">
+        <result column="mng_code" property="mngCode" javaType="String"/>
+        <result column="device_id" property="deviceId" javaType="Integer"/>
+        <result column="action_type" property="actionType" javaType="Integer"/>
+        <result column="action_type_name" property="actionTypeName" javaType="String"/>
+        <result column="employee_name" property="employeeName" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="device_type" property="deviceType" javaType="Integer"/>
+        <result column="device_type_name" property="deviceTypeName" javaType="String"/>
+    </resultMap>
+    <select id="getHistories" resultMap="getHistories-result">
+        SELECT
+            H.*, A.name as action_type_name, U.name as employee_name,
+            D.mng_code, D.brand, D.model, D.serial, D.imei,
+            (select T.name from dm_device_type T where T.id = D.device_type) as device_type_name
+        FROM dm_history H
+        left join dm_device D on H.device_id = D.id
+        left join dm_action_type A on A.id = H.action_type
+        left join users U ON H.employee = U.username
+        where 1 = 1
+
+        <if test="deviceType != null">
+            and D.device_type = #{deviceType}
+        </if>
+
+        <if test="mngCode != null">
+            and D.mng_code like '%' #{mngCode} '%'
+        </if>
+
+        <if test="model != null">
+            and D.model like '%' #{model} '%'
+        </if>
+
+        <if test="serial != null">
+            and D.serial like '%' #{serial} '%'
+        </if>
+
+        <if test="imei != null">
+            and D.serial like '%' #{imei} '%'
+        </if>
+
+        <if test="employee != null">
+            and H.employee = #{employee}
+        </if>
+
+        <if test="actionType != null">
+            and H.action_type = #{actionType}
+        </if>
+
+        order by H.created_at desc
+    </select>
+</mapper>

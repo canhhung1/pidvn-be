@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.hr.user_info_management.UserInfoMngMapper">
+
+    <resultMap id="getUsers-result"
+               type="pidvn.modules.hr.user_info_management.models.UserInfoVo">
+
+        <result column="section_id" property="sectionId" javaType="Integer"/>
+        <result column="section_code" property="sectionCode" javaType="String"/>
+        <result column="section_name" property="sectionName" javaType="String"/>
+        <result column="subsection_id" property="subsectionId" javaType="Integer"/>
+        <result column="subsection_code" property="subsectionCode" javaType="String"/>
+        <result column="subsection_name" property="subsectionName" javaType="String"/>
+        <result column="position_id" property="positionId" javaType="Integer"/>
+        <result column="position_name" property="positionName" javaType="String"/>
+        <result column="marital_status" property="maritalStatus" javaType="String"/>
+
+    </resultMap>
+
+    <select id="getUsers" resultMap="getUsers-result">
+        with
+        T01 as (
+            select
+                A.id as subsection_id, A.code as subsection_code, A.name as subsection_name,
+                B.id as section_id, B.code as section_code, B.name as section_name
+            from subsection A
+            left join section B on A.section_id = B.id
+        ),
+        T02 as (
+            select
+                U.id, U.username, U.name, U.email, T01.*, U.position_id,
+                (select P.name from position P where P.id = U.position_id) position_name
+            from users U
+            inner join T01 on U.subsection_id = T01.subsection_id
+        )
+        select * from T02
+        where 1 = 1
+        <if test="username != null">
+            and T02.username = #{username}
+        </if>
+
+    </select>
+
+
+    <resultMap id="getBasicUserInfo-result"
+               type="pidvn.modules.hr.user_info_management.models.UserInfoVo">
+        <result column="join_date" property="joinDate" javaType="Date"/>
+        <result column="subsection_id" property="subsectionId" javaType="Integer"/>
+        <result column="subsection_name" property="subsectionName" javaType="String"/>
+        <result column="subsection_code" property="subsectionCode" javaType="String"/>
+        <result column="section_id" property="sectionId" javaType="Integer"/>
+        <result column="section_name" property="sectionName" javaType="String"/>
+        <result column="section_code" property="sectionCode" javaType="String"/>
+        <result column="position_id" property="positionId" javaType="Integer"/>
+        <result column="position_name" property="positionName" javaType="String"/>
+    </resultMap>
+    <select id="getBasicUserInfo" resultMap="getBasicUserInfo-result">
+        select
+            A.username, A.name, A.email, A.dob, A.join_date,
+            B.id as subsection_id, B.name as subsection_name, B.code as subsection_code,
+            C.id as section_id, C.name as section_name, C.code as section_code,
+            A.position_id, D.name as position_name
+        from users A
+        inner join subsection B on A.subsection_id = B.id
+        inner join section C on C.id = B.section_id
+        inner join position D on A.position_id = D.id
+        where A.username = #{username}
+    </select>
+</mapper>

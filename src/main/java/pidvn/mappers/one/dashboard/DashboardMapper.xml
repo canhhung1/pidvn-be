@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.dashboard.DashboardMapper">
+
+    <resultMap id="traceability-result"
+               type="pidvn.modules.dashboard.models.MaterialVo">
+        <result column="status_name" property="statusName" javaType="String"/>
+    </resultMap>
+    <select id="traceability" resultMap="traceability-result">
+        T01 as (
+            select
+                R.lot_no, R.record_type, R.qty, R.model, R.line, R.created_at
+            from pur_wh_records R
+            where 1 = 1
+            and DATE_FORMAT(R.created_at, '%Y-%m-%d') between DATE_FORMAT('2022-11-30', '%Y-%m-%d') and DATE_FORMAT('2022-11-30', '%Y-%m-%d')
+            union all
+            select
+                M.clotno lot_no, M.record_type, M.qty, M.cpn model, M.line, M.created_at
+            from material_controls M
+            where 1 = 1
+            and DATE_FORMAT(M.created_at, '%Y-%m-%d') between DATE_FORMAT('2022-11-30', '%Y-%m-%d') and DATE_FORMAT('2022-11-30', '%Y-%m-%d')
+        ),
+        T02 as (
+            select T01.*, T.description from T01
+            left join pur_wh_record_types T on T01.record_type = T.type
+        )
+        select T02.* from T02
+        where 1 = 1
+        <if test="">
+            and T02.lot_no = 'VN221025*P-0455A*MLD14*B*006'
+        </if>
+
+    </select>
+
+
+
+</mapper>

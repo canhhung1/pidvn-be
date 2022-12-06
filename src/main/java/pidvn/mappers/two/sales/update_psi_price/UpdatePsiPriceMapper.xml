@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.two.sales.update_psi_price.UpdatePsiPriceMapper">
+
+    <resultMap id="getPsiPriceData-result"
+               type="pidvn.modules.sales.update_psi_price.modes.PsiPriceVo">
+        <result column="KEY" property="KEY" javaType="String"/>
+        <result column="CDFC" property="CDFC" javaType="String"/>
+        <result column="PNSASM" property="PNSASM" javaType="String"/>
+        <result column="YMD8ST" property="YMD8ST" javaType="String"/>
+        <result column="YMD8ED" property="YMD8ED" javaType="String"/>
+        <result column="SAPSTDI" property="SAPSTDI" javaType="Double"/>
+        <result column="CDCUR" property="CDCUR" javaType="String"/>
+        <result column="ABRPYRE" property="ABRPYRE" javaType="String"/>
+        <result column="CDTTR" property="CDTTR" javaType="String"/>
+        <result column="SAP" property="SAP" javaType="Double"/>
+        <result column="CDSAPUM" property="CDSAPUM" javaType="String"/>
+        <result column="PNCSTSM" property="PNCSTSM" javaType="String"/>
+        <result column="CSTTL" property="CSTTL" javaType="Double"/>
+    </resultMap>
+    <select id="getPsiPriceData" resultMap="getPsiPriceData-result">
+        <if test="type == 'std_price'">
+            select CDFC,PNSASM, to_char(YMD8ST,'mm/dd/yyyy') YMD8ST, to_char(YMD8ED,'mm/dd/yyyy') YMD8ED, SAPSTDI
+            from uvnbn011.TNMU003 where CDFC in('EM','RE')
+        </if>
+        <if test="type == 'original_price'">
+            <![CDATA[
+                select
+                    c.CDFC, c.PNSAPSM ||c.CDCUS KEY, c.CDCUR , e.ABRPYRE, c.CDTTR,
+                    to_char(c.YMD8ST,'mm/dd/yyyy') YMD8ST, to_char(c.YMD8ED,'mm/dd/yyyy') YMD8ED,
+                    c.SAP, c.CDSAPUM
+                from uvnbn011.tnms005 c join (
+                    select * from (
+                            select A.* , row_number() over(partition by PN, CDCUS order by YMD8ENT desc) RN from (
+                            select DISTINCT a.NOIV,a.YMD8ENT, a.CDCUS,b.PN, a.CDSATTR, a.CDBLT, CDPYCUR from uvnbn011.tnds008 a join uvnbn011.tnds009 b on a.NOIV=b.NOIV
+                            )A
+                    )A where 1=1 and RN = 1
+                )d on c.PNSAPSM=d.PN and c.CDCUS=d.CDCUS and c.CDTTR=d.CDSATTR join uvnbn011.TNMS001 f on c.CDCUS=f.CDCUS join uvnbn011.tnmuc38 e on f.CDBLT=e.CDBLT where c.CDFC='EM'
+            ]]>
+        </if>
+        <if test="type == 'std_cost'">
+            select CDFC, PNCSTSM, to_char(YMD8ST,'mm/dd/yyyy') YMD8ST, to_char(YMD8ED,'mm/dd/yyyy') YMD8ED, CSTTL
+            from uvnbn011.TNMU013 where CDFC in ('EM','RE')
+        </if>
+    </select>
+</mapper>

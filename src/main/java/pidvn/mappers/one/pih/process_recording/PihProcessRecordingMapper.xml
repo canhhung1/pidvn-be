@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.pih.process_recording.PihProcessRecordingMapper">
+
+    <resultMap id="getMaterial-result"
+               type="pidvn.modules.pih.process_recording.models.MaterialVo">
+        <result column="fr_box" property="frBox" javaType="Integer"/>
+        <result column="to_box" property="toBox" javaType="Integer"/>
+        <result column="winding_bobbin" property="windingBobbin" javaType="Integer"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+    </resultMap>
+    <select id="getMaterial" resultMap="getMaterial-result">
+        select
+            M.*,
+            (select U.name from users U where U.username = M.user1) employee
+        from material_controls M
+        where 1 = 1
+        <if test="cpn">
+            and M.cpn = #{cpn}
+        </if>
+        <if test="plotno">
+            and M.plotno = #{plotno}
+        </if>
+        <if test="clotno">
+            and M.clotno = #{clotno}
+        </if>
+        <if test="recordType != null">
+            and M.record_type = #{recordType}
+        </if>
+
+        <if test="line != null">
+            and M.line = #{line}
+        </if>
+
+        <if test="fromDate != null and toDate != null">
+            and M.date between DATE_FORMAT(#{fromDate}, '%Y-%m-%d') and DATE_FORMAT(#{toDate}, '%Y-%m-%d')
+        </if>
+
+        order by M.id desc
+
+    </select>
+
+
+
+</mapper>

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.relay.measurement.MeasureMapper">
+
+
+    <resultMap id="getMeasureDataByMasterId-result"
+               type="pidvn.modules.relay.measurement.models.MeasureDataVo">
+        <result column="item_name" property="itemName" javaType="String"/>
+        <result column="child_item_name" property="childItemName" javaType="String"/>
+        <result column="reason_name" property="reasonName" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+    </resultMap>
+    <select id="getMeasureDataByMasterId" resultMap="getMeasureDataByMasterId-result">
+        with T01 as(
+            select
+                M.id, M.line, M.item, M.model, M.shift, M.created_at,
+                R.name as reason_name, U.name as user,
+                D.a1, D.b1, D.b2, D.c1, D.c2, D.c3,
+                D.d1, D.d2, D.d3, D.d4, D.child_item
+            from mea_master_data M
+            inner join mea_detail_data D on M.id = D.master
+            inner join mea_reason R on M.reason = R.id
+            inner join users U on M.user = U.username
+        ),
+        T02 as (
+            select T01.*, I.name as item_name, CI.name as child_item_name
+            from T01
+            inner join mea_item I on T01.item = I.id
+            left join mea_child_item CI on T01.child_item = CI.id
+        )
+        select * from T02
+        where T02.id = #{masterId}
+    </select>
+
+
+    <resultMap id="getMasterData-result"
+               type="pidvn.modules.relay.measurement.models.MeasureMasterDataVo">
+
+        <result column="model_type" property="modelType" javaType="String"/>
+        <result column="reason_name" property="reasonName" javaType="String"/>
+        <result column="user_name" property="userName" javaType="String"/>
+        <result column="approved_by" property="approvedBy" javaType="String"/>
+        <result column="approver_name" property="approverName" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="qa_card" property="qaCard" javaType="String"/>
+
+    </resultMap>
+    <select id="getMasterData" resultMap="getMasterData-result">
+        select
+            M.id, M.line, M.item, M.model_type, M.model, M.shift, M.reason, M.mold, M.qa_card,
+            R.name as reason_name, M.user, M.approved_by, M.created_at, M.note,
+            (select U.name from users U where U.username = M.user) as user_name,
+            (select U.name from users U where U.username = M.approved_by) as approver_name
+        from mea_master_data M
+        inner join mea_reason R on M.reason = R.id
+        where 1 = 1
+        <if test="item != null">
+            and M.item = #{item}
+        </if>
+        <if test="line != null">
+            and M.line = #{line}
+        </if>
+        <if test="modelType != null">
+            and M.model_type = #{modelType}
+        </if>
+        <if test="model != null">
+            and M.model = #{model}
+        </if>
+        <if test="user != null">
+            and M.user = #{user}
+        </if>
+        <if test="shift != null">
+            and M.shift = #{shift}
+        </if>
+        <if test="reason != null">
+            and M.reason = #{reason}
+        </if>
+        <if test="fromDate != null and toDate != null">
+            and DATE_FORMAT(M.created_at, '%Y-%m-%d')
+            between DATE_FORMAT(#{fromDate}, '%Y-%m-%d') and DATE_FORMAT(#{toDate}, '%Y-%m-%d')
+        </if>
+
+        order by M.created_at desc
+
+    </select>
+
+
+    <resultMap id="getDetailData-result"
+               type="pidvn.modules.relay.measurement.models.MeasureDetailDataVo">
+
+        <result column="model_type" property="modelType" javaType="String"/>
+        <result column="reason_name" property="reasonName" javaType="String"/>
+        <result column="user_name" property="userName" javaType="String"/>
+        <result column="child_item" property="childItem" javaType="Integer"/>
+        <result column="child_item_name" property="childItemName" javaType="String"/>
+        <result column="approved_by" property="approvedBy" javaType="String"/>
+        <result column="approver_name" property="approverName" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="updated_at" property="updatedAt" javaType="Date"/>
+
+        <result column="item_unit" property="itemUnit" javaType="Integer"/>
+
+        <result column="a1_min" property="a1Min" javaType="Float"/>
+        <result column="a1_max" property="a1Max" javaType="Float"/>
+        <result column="b1_min" property="b1Min" javaType="Float"/>
+        <result column="b1_max" property="b1Max" javaType="Float"/>
+        <result column="b2_min" property="b2Min" javaType="Float"/>
+        <result column="b2_max" property="b2Max" javaType="Float"/>
+        <result column="c1_min" property="c1Min" javaType="Float"/>
+        <result column="c1_max" property="c1Max" javaType="Float"/>
+        <result column="c2_min" property="c2Min" javaType="Float"/>
+        <result column="c2_max" property="c2Max" javaType="Float"/>
+        <result column="c3_min" property="c3Min" javaType="Float"/>
+        <result column="c3_max" property="c3Max" javaType="Float"/>
+        <result column="d1_min" property="d1Min" javaType="Float"/>
+        <result column="d1_max" property="d1Max" javaType="Float"/>
+        <result column="d2_min" property="d2Min" javaType="Float"/>
+        <result column="d2_max" property="d2Max" javaType="Float"/>
+        <result column="d3_min" property="d3Min" javaType="Float"/>
+        <result column="d3_max" property="d3Max" javaType="Float"/>
+        <result column="d4_min" property="d4Min" javaType="Float"/>
+        <result column="d4_max" property="d4Max" javaType="Float"/>
+
+        <result column="qa_card" property="qaCard" javaType="String"/>
+
+
+    </resultMap>
+    <select id="getDetailData" resultMap="getDetailData-result">
+        <![CDATA[
+            with T01 as (
+                SELECT
+                    M.line, M.model_type, M.model, M.shift, M.user, M.approved_by, M.mold, M.qa_card,
+                    (select U.name from users U where U.username = M.user) as user_name,
+                    (select U.name from users U where U.username = M.approved_by) as approver_name,
+                    (select R.name from mea_reason R where R.id = M.reason) as reason_name, D.*,
+                    I.name as item_name, I.unit as item_unit, CI.name as child_item_name, M.reason
+                FROM mea_detail_data D
+                inner join mea_master_data M on D.master = M.id
+                left join mea_item I on D.item = I.id
+                left join mea_child_item CI on D.child_item = CI.id
+            ),
+            T02 as (
+                select
+                    T01.*, S.a1_min, S.a1_max, S.b1_min, S.b1_max, S.b2_min, S.b2_max,
+                    S.c1_min, S.c1_max, S.c2_min, S.c2_max, S.c3_min, S.c3_max, S.d1_min,
+                    S.d1_max, S.d2_min, S.d2_max, S.d3_min, S.d3_max, S.d4_min, S.d4_max
+                from T01 left join mea_standard S on T01.item = S.item and T01.model_type = S.model_type
+            )
+            select * from T02
+            where 1 = 1
+        ]]>
+        <if test="master != null">
+            and T02.master = #{master}
+        </if>
+        <if test="item != null">
+            and T02.item = #{item}
+        </if>
+        <if test="line != null">
+            and T02.line = #{line}
+        </if>
+        <if test="modelType != null">
+            and T02.model_type = #{modelType}
+        </if>
+        <if test="model != null">
+            and T02.model = #{model}
+        </if>
+        <if test="user != null">
+            and T02.user = #{user}
+        </if>
+        <if test="shift != null">
+            and T02.shift = #{shift}
+        </if>
+        <if test="reason != null">
+            and T02.reason = #{reason}
+        </if>
+        <if test="fromDate != null and toDate != null">
+            and DATE_FORMAT(T02.created_at, '%Y-%m-%d')
+            between DATE_FORMAT(#{fromDate}, '%Y-%m-%d') and DATE_FORMAT(#{toDate}, '%Y-%m-%d')
+        </if>
+        order by T02.created_at desc, T02.child_item asc
+    </select>
+
+    <resultMap id="getItems-result"
+               type="pidvn.modules.relay.measurement.models.MeasureItemVo">
+        <result column="unit_name" property="unitName" javaType="String"/>
+        <result column="ordinal_number" property="ordinalNumber" javaType="Integer"/>
+    </resultMap>
+    <select id="getItems" resultMap="getItems-result">
+        select I.*, U.name as unit_name, count(M.id) as times
+        from mea_item I
+        inner join mea_item_unit U on I.unit = U.id
+        left join mea_master_data M on I.id = M.item and DATE_FORMAT(M.created_at, '%Y-%m-%d') = curdate()
+        group by I.id
+        order by I.ordinal_number IS NULL, I.ordinal_number asc
+    </select>
+
+
+    <resultMap id="getQaCard-result"
+               type="pidvn.modules.relay.measurement.models.QaCardVo">
+        <result column="lot_no" property="qaCard" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+    </resultMap>
+    <select id="getQaCard" resultMap="getQaCard-result">
+        select L.lot_no, L.created_at from lots L
+        where L.label_type = 'QA'
+        and L.created_at >  date(now()) - interval 7 day
+        order by L.created_at desc
+    </select>
+
+
+    <!-- Quick Approve -->
+    <update id="quickApprove">
+        update mea_master_data
+        set approved_by = #{approver}
+        where id in
+        <foreach item="item" index="index" collection="masterIds"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+</mapper>

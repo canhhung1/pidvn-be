@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.personal.uniform.UserUniformMapper">
+
+    <resultMap id="getUserUniformSizes-result"
+               type="pidvn.modules.personal.uniform.models.UserUniformSizeVo">
+        <result column="size_type" property="sizeType" javaType="Integer"/>
+        <result column="size_type_name" property="sizeTypeName" javaType="String"/>
+        <result column="value_type" property="valueType" javaType="String"/>
+    </resultMap>
+    <select id="getUserUniformSizes" resultMap="getUserUniformSizes-result">
+        SELECT A.name as size_type_name, A.type value_type, A.id size_type, B.username, B.size
+        FROM user_uniform_size_type A
+        LEFT JOIN user_uniform_size B on A.id = B.size_type and B.username = #{username}
+        ORDER BY A.id asc
+    </select>
+
+    <resultMap id="getUserUniforms-result"
+               type="pidvn.modules.personal.uniform.models.UserUniformVo">
+        <result column="uniformType" property="uniformType" javaType="Integer"/>
+        <result column="uniform_type_name" property="uniformTypeName" javaType="String"/>
+    </resultMap>
+    <select id="getUserUniforms" resultMap="getUserUniforms-result">
+        select A.*, B.name uniform_type_name from user_uniform A
+        left join user_uniform_type B on A.uniform_type = B.id
+        where 1 = 1
+        <if test="username != null">
+            AND A.username = #{username}
+        </if>
+    </select>
+</mapper>

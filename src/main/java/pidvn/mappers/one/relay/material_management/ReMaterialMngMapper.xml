@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.relay.material_management.ReMaterialMngMapper">
+
+    <resultMap id="getPurWhRecords-result"
+               type="pidvn.modules.relay.material_management.models.PurWhRecordVo">
+        <result column="part_no" property="partNo" javaType="String"/>
+        <result column="lot_group" property="lotGroup" javaType="String"/>
+        <result column="lot_no" property="lotNo" javaType="String"/>
+        <result column="record_type" property="recordType" javaType="String"/>
+        <result column="qa_card" property="qaCard" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+    </resultMap>
+    <select id="getPurWhRecords" resultMap="getPurWhRecords-result">
+        select R.*, L.lot_group from pur_wh_records R
+        left join lots L on R.lot_no = L.lot_no
+        where 1 = 1
+        <if test="lotNos != null">
+            and R.lot_no in
+            <foreach item="item" index="index" collection="lotNos" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="recordType != null">
+            and R.record_type = #{recordType}
+        </if>
+        <if test="qaCard != null">
+            and R.qa_card = #{qaCard}
+        </if>
+    </select>
+
+
+    <resultMap id="getLotsBySlipNo-result"
+               type="pidvn.modules.relay.material_management.models.PurWhRecordVo">
+        <result column="lot_group" property="lotGroup" javaType="String"/>
+        <result column="lot_no" property="lotNo" javaType="String"/>
+    </resultMap>
+    <select id="getLotsBySlipNo" resultMap="getLotsBySlipNo-result">
+        with
+        T01 as (
+            select
+                R.model, L.lot_group, R.lot_no, (R.qty*-1) qty
+            from pur_wh_records R
+            inner join lots L on R.lot_no = L.lot_no
+            where 1 = 1
+            and R.record_type = 'XPA'
+            and R.slip_no = #{slipNo}
+        ),
+        T02 as (
+            select R.lot_no, R.receiver from pur_wh_records R
+            where R.record_type = 'RNP'
+        )
+
+        <if test="groupBy == null">
+            select T01.model, T01.lot_group, T01.lot_no, T01.qty, T02.receiver from T01
+            left join T02 on T01.lot_no = T02.lot_no
+        </if>
+
+        <if test="groupBy != null">
+            select T01.model, T01.lot_group, T01.lot_no, sum(T01.qty) qty, T02.receiver from T01
+            left join T02 on T01.lot_no = T02.lot_no
+            <if test="groupBy == 'model'">
+                group by T01.model
+            </if>
+            <if test="groupBy == 'lot_group'">
+                group by T01.lot_group
+            </if>
+        </if>
+
+
+        order by T01.model, T01.lot_group, T01.lot_no asc
+    </select>
+
+
+    <resultMap id="getActualQtyLineWh-result"
+               type="pidvn.modules.relay.material_management.models.PurWhRecordVo">
+        <result column="lot_no" property="lotNo" javaType="String"/>
+        <result column="origin_qty" property="originQty" javaType="Float"/>
+        <result column="line_qty" property="lineQty" javaType="Float"/>
+        <result column="actual_qty" property="actualQty" javaType="Float"/>
+    </resultMap>
+
+    <select id="getActualQtyLineWh" resultMap="getActualQtyLineWh-result">
+
+        with
+        -- Lấy toàn bộ NVL trên xe theo QA Card
+        T01 as (
+            select R.id, R.lot_no, R.qty as origin_qty
+            from pur_wh_records R
+            where 1 = 1
+            and record_type = 'RDC'
+            and R.qa_card = #{qaCard}
+        ),
+        -- Lấy số lượng thực tế input vào LINE
+        T02 as (
+            select
+                R.id, R.lot_no,
+                sum(
+                    case
+                        when R.record_type = 'CDL' then R.qty
+                        when R.record_type = 'LTC' then R.qty*-1
+                    end
+                ) as line_qty
+            from pur_wh_records R
+            where 1 = 1
+            and R.record_type in ('CDL','LTC')
+            and R.qa_card = #{qaCard}
+            group by R.lot_no
+        ),
+        T03 as (
+            select T01.*, ifnull(T02.line_qty, 0) line_qty
+            from T01 left join T02 on T01.lot_no = T02.lot_no
+        )
+        -- Tìm ra số lượng tồn
+        select T03.*, (T03.origin_qty - T03.line_qty) actual_qty from T03
+
+    </select>
+
+
+    <resultMap id="materialTraceability-result"
+               type="pidvn.modules.relay.material_management.models.PurWhRecordVo">
+        <result column="lot_no" property="lotNo" javaType="String"/>
+        <result column="record_type_name" property="recordTypeName" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+    </resultMap>
+    <select id="materialTraceability" resultMap="materialTraceability-result">
+        select
+            R.id, R.lot_no, R.qty, R.line, R.record_type, R.shift,
+            R.sender, R.receiver, R.parent, R.model, R.date, R.created_at,
+            T.type, T.description as record_type_name
+        from pur_wh_records R
+        left join pur_wh_record_types T on R.record_type = T.type
+        where 1 = 1
+
+        <if test="type != null">
+            <if test="type == 'RE-WH'">
+                and R.record_type in ('RNP','RDC','CTR')
+            </if>
+            <if test="type == 'LINE-WH'">
+                and R.record_type in ('RDC','CDL','LTC')
+            </if>
+            <if test="type == 'LINE'">
+                and R.record_type in ('CDL','LTC')
+            </if>
+        </if>
+        <if test="type == null">
+            and R.record_type in ('RNP','RDC','CDL','LTC','CTR','RTP')
+        </if>
+
+
+        <if test="type != line">
+            and R.line = #{line}
+        </if>
+
+        <if test="fromDate != null and toDate != null">
+            and DATE_FORMAT(R.date, '%Y-%m-%d') between DATE_FORMAT(#{fromDate}, '%Y-%m-%d') and DATE_FORMAT(#{toDate}, '%Y-%m-%d')
+        </if>
+
+    </select>
+
+
+    <!-- Version 3 -->
+    <resultMap id="getMaterials-result"
+               type="pidvn.modules.relay.material_management.models.PurWhRecordVo">
+        <result column="lot_no" property="lotNo" javaType="String"/>
+        <result column="record_type_name" property="recordTypeName" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+    </resultMap>
+    <select id="getMaterials" resultMap="getMaterials-result">
+
+    </select>
+
+
+</mapper>

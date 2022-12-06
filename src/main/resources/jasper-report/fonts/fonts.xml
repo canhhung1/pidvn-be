@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fontFamilies>
+    <fontFamily name="VN-Arial">
+        <normal><![CDATA[jasper-report/fonts/VN-Arial/arial.ttf]]></normal>
+        <bold><![CDATA[jasper-report/fonts/VN-Arial/arialbd.ttf]]></bold>
+        <italic><![CDATA[jasper-report/fonts/VN-Arial/ariali.ttf]]></italic>
+        <boldItalic><![CDATA[jasper-report/fonts/VN-Arial/arialbi.ttf]]></boldItalic>
+        <pdfEncoding><![CDATA[Identity-H]]></pdfEncoding>
+        <pdfEmbedded><![CDATA[true]]></pdfEmbedded>
+        <exportFonts/>
+    </fontFamily>
+</fontFamilies>

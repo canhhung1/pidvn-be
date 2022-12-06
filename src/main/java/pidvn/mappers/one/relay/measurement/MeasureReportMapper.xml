@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.relay.measurement.MeasureReportMapper">
+
+    <resultMap id="getMeasurementAmountByLine-result"
+               type="pidvn.modules.relay.measurement.models.report.MeaReportVo">
+
+    </resultMap>
+
+    <select id="getMeasurementAmountByLine" resultMap="getMeasurementAmountByLine-result">
+        <![CDATA[
+            with
+            T01 as (
+                select M.id, M.line, R.name as reason_name, M.created_at
+                from mea_master_data M
+                inner join mea_reason R on M.reason = R.id
+                where 1 = 1
+                and M.item = #{item}
+                and DATE_FORMAT(M.created_at, '%Y-%m-%d') = curdate()
+            ),
+            T02 as (
+                select T01.line, T01.reason_name, count(*) as amount
+                from T01
+                group by T01.line, T01.reason_name
+            ),
+            T03 as (
+                select L.name as line, R.id as reason, R.name as reason_name from mea_line L, mea_reason R
+            ),
+            T04 as (
+                select T03.*, T02.amount from T03
+                left join T02 on T03.line = T02.line and T03.reason_name = T02.reason_name
+            )
+            -- select * from T04;
+            select T04.line,
+                sum(if(T04.reason = 1, T04.amount, null)) as reason1,
+                sum(if(T04.reason = 2, T04.amount, null)) as reason2,
+                sum(if(T04.reason = 3, T04.amount, null)) as reason3,
+                sum(if(T04.reason = 4, T04.amount, null)) as reason4,
+                sum(if(T04.reason = 5, T04.amount, null)) as reason5,
+                sum(if(T04.reason = 6, T04.amount, null)) as reason6,
+                sum(if(T04.reason = 7, T04.amount, null)) as reason7,
+                sum(if(T04.reason = 8, T04.amount, null)) as reason8,
+                sum(if(T04.reason = 9, T04.amount, null)) as reason9,
+                sum(if(T04.reason = 10, T04.amount, null)) as reason10
+            from T04
+            group by T04.line
+        ]]>
+    </select>
+
+</mapper>

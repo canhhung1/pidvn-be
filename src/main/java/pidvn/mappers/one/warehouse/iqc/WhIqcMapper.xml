@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.warehouse.iqc.WhIqcMapper">
+
+    <resultMap id="getInvoices-result"
+               type="pidvn.modules.warehouse.iqc.models.InvoiceVo">
+    </resultMap>
+
+    <select id="getInvoices" resultMap="getInvoices-result">
+
+        SELECT DISTINCT
+            R.invoice
+        FROM
+            pur_wh_records R
+        WHERE
+                R.record_type = 'IM'
+            AND R.invoice IS NOT NULL
+            AND R.invoice != ''
+        ORDER BY R.id DESC
+
+    </select>
+
+
+    <resultMap id="getIqcRequests-result"
+               type="pidvn.modules.warehouse.iqc.models.IqcRequestVo">
+        <result column="request_no" property="requestNo" javaType="String"/>
+        <result column="status_name" property="statusName" javaType="String"/>
+        <result column="requested_by" property="requestedBy" javaType="String"/>
+        <result column="requested_by_name" property="requestedByName" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+    </resultMap>
+    <select id="getIqcRequests" resultMap="getIqcRequests-result">
+        SELECT
+            R.*, S.name AS status_name, U.name requested_by_name
+        FROM
+            iqc_request R
+        LEFT JOIN
+            iqc_request_status S ON R.status = S.id
+        LEFT JOIN
+            users U ON R.requested_by = U.username
+        WHERE 1 = 1
+
+        <if test="invoice != null and invoice != ''">
+            AND R.invoice = #{invoice}
+        </if>
+
+        <if test="requestNo != null and requestNo != ''">
+            AND R.request_no = #{requestNo}
+        </if>
+
+        <if test="status != null">
+            AND R.status = #{status}
+        </if>
+
+        <if test="fromDate != null and toDate != null">
+            and DATE_FORMAT(R.created_at, '%Y-%m-%d') between DATE_FORMAT(#{fromDate}, '%Y-%m-%d') and DATE_FORMAT(#{toDate}, '%Y-%m-%d')
+        </if>
+
+        order by created_at desc
+
+    </select>
+
+
+    <resultMap id="getIqcRequestDetail-result"
+               type="pidvn.modules.warehouse.iqc.models.IqcRequestDetailVo">
+        <result column="lot_group" property="lotGroup" javaType="String"/>
+    </resultMap>
+    <select id="getIqcRequestDetail" resultMap="getIqcRequestDetail-result">
+
+        -- Master
+        with
+        T01 as (
+            select
+                 R.request_no, P.invoice, R.supplier,  P.model,
+                 L.lot_group, sum(P.qty) as qty, count(P.id) as amount,
+                 R.created_at as requested_at
+            from pur_wh_records P
+            left join lots L on P.lot_no = L.lot_no
+            left join iqc_request R on L.invoice = R.invoice and R.request_no = #{requestNo}
+            where 1 = 1
+            and P.record_type = 'IM'
+            and P.invoice = #{invoice}
+            and P.slip_no = #{requestNo}
+            and P.flag = '1'
+            <if test="lotGroup != null">
+                and L.lot_group = #{lotGroup}
+            </if>
+            <if test="model != null">
+                and P.model = #{model}
+            </if>
+            group by P.model, L.lot_group
+        ),
+        T02 as (
+            select
+                T01.*, M.result1, M.result2, M.result3 , M.remark,
+                M.created_by, M.updated_at as iqc_at, A.checked_amount
+            from T01
+            left join iqc_data_master M
+                on T01.lot_group = M.lot_group and T01.model = M.model
+                and M.request_no = #{requestNo} and M.invoice = #{invoice}
+            left join (
+                select
+                    D.request_no, D.lot_group, count(*) checked_amount, L.model, D.invoice
+                from iqc_data_detail D
+                inner join lots L on D.lot_no = L.lot_no
+                group by D.lot_group, L.model
+            ) as A on T01.lot_group = A.lot_group and A.request_no = #{requestNo} and A.invoice = #{invoice} and T01.model = A.model
+        )
+        select T02.* from T02
+        order by T02.model, T02.lot_group;
+
+    </select>
+
+
+</mapper>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.relay.material_management.relay_warehouse.RelayWarehouseMapper">
+
+    <resultMap id="getListPXK-result"
+               type="pidvn.modules.relay.material_management.relay_warehouse.models.PhieuXuatKhoVo">
+        <result column="slip_no" property="slipNo" javaType="String"/>
+        <result column="date" property="date" javaType="Date"/>
+    </resultMap>
+    <select id="getListPXK" resultMap="getListPXK-result">
+        SELECT distinct R.slip_no, R.date
+        FROM pur_wh_records R
+        where R.record_type = 'XPA'
+        order by R.date desc
+    </select>
+
+    <resultMap id="getLotsXuatKhoBySlipNo-result"
+               type="pidvn.modules.relay.material_management.relay_warehouse.models.LotVo">
+        <result column="part_no" property="partNo" javaType="String"/>
+        <result column="lot_group" property="lotGroup" javaType="String"/>
+        <result column="lot_no" property="lotNo" javaType="String"/>
+    </resultMap>
+
+    <!-- Lấy các lots được xuất kho sang relay -->
+    <select id="getLotsXuatKhoBySlipNo" resultMap="getLotsXuatKhoBySlipNo-result">
+        with
+        T01 as (
+            select
+            R.model as part_no, L.lot_group, L.lot_no, (R.qty*-1) as qty
+            from pur_wh_records R
+            inner join lots L on R.lot_no = L.lot_no
+            where 1 = 1
+            and R.slip_no = #{slipNo}
+            and R.record_type = 'XPA'
+            order by R.model, L.lot_group, L.lot_no asc
+        ),
+        T02 as (
+            select T01.*, R.receiver from T01
+            left join relay_wh_records R
+            on T01.lot_no = R.lot_no and R.record_type = 'RNP'
+        )
+        select * from T02
+        order by T02.part_no, T02.lot_group, T02.lot_no asc
+    </select>
+
+    <resultMap id="getRelayWhRecords-result"
+               type="pidvn.modules.relay.material_management.relay_warehouse.models.ReWhRecordVo">
+        <result column="part_no" property="partNo" javaType="String"/>
+        <result column="lot_group" property="lotGroup" javaType="String"/>
+        <result column="lot_no" property="lotNo" javaType="String"/>
+    </resultMap>
+    <select id="getRelayWhRecords" resultMap="getRelayWhRecords-result">
+        select R.*, L.lot_group from relay_wh_records R
+        left join lots L on R.lot_no = L.lot_no
+        where 1 = 1
+        <if test="lotNos != null">
+            and R.lot_no in
+            <foreach item="item" index="index" collection="lotNos" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="recordType != null">
+            and R.record_type = #{recordType}
+        </if>
+        <if test="qaCard != null">
+            and R.qa_card = #{qaCard}
+        </if>
+    </select>
+
+
+    <!--
+        Lấy những records mới nhất được thêm vào database theo từng lot_no
+    -->
+    <resultMap id="getNewestRelayWhRecords-result"
+               type="pidvn.modules.relay.material_management.relay_warehouse.models.ReWhRecordVo">
+        <result column="part_no" property="partNo" javaType="String"/>
+        <result column="lot_group" property="lotGroup" javaType="String"/>
+        <result column="lot_no" property="lotNo" javaType="String"/>
+        <result column="qa_card" property="qaCard" javaType="String"/>
+        <result column="record_type" property="recordType" javaType="String"/>
+    </resultMap>
+    <select id="getNewestRelayWhRecords" resultMap="getNewestRelayWhRecords-result">
+        select * from relay_wh_records R
+        where 1 = 1
+        and R.id in (
+            select max(R.id) from relay_wh_records R
+            group by R.lot_no
+        )
+        <if test="lotNos != null">
+            and R.lot_no in
+            <foreach item="item" index="index" collection="lotNos" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+</mapper>

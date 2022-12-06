@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  pidvn-be-service:
+    image: pidvn-be:1.0
+    container_name: pidvn-be
+    ports:
+      - 8889:8889
+    volumes:
+      - ./:/app
+      - P:\IS\CanhHung\FDCS:/app/data
+
+

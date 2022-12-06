@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.auth.AuthMapper">
+
+    <resultMap id="getRoleAndPermissionByUsername-result"
+               type="pidvn.auth.models.AuthVo">
+
+        <result column="role_id" property="roleId" javaType="Integer"/>
+        <result column="user_id" property="userId" javaType="Integer"/>
+        <result column="role_name" property="roleName" javaType="String"/>
+        <result column="permission" property="permission" javaType="String"/>
+        <result column="username" property="username" javaType="String"/>
+
+    </resultMap>
+    <select id="getRoleAndPermissionByUsername"
+            resultMap="getRoleAndPermissionByUsername-result">
+
+        select
+            ifnull(group_concat(R.name), '') as roles,
+            ifnull(group_concat(REGEXP_REPLACE(ifnull(R.permission,'["super_admin"]'),'(")|(\\[)|(\\])','')),'')  permissions, U.username
+        from role_user RU
+        inner join roles R on RU.role_id = R.id
+        inner join users U on RU.user_id = U.id
+        where U.username = #{username}
+
+    </select>
+
+    <resultMap id="getUserInfo-result"
+               type="pidvn.auth.models.AccountVo">
+
+        <result column="username" property="username" javaType="String"/>
+        <result column="name" property="fullName" javaType="String"/>
+        <result column="email" property="email" javaType="String"/>
+        <result column="subsection" property="subsection" javaType="String"/>
+        <result column="subsection_code" property="subsectionCode" javaType="String"/>
+        <result column="section" property="section" javaType="String"/>
+        <result column="section_code" property="sectionCode" javaType="String"/>
+        <result column="position_id" property="positionId" javaType="Integer"/>
+    </resultMap>
+    <select id="getUserInfo"
+            resultMap="getUserInfo-result">
+
+        select
+            A.id, A.username, A.name, A.email, B.name as subsection, C.name as section,
+            B.code as subsection_code, C.code as section_code, A.position_id, D.name as position
+        from users A
+        inner join subsection B on A.subsection_id = B.id
+        inner join section C on C.id = B.section_id
+        inner join position D on A.position_id = D.id
+        where A.username = #{username}
+
+    </select>
+
+
+    <resultMap id="getRoleAndPermissionByUsernameV2-result"
+               type="pidvn.auth.models.AuthVo">
+
+        <result column="role_id" property="roleId" javaType="Integer"/>
+        <result column="user_id" property="userId" javaType="Integer"/>
+        <result column="role_name" property="roleName" javaType="String"/>
+        <result column="permission" property="permission" javaType="String"/>
+        <result column="username" property="username" javaType="String"/>
+
+    </resultMap>
+    <select id="getRoleAndPermissionByUsernameV2"
+            resultMap="getRoleAndPermissionByUsernameV2-result">
+
+        select ifnull(roles,'') roles, ifnull(group_concat(case when CNT = 0 then roles else name end),'') permissions, username  from (
+               select * from (
+                      select tbl,roles,permissions,username,name, CNT,SUM(CNT) over(partition by '')TOTAL from (
+                             select A.*, B.name, instr(case when A.permissions = 'super_admin' then B.name else A.permissions end ,B.name) CNT  from (
+                                   select 'A' tbl,
+                                          R.name as roles,
+                                   ifnull(group_concat(REGEXP_REPLACE(ifnull(R.permission,'["super_admin"]'),'(")|(\\[)|(\\])','')),'')  permissions, U.username
+                                          from role_user RU
+                                          inner join (SELECT * FROM pidvn.roles where 1=1 and nvl(permission,'') like '%') R on RU.role_id = R.id
+                                          inner join users U on RU.user_id = U.id
+                                          where U.username = #{username}
+                                   )A, (select *,'A' tbl from permissions p where name like 'e-%') B
+                             where A.tbl = B.tbl -- and instr(case when A.permissions = 'super_admin' then B.name else A.permissions end ,B.name) > 0
+                      )A
+               )A where (CNT = 0 and TOTAL = 0) or (CNT != 0)
+        )A
+
+    </select>
+
+
+</mapper>

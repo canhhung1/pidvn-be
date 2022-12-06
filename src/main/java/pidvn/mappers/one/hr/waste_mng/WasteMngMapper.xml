@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.hr.waste_mng.WasteMngMapper">
+
+    <resultMap id="getWasteMasterData-result"
+               type="pidvn.modules.hr.waste_mng.models.WasteDataVo">
+        <result column="created_by" property="createdBy" javaType="String"/>
+        <result column="created_by_name" property="createdByName" javaType="String"/>
+        <result column="waste_group" property="wasteGroup" javaType="Integer"/>
+        <result column="waste_group_name" property="wasteGroupName" javaType="String"/>
+        <result column="handle_company" property="handleCompany" javaType="Integer"/>
+        <result column="handle_company_label" property="handleCompanyLabel" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+    </resultMap>
+
+    <select id="getWasteMasterData" resultMap="getWasteMasterData-result">
+        select
+            M.*, SUBSTRING_INDEX(TRIM(U.name), ' ', -1) as created_by_name,
+            G.id as waste_group, G.name as waste_group_name,
+            C.id as handle_company, C.label as handle_company_label
+        from waste_master_data M
+        inner join waste_group G on G.id = M.waste_group
+        inner join waste_handle_company C on M.handle_company = C.id
+        inner join users U on M.created_by = U.username
+        where 1 = 1
+        <if test="id != null">
+            and M.id = #{id}
+        </if>
+        order by M.id desc
+    </select>
+
+
+    <resultMap id="getWasteDetailData-result"
+               type="pidvn.modules.hr.waste_mng.models.WasteDataVo">
+        <result column="created_by" property="createdBy" javaType="String"/>
+        <result column="created_by_name" property="createdByName" javaType="String"/>
+        <result column="waste_group" property="wasteGroup" javaType="Integer"/>
+        <result column="waste_group_name" property="wasteGroupName" javaType="String"/>
+        <result column="waste_type" property="wasteType" javaType="Integer"/>
+        <result column="waste_type_name" property="wasteTypeName" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="handle_method" property="handleMethod" javaType="Integer"/>
+        <result column="handle_method_name" property="handleMethodName" javaType="String"/>
+        <result column="waste_status" property="wasteStatus" javaType="Integer"/>
+        <result column="waste_status_name" property="wasteStatusName" javaType="String"/>
+        <result column="waste_type_code" property="wasteTypeCode" javaType="String"/>
+        <result column="net_weight" property="netWeight" javaType="Float"/>
+        <result column="seal_no" property="sealNo" javaType="String"/>
+        <result column="packaging_no" property="packagingNo" javaType="String"/>
+        <result column="row_num" property="rowNum" javaType="Integer"/>
+
+    </resultMap>
+    <select id="getWasteDetailData" resultMap="getWasteDetailData-result">
+        select
+            D.*, T.name as waste_type_name, T.code, T.unit, T.handle_method, T.waste_status, T.code as waste_type_code,
+            (select H.name from waste_handle_method H where H.id = T.handle_method) as handle_method_name,
+            (select S.name from waste_status S where S.id = T.waste_status) as waste_status_name,
+            G.name as waste_group_name, SUBSTRING_INDEX(TRIM(U.name), ' ', -1) as created_by_name,
+            row_number() over (order by D.id desc) AS row_num
+        from waste_detail_data D
+        inner join waste_type T on D.waste_type = T.id
+        inner join waste_group G on D.waste_group = G.id
+        inner join users U on D.created_by = U.username
+        where 1 = 1
+        <if test="wasteMaster != null and wasteMaster != ''">
+            and D.waste_master = #{wasteMaster}
+        </if>
+        <if test="wasteGroup != null">
+            and D.waste_group = #{wasteGroup}
+        </if>
+        <if test="fromDate != null and toDate != null">
+            and DATE_FORMAT(D.created_at, '%Y-%m') between DATE_FORMAT(#{fromDate}, '%Y-%m') and DATE_FORMAT(#{toDate}, '%Y-%m')
+        </if>
+
+        <if test="sqlType != null">
+            order by T.name asc
+        </if>
+    </select>
+
+    <resultMap id="getWasteDetailDataSummary-result"
+               type="pidvn.modules.hr.waste_mng.models.WasteDataVo">
+        <result column="ids" property="ids" javaType="String"/>
+        <result column="waste_type" property="wasteType" javaType="Integer"/>
+        <result column="waste_type_name" property="wasteTypeName" javaType="String"/>
+        <result column="weight" property="weight" javaType="Float"/>
+        <result column="handle_method" property="handleMethod" javaType="Integer"/>
+        <result column="handle_method_name" property="handleMethodName" javaType="String"/>
+        <result column="waste_status" property="wasteStatus" javaType="Integer"/>
+        <result column="waste_status_name" property="wasteStatusName" javaType="String"/>
+        <result column="waste_type_code" property="wasteTypeCode" javaType="String"/>
+        <result column="net_weight" property="netWeight" javaType="Float"/>
+    </resultMap>
+
+    <select id="getWasteDetailDataSummary" resultMap="getWasteDetailDataSummary-result">
+        select
+            D.waste_type, T.name as waste_type_name, T.code, T.unit, T.waste_status, T.handle_method, T.code as waste_type_code,
+            (select H.name from waste_handle_method H where H.id = T.handle_method) as handle_method_name,
+            (select S.name from waste_status S where S.id = T.waste_status) as waste_status_name,
+            D.price, round(sum(D.weight),2) as weight, round(sum(D.net_weight),2) as net_weight, group_concat(D.id) as ids
+        from waste_detail_data D
+        inner join waste_type T on D.waste_type = T.id
+        where D.waste_master = #{wasteMaster}
+        group by D.waste_type
+        order by D.waste_type asc;
+    </select>
+
+
+    <resultMap id="getWasteDetailDataSummaryAll-result"
+               type="pidvn.modules.hr.waste_mng.models.WasteDataVo">
+        <result column="ids" property="ids" javaType="String"/>
+        <result column="waste_group" property="wasteGroup" javaType="Integer"/>
+        <result column="waste_group_name" property="wasteGroupName" javaType="String"/>
+        <result column="waste_type" property="wasteType" javaType="Integer"/>
+        <result column="waste_type_name" property="wasteTypeName" javaType="String"/>
+        <result column="weight" property="weight" javaType="Float"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+    </resultMap>
+    <select id="getWasteDetailDataSummaryAll" resultMap="getWasteDetailDataSummaryAll-result">
+        with
+        T01 as (
+            select
+                D.waste_master, D.waste_group, G.name as waste_group_name,
+                D.waste_type, T.name as waste_type_name, D.weight, D.price,
+                round((D.weight * D.price),2) as amount,
+                DATE_FORMAT(D.created_at, '%Y-%m-%d') created_at
+            from waste_detail_data D
+            inner join waste_type T on D.waste_type = T.id
+            inner join waste_group G on D.waste_group = G.id
+        ),
+        T02 as (
+            select
+                group_concat(T01.waste_master) waste_master,
+                T01.waste_group, T01.waste_group_name,
+                T01.waste_type, T01.waste_type_name,
+                round(sum(T01.weight),2) as weight,
+                sum(T01.amount) as amount, T01.created_at
+            from T01
+            group by T01.waste_type, T01.created_at
+        )
+        select * from T02
+        where 1 = 1
+        <if test="wasteGroup != null">
+            and T02.waste_group = #{wasteGroup}
+        </if>
+        <if test="fromDate != null and toDate != null">
+            and DATE_FORMAT(T02.created_at, '%Y-%m') between DATE_FORMAT(#{fromDate}, '%Y-%m') and DATE_FORMAT(#{toDate}, '%Y-%m')
+        </if>
+        order by T02.waste_type asc
+
+    </select>
+
+
+</mapper>

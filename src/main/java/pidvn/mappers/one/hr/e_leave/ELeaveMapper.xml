@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.hr.e_leave.ELeaveMapper">
+    <resultMap id="getEmailInform-result"
+               type="pidvn.modules.schedule_task.e_leave.models.EmailVo">
+        <result column="cc_email" property="ccEmail" javaType="String"/>
+        <result column="leave_id" property="leaveId" javaType="String"/>
+    </resultMap>
+    <select id="getEmailInform" resultMap="getEmailInform-result">
+        <![CDATA[
+             with getId as(
+             select A.*
+             , case
+             when status1 < CNT then 'Pending'
+             when status1 > CNT then 'Rejected'
+             when status1 = CNT then 'Approved'
+             end checked
+             from(
+             select A.*
+             from (  select * from (
+            select A.*
+             , count(*) over(partition by leave_id order by '') CNT
+              , sum(status) over(partition by leave_id order by '') status1
+            from (
+             select url,sott, starttime,endtime,reason,leave_id,substr(B.datetime,1,10) dttime,A.username genid, B.username usernames , dayoff dt,statusdayoff, D.code name, B.updatetime
+             , case
+             when B.status = 'approved' then 1
+             when B.status = 'rejected' then 5
+             when B.status = '' then 0
+             end
+             status
+              from (
+             select * from (
+             select stt,type_request,starttime,endtime,reason,leave_id,`datetime`,flag,username,dayoff,statusdayoff,`type`, url
+             from(
+             select stt,type_request,starttime,endtime,reason,leave_id,`datetime`
+             ,flag,username,dayoff,statusdayoff,url,`type`
+             , row_number() over(partition by type_request,username, datetime order by length(leave_id) desc, leave_id desc)RN
+             from pidvn_form_leave A
+             )A where rn = 1 )A)A
+            , pidvn_router_leave B, `users` C, `section` D, subsection E
+             where 1=1 and A.flag = 'true' and A.leave_id = B.request_id
+            and A.username = C.username
+             and C.subsection_id = E.id and E.section_id = D.id and A.flag = 'true'
+             )A
+             )A order by status*1 desc )A
+            where status1 < CNT and status = 0
+             )A where 1=1
+            and (starttime like concat(DATE_FORMAT( CURRENT_DATE - INTERVAL 1 MONTH, '%Y-%m' ) , '%') or endtime like concat(DATE_FORMAT( CURRENT_DATE - INTERVAL 1 MONTH, '%Y-%m' ) , '%'))
+            )
+            select *, MONTH(CURRENT_DATE - INTERVAL 1 MONTH) month from(
+            select *, case when leave_id like 'CF%' then 'inout' else 'leave' end `type`
+            , row_number() over(partition by email, case when leave_id like 'CF%' then 'inout' else 'leave' end order by '') rn
+            from(
+            select A.usernames username, A.genid
+            , IF(B.email  IS NULL or B.email = '', C.email, B.email) email, A.email cc_email, A.leave_id
+              from (
+            select A.*, C.name hoten, IF(C.email  IS NULL or C.email = '', D.email, C.email) email
+            from getId A, users C, pidvn_gmail_user D
+            where 1=1 and C.username = A.genid and A.genid = D.username
+            )A, users B, pidvn_gmail_user C where 1=1 and A.usernames = B.username  and B.username = C.username
+            )A
+            )A where 1 = 1
+        ]]>
+    </select>
+
+
+    <resultMap id="getUserMissInOut-result"
+               type="pidvn.modules.schedule_task.e_leave.models.EleaveVo">
+        <result column="ProfileName" property="profileName" javaType="String"/>
+        <result column="CodeEmp" property="codeEmp" javaType="String"/>
+        <result column="Email" property="email" javaType="String"/>
+        <result column="Date" property="date" javaType="String"/>
+        <result column="Shift" property="shift" javaType="String"/>
+        <result column="Time" property="time" javaType="String"/>
+    </resultMap>
+    <select id="getUserMissInOut" resultMap="getUserMissInOut-result">
+        <![CDATA[
+            with t_inout as(
+            select A.* from
+            pidvn_attendancedetail A
+            , (select * from Calendar where 1=1  and flag = 'true' and `date` = date(now())) B
+            where 1=1
+            and (NgayCong >= concat(DATE(DATE_ADD(sysdate(), INTERVAL - `day` DAY)),' 00:00:00')
+            and (LeaveCode = 'ABS' or ((FirstInTime is null or LastOutTime is null) and LeaveCode = '0')))
+            ),
+            days as(
+            select a.Date
+            from (
+                 select last_day(DATE(DATE_ADD(sysdate(), INTERVAL -1 DAY))) - INTERVAL (a.a + (10 * b.a) + (100 * c.a)) DAY as Date
+                 from (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as a
+                 cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as b
+                 cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as c
+            ) a  , (select * from Calendar where 1=1  and flag = 'true' and `date` = date(now())) B
+            where a.Date >= concat(year(now()),'-01-01') order by a.Date
+            ), nows as(
+              select starttime,endtime, type_request,dt, statusdayoff , genid,B.name,C.name pos,D.name sub, reason, E.name ss
+              from (
+              select A.*
+              , case
+              when status1 < CNT then 'Pending'
+              when status1 > CNT then 'Rejected'
+              when status1 = CNT then 'Approved'
+              end checked
+              from(
+              select A.*
+              , sum(status) status1, group_concat(a_name) a_name1
+              from (
+              select A.*
+              , count(*) over(partition by leave_id order by '') CNT
+              from (
+              select F.stt kab, F.`type` type_request,starttime,endtime,reason,leave_id,substr(B.datetime,1,10) dttime
+              ,A.username genid, dayoff dt,statusdayoff, D.code name, B.updatetime, B.username a_name
+              , case
+              when B.status = 'approved' then 1
+              when B.status = 'rejected' then 5
+              when B.status = '' then 0
+              end
+              status
+              from pidvn_form_leave A
+              , pidvn_router_leave B, `users` C, `section` D, subsection E, pidvn_leave_type_std F
+              , (select * from Calendar where 1=1  and flag = 'true' and `date` = date(now())) G
+              where 1=1 and F.`type` = A.type_request and A.leave_id = B.request_id
+              and B.username = C.username and A.`type` = 'leave'
+              and C.status = 1 and A.flag = 'true' and C.subsection_id = E.id and E.section_id = D.id
+              and (endtime >= DATE(DATE_ADD(sysdate(), INTERVAL - `day` DAY)) and (starttime <= DATE(DATE_ADD(sysdate(), INTERVAL - `day` DAY)) or starttime >= DATE(DATE_ADD(sysdate(), INTERVAL - `day` DAY))) )
+              )A
+              )A
+              group by leave_id
+              )A where 1=1
+              )A, users B, `position` C, subsection D, `section` E
+              Where 1=1 and E.id = D.section_id and B.subsection_id = D.id and B.position_id = C.id
+              and A.genid = B.username  and dt >=1
+              and checked = 'Approved' order by  pos desc, ss, sub, kab, dttime desc
+            )
+            , hbc as(
+            select A.* from (
+            select * from days A left join nows B on A.Date between B.starttime and B.endtime
+            )A, (select * from Calendar where 1=1  and flag = 'true' and `date` = date(now())) B
+            where  A.Date = DATE(DATE_ADD(sysdate(), INTERVAL - `day` DAY))
+            )
+            select ProfileName, CodeEmp , substr(ngaycong,1,10) Date ,calamviec Shift
+            , case
+            when FirstInTime is null and LastOutTime is not null then concat('Time in: 00:00:00 <br>Time out: ',LastOutTime)
+            when FirstInTime is not null and LastOutTime is null then  concat('Time in: ',FirstInTime,'<br>Time out: 00:00:00')
+            when FirstInTime is null and LastOutTime is null then 'Time in: 00:00:00 <br>Time out: 00:00:00'
+            end Time
+            , IF(B.email  IS NULL or B.email = '', C.email, B.email) Email
+            from(
+            select A.*,B.dt, B.statusdayoff  from t_inout A left join hbc B
+            ON A.CodeEmp = B.genid
+            )A, users B, pidvn_gmail_user C , (select * from Calendar where 1=1  and flag = 'true' and `date` = date(now())) D
+            where 1=1 and A.CodeEmp = B.username and B.username = C.username
+            and nvl(statusdayoff,'') not in ('E_FULLSHIFT');
+
+        ]]>
+    </select>
+
+    <resultMap id="getEmailRejectRequest-result"
+               type="pidvn.modules.schedule_task.e_leave.models.EmailVo">
+        <result column="cc_email" property="ccEmail" javaType="String"/>
+        <result column="leave_id" property="leaveId" javaType="String"/>
+    </resultMap>
+    <select id="getEmailRejectRequest" resultMap="getEmailRejectRequest-result">
+        <![CDATA[
+            with getId as(
+             select A.*
+             , case
+             when status1 < CNT then 'Pending'
+             when status1 > CNT then 'Rejected'
+             when status1 = CNT then 'Approved'
+             end checked
+             from(
+             select A.*
+             from (  select * from (
+            select A.*
+             , count(*) over(partition by leave_id order by '') CNT
+              , sum(status) over(partition by leave_id order by '') status1
+            from (
+             select B.stt,url,sott, starttime,endtime,reason,leave_id,substr(B.datetime,1,10) dttime,A.username genid, B.username usernames , dayoff dt,statusdayoff, D.code name, B.updatetime
+             , case
+             when B.status = 'approved' then 1
+             when B.status = 'rejected' then 5
+             when B.status = '' then 0
+             end
+             status
+              from (
+             select * from (
+             select stt,type_request,starttime,endtime,reason,leave_id,`datetime`,flag,username,dayoff,statusdayoff,`type`, url
+             from(
+             select stt,type_request,starttime,endtime,reason,leave_id,`datetime`
+             ,flag,username,dayoff,statusdayoff,url,`type`
+             , row_number() over(partition by type_request,username, datetime order by length(leave_id) desc, leave_id desc)RN
+             from pidvn_form_leave A
+             )A where rn = 1 )A )A
+            , pidvn_router_leave B, `users` C, `section` D, subsection E
+             where 1=1 and A.flag = 'true' and A.leave_id = B.request_id
+            and A.username = C.username
+             and C.subsection_id = E.id and E.section_id = D.id and A.flag = 'true'
+             )A
+             )A order by status*1 desc )A
+            where status1 < CNT and status = 0
+             )A where 1=1
+            and (starttime like concat(DATE_FORMAT( CURRENT_DATE - INTERVAL 1 MONTH, '%Y-%m' ) , '%') or endtime like concat(DATE_FORMAT( CURRENT_DATE - INTERVAL 1 MONTH, '%Y-%m' ) , '%'))
+            ), abc as(
+            select * from(
+            select *, case when leave_id like 'CF%' then 'inout' else 'leave' end `type`
+            from(
+            select A.stt
+            , IF(B.email  IS NULL or B.email = '', C.email, B.email) email, A.leave_id
+              from (
+            select A.*, C.name hoten, IF(C.email  IS NULL or C.email = '', D.email, C.email) email
+            from getId A, users C, pidvn_gmail_user D
+            where 1=1 and C.username = A.genid and A.genid = D.username
+            )A, users B, pidvn_gmail_user C where 1=1 and A.usernames = B.username  and B.username = C.username
+            )A
+            )A where 1 = 1
+            )
+            select * from abc;
+        ]]>
+    </select>
+
+</mapper>

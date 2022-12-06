@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.relay.training_record.TrainingRecordMapper">
+
+    <resultMap id="getTrainingRecordMaster-result"
+               type="pidvn.modules.relay.training_record.models.TrainingRecordMasterVo">
+        <result column="course_name" property="courseName" javaType="String"/>
+        <result column="course_type" property="courseType" javaType="Integer"/>
+        <result column="course_type_name" property="courseTypeName" javaType="String"/>
+        <result column="score_of_pass" property="scoreOfPass" javaType="Float"/>
+        <result column="score_of_max" property="scoreOfMax" javaType="Float"/>
+        <result column="trainer_name" property="trainerName" javaType="String"/>
+        <result column="approval_by" property="approvalBy" javaType="String"/>
+        <result column="approval_by_name" property="approvalByName" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+    </resultMap>
+
+    <select id="getTrainingRecordMaster" resultMap="getTrainingRecordMaster-result">
+        SELECT
+        M.*, C.name as course_name, C.type as course_type,
+        (select T.name from training_record_type T where T.id = C.type) course_type_name,
+        (select concat(U.name, ' - ', U.username)  from users U where U.username = M.approval_by) as approval_by_name,
+        (select concat(U.name, ' - ', U.username) from users U where U.username = M.trainer) as trainer_name
+        FROM training_record_master M
+        inner join training_record_course C on M.course = C.id
+        where 1 = 1
+        <if test="id != null">
+            and M.id = #{id}
+        </if>
+    </select>
+
+    <resultMap id="getTrainingRecordDetail-result"
+               type="pidvn.modules.relay.training_record.models.TrainingRecordDetailVo">
+        <result column="training_record_master" property="trainingRecordMaster" javaType="Integer"/>
+        <result column="material_received" property="materialReceived" javaType="String"/>
+        <result column="test_result" property="testResult" javaType="String"/>
+        <result column="subsection_name" property="subsectionName" javaType="String"/>
+        <result column="position_name" property="positionName" javaType="String"/>
+        <result column="test_result" property="testResult" javaType="String"/>
+
+    </resultMap>
+
+    <select id="getTrainingRecordDetail" resultMap="getTrainingRecordDetail-result">
+        with
+        T01 as (
+            select
+                U.username, U.name, P.name position_name, A.name subsection_name
+            from users U
+            left join position P on U.position_id = P.id
+            left join subsection A on A.id = U.subsection_id
+        ),
+        T02 as (
+            select
+                D.*,M.score_of_max, M.score_of_pass
+            from training_record_detail D
+            inner join training_record_master M on D.training_record_master = M.id
+            where 1 = 1
+            and D.training_record_master = #{trainingRecordMaster}
+        )
+        select * from T02
+        inner join T01 on T02.username = T01.username
+    </select>
+
+
+
+    <resultMap id="getCourses-result"
+               type="pidvn.modules.relay.training_record.models.TRCourseVo">
+        <result column="type_name" property="typeName" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+    </resultMap>
+    <select id="getCourses" resultMap="getCourses-result">
+        SELECT C.*, T.name as type_name
+        FROM training_record_course C
+        inner join training_record_type T on C.type = T.id
+        order by C.created_at desc
+    </select>
+
+    <resultMap id="getUsers-result"
+               type="pidvn.modules.relay.training_record.models.UserVo">
+    </resultMap>
+    <select id="getUsers" resultMap="getUsers-result">
+        select
+        U.username, concat(U.name, ' - ', U.username) name
+        from users U
+    </select>
+
+
+    <resultMap id="getHistories-result"
+               type="pidvn.modules.relay.training_record.models.HistoriesVo">
+        <result column="trainer_name" property="trainerName" javaType="String"/>
+        <result column="course_name" property="courseName" javaType="String"/>
+        <result column="test_result" property="testResult" javaType="String"/>
+        <result column="approver_name" property="approverName" javaType="String"/>
+        <result column="position_name" property="positionName" javaType="String"/>
+        <result column="subsection_name" property="subsectionName" javaType="String"/>
+    </resultMap>
+    <select id="getHistories" resultMap="getHistories-result">
+        with
+        T01 as (
+            select
+                U.username, U.name, P.name position_name, A.name subsection_name
+            from users U
+            left join position P on U.position_id = P.id
+            left join subsection A on A.id = U.subsection_id
+        ),
+        T02 as (
+            SELECT
+                (select U.name from users U where U.username = D.username) trainer_name,
+                M.course, M.trainer, M.date, M.approval_by,
+                (select U.name from users U where U.username = D.username) name,
+                D.username, D.attendance, D.score, D.test_result,
+                C.name as course_name
+            FROM training_record_master M
+            inner join training_record_detail D on D.training_record_master = M.id
+            inner join training_record_course C on M.course = C.id
+        )
+        select * from T02
+        inner join T01 on T02.username = T01.username
+        order by T02.username
+    </select>
+
+</mapper>

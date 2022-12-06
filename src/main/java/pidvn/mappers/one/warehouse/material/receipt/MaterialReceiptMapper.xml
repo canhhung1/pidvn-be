@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.warehouse.material.receipt.MaterialReceiptMapper">
+
+    <resultMap id="getPurWhRecords-result"
+               type="pidvn.modules.warehouse.material.receipt.models.PurWhRecordsVo">
+        <result column="lot_no" property="lotNo" javaType="String"/>
+        <result column="wh_user_code" property="whUserCode" javaType="String"/>
+        <result column="vendor_code" property="vendorCode" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="slip_no" property="slipNo" javaType="String"/>
+    </resultMap>
+    <select id="getPurWhRecords" resultMap="getPurWhRecords-result">
+        select
+            PWR.id, PWR.model, PWR.lot_no, PWR.qty, PWR.vendor_code, PWR.created_at, PWR.po, PWR.invoice, PWR.slip_no
+        from pur_wh_records PWR
+        left join lots L on PWR.lot_no = L.lot_no
+        where 1 = 1
+            and PWR.record_type = 'IM'
+            and PWR.flag = '1'
+
+        <if test="serial != null">
+            and PWR.serial = #{serial}
+        </if>
+
+        <if test="lotNo != null">
+            and PWR.lot_no like '%' #{lotNo} '%'
+        </if>
+
+        <if test="model != null and model != ''">
+            and PWR.model = #{model}
+        </if>
+
+        <if test="whUserCode != null">
+            and PWR.wh_user_code = #{wh_user_code}
+        </if>
+
+        <if test="slipNo != null and slipNo != ''">
+            and PWR.slip_no like '%' #{slipNo} '%'
+        </if>
+
+        <if test="invoice != null and invoice != ''">
+            and PWR.invoice like '%' #{invoice} '%'
+        </if>
+
+        <if test="fromDate != null and toDate != null">
+            and DATE_FORMAT(PWR.created_at, '%Y-%m-%d') between DATE_FORMAT(#{fromDate}, '%Y-%m-%d') and DATE_FORMAT(#{toDate}, '%Y-%m-%d')
+        </if>
+
+        order by PWR.created_at DESC
+
+        <if test="isPaging == true">
+            LIMIT #{recordStart} , #{recordPerPage}
+        </if>
+
+    </select>
+
+    <resultMap id="getLotsByLotNo-result"
+               type="pidvn.modules.warehouse.material.receipt.models.LotVo">
+        <result column="lot_no" property="lotNo" javaType="String"/>
+    </resultMap>
+    <select id="getLotsByLotNo" resultMap="getLotsByLotNo-result">
+        select * from lots L where L.lot_no in
+        <foreach item="item" index="index" collection="lots" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+
+
+    <!-- Lấy danh sách invoice -->
+    <resultMap id="getInvoices-result"
+               type="pidvn.modules.warehouse.material.receipt.models.InvoiceVo">
+        <result column="lot_no" property="lotNo" javaType="String"/>
+    </resultMap>
+    <select id="getInvoices" resultMap="getInvoices-result">
+        select
+            L.invoice, P.date as warehouse_date,
+            group_concat(distinct(L.lot_group) separator ' ; ') as lot_group,
+            group_concat(distinct(L.model) separator ' ; ') as model
+        from pur_wh_records P
+        left join lots L on P.lot_no = L.lot_no
+        where
+                P.record_type = 'IM'
+            and L.invoice is not null
+            and L.invoice != ''
+            <if test="invoice != null">
+                and L.invoice = #{invoice}
+            </if>
+        group by L.invoice
+        order by P.date desc
+    </select>
+
+
+    <!-- Lấy thông tin chi tiết invoice bao gồm: LotGroup, Model, Số lượng, Qty -->
+    <resultMap id="getInvoiceDetail-result"
+               type="pidvn.modules.warehouse.material.receipt.models.InvoiceDetailVo">
+        <result column="lot_no" property="lotNo" javaType="String"/>
+    </resultMap>
+    <select id="getInvoiceDetail" resultMap="getInvoiceDetail-result">
+        select
+            L.invoice, L.lot_group, P.model,
+            count(*) as amount, sum(P.qty) as qty
+        from pur_wh_records P
+        left join lots L on P.lot_no = L.lot_no
+        where
+                P.record_type = 'IM'
+            and L.invoice is not null
+            and L.invoice != ''
+        <if test="invoice != null">
+            and L.invoice = #{invoice}
+        </if>
+        group by P.invoice, L.lot_group
+
+    </select>
+
+
+    <!--  -->
+    <resultMap id="getPurWhRecordsByInvoice-result"
+               type="pidvn.modules.warehouse.material.receipt.models.PurWhRecordsVo">
+
+        <result column="slip_no" property="slipNo" javaType="String"/>
+
+    </resultMap>
+
+    <select id="getPurWhRecordsByInvoice" resultMap="getPurWhRecordsByInvoice-result">
+        select * from pur_wh_records R
+        where R.record_type = 'IM'
+        and R.invoice = #{invoice}
+        and R.slip_no is not null
+        and R.slip_no != ''
+    </select>
+
+</mapper>

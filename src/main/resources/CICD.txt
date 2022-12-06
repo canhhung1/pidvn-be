@@ -1,0 +1,69 @@
+=============================================================================
+pipeline {
+    agent any
+    
+    stages {
+        stage('Cloning')
+        {
+            steps 
+            {
+                git branch: 'develop', credentialsId: 'eb896f81-8121-4837-b675-5bfafffe3eec', url: 'https://gitlab.com/hungnc225.it/pidvn-be.git'
+            }
+        }
+        
+        stage('Clean Install Maven')
+        {
+            steps 
+            {
+              bat 'mvn clean install'
+            }
+        }
+        
+        stage('Publish')
+        {
+            steps 
+            {
+                bat 'xcopy target\\pidvn-be.war C:\\apache-tomcat-8.5.61\\webapps /e /y /i /r'
+            }
+        }
+    }   
+}
+
+=============================================================================
+pipeline {
+    agent any
+    
+    stages {
+        stage('Cloning')
+        {
+            steps 
+            {
+                git branch: 'develop', credentialsId: 'eb896f81-8121-4837-b675-5bfafffe3eec', url: 'https://gitlab.com/hungnc225.it/pidvn-fe.git'
+            }
+        }
+        
+        stage('Install')
+        {
+            steps 
+            {
+                bat 'npm install'
+            }
+        }
+        
+        stage('Build')
+        {
+            steps 
+            {
+                bat 'npm run ng -- build'
+            }
+        }
+        
+        stage('Publish')
+        {
+            steps 
+            {
+                bat 'xcopy dist C:\\inetpub\\wwwroot /e /y /i /r'
+            }
+        }
+    }   
+}

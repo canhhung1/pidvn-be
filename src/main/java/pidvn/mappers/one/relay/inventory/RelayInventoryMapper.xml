@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.relay.inventory.RelayInventoryMapper">
+
+    <resultMap id="getInventoryRequests-result"
+               type="pidvn.modules.relay.inventory.models.InventoryRequestVo">
+        <result column="req_no" property="reqNo" javaType="String"/>
+        <result column="cut_off" property="cutOff" javaType="Date"/>
+        <result column="inventory_date" property="inventoryDate" javaType="Date"/>
+        <result column="created_by" property="createdBy" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="updated_at" property="updatedAt" javaType="Date"/>
+        <result column="expired" property="expired" javaType="Boolean"/>
+
+    </resultMap>
+    <select id="getInventoryRequests" resultMap="getInventoryRequests-result">
+        select
+            R.*,
+            case
+                when R.inventory_date = curdate() then true
+                else false
+            end expired
+        from relay_inventory_request R
+        order by R.id desc
+    </select>
+
+    <resultMap id="getBalance-result"
+               type="pidvn.modules.relay.inventory.models.BalanceVo">
+        <result column="part_no" property="partNo" javaType="String"/>
+        <result column="lot_no" property="lotNo" javaType="String"/>
+        <result column="system_stock" property="systemStock" javaType="Float"/>
+        <result column="actual_stock" property="actualStock" javaType="Float"/>
+        <result column="balance" property="balance" javaType="Float"/>
+        <result column="line" property="line" javaType="String"/>
+    </resultMap>
+    <select id="getBalance" resultMap="getBalance-result">
+        <![CDATA[
+        with
+        T01 as (
+            select A.part_no, A.lot_no, sum(A.qty) qty from (
+                select
+                    R.model part_no, R.lot_no,
+                    case
+                        when R.record_type = 'MRTW' then R.qty*-1
+                        else R.qty
+                    end qty,
+                    R.record_type, R.created_at
+                from pur_wh_records R
+                where 1 = 1
+                and R.record_type in ('RNP','MRTW')
+                and DATE_FORMAT(R.created_at,'%Y-%m-%d') between #{cutOff} and #{ivtDate}
+                union all
+                select
+                    M.cpn part_no, M.clotno lot_no, (M.qty*-1) qty, M.record_type, M.created_at
+                from material_controls M
+                where 1 = 1
+                and M.record_type = 'CDL'
+                and DATE_FORMAT(M.created_at,'%Y-%m-%d') between #{cutOff} and #{ivtDate}
+            ) A group by A.lot_no
+        ),
+        T02 as (
+            select
+                T01.part_no, T01.lot_no, T01.qty system_stock, I.qty actual_stock, I.line
+            from T01
+            left join relay_inventories I on T01.lot_no = I.lot_no and I.req_no = #{reqNo}
+            where 1 = 1
+            and T01.qty >= 0
+        )
+        select
+            T02.*, (T02.system_stock - T02.actual_stock) balance
+        from T02
+        order by T02.line desc, T02.actual_stock asc
+        ]]>
+    </select>
+</mapper>

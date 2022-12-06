@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.relay.datecode_management.RelayDateCodeMapper">
+
+    <resultMap id="getDateCodes-result"
+               type="pidvn.modules.relay.datecode_management.models.DateCodeVo">
+
+        <result column="qa_card" property="qaCard" javaType="String"/>
+        <result column="date_code" property="dateCode" javaType="String"/>
+        <result column="user_code" property="userCode" javaType="Integer"/>
+        <result column="employee_name" property="employeeName" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+    </resultMap>
+    <select id="getDateCodes" resultMap="getDateCodes-result">
+        SELECT D.*, U.name employee_name FROM relay_date_code D
+        inner join users U on D.user_code = U.id
+        where 1 = 1
+        and D.qa_card = #{qaCard}
+        order by D.id desc
+    </select>
+
+    <resultMap id="getAllDateCode-result"
+               type="pidvn.modules.relay.datecode_management.models.DateCodeVo">
+        <result column="qa_card" property="qaCard" javaType="String"/>
+        <result column="date_code" property="dateCode" javaType="String"/>
+        <result column="user_code" property="userCode" javaType="Integer"/>
+        <result column="employee_name" property="employeeName" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+    </resultMap>
+    <select id="getAllDateCode" resultMap="getAllDateCode-result">
+        SELECT D.*, U.name employee_name FROM relay_date_code D
+        inner join users U on D.user_code = U.id
+        where 1 = 1
+        order by D.id desc
+    </select>
+
+
+    <resultMap id="getQaCards-result"
+               type="pidvn.modules.relay.datecode_management.models.QaCardVo">
+        <result column="lot_no" property="qaCard" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+    </resultMap>
+    <select id="getQaCards" resultMap="getQaCards-result">
+        select L.lot_no, L.created_at from lots L
+        where L.label_type = 'QA'
+        and L.created_at >  date(now()) - interval 250 day
+        order by L.created_at desc
+    </select>
+</mapper>

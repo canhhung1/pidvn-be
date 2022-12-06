@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.pih.pih_stop_line.PihStopLineMapper">
+
+    <resultMap id="getStopItems-result"
+               type="pidvn.modules.pih.pih_stop_line.models.StopItemVo">
+        <result column="item_name" property="itemName" javaType="String"/>
+        <result column="group_name" property="groupName" javaType="String"/>
+        <result column="type_name" property="typeName" javaType="String"/>
+    </resultMap>
+    <select id="getStopItems" resultMap="getStopItems-result">
+        with
+        T01 as (
+            select G.id, G.name group_name, T.name type_name from stop_groups G
+            left join stop_types T on G.stop_type_id = T.id
+        )
+        select I.id, I.name item_name, T01.group_name, T01.type_name from stop_items I
+        left join T01 on I.stop_group_id = T01.id
+    </select>
+
+
+    <resultMap id="getLines-result"
+               type="pidvn.modules.pih.pih_stop_line.models.LineVo">
+        <result column="product_id" property="productId" javaType="Integer"/>
+    </resultMap>
+    <select id="getLines" resultMap="getLines-result">
+        select
+            L.id, L.name, L.product_id, L.description
+        from line L
+        where 1 = 1
+        and L.product_id = 4;
+    </select>
+
+
+    <resultMap id="getStopTimes-result"
+               type="pidvn.modules.pih.pih_stop_line.models.StopTime">
+        <result column="start_time" property="startTime" javaType="Date"/>
+        <result column="stop_time" property="stopTime" javaType="Date"/>
+        <result column="total_stop_time" property="totalStopTime" javaType="Integer"/>
+        <result column="line_id" property="lineId" javaType="Integer"/>
+        <result column="line_name" property="lineName" javaType="String"/>
+        <result column="item_id" property="itemId" javaType="Integer"/>
+        <result column="item_name" property="itemName" javaType="String"/>
+        <result column="group_id" property="groupId" javaType="Integer"/>
+        <result column="group_name" property="groupName" javaType="String"/>
+        <result column="type_id" property="typeId" javaType="Integer"/>
+        <result column="type_name" property="typeName" javaType="String"/>
+        <result column="line_name" property="lineName" javaType="String"/>
+        <result column="shift_id" property="shiftId" javaType="Integer"/>
+        <result column="shift_name" property="shiftName" javaType="String"/>
+    </resultMap>
+    <select id="getStopTimes" resultMap="getStopTimes-result">
+        with
+        T01 as (
+            select
+                T.*, L.name line_name, S.id shift_id, concat(S.name, ' (', S.code, ')')  shift_name,
+                I.name item_name, I.stop_group_id group_id, U.name employee
+            from stop_times T
+            left join line L on T.line = L.id
+            left join shifts S on T.shift = S.id
+            left join stop_items I on T.stop_item_id = I.id
+            left join users U on T.user_code = U.username
+        ),
+        T02 as (
+            select G.id group_id, G.name group_name, T.id type_id, T.name type_name from stop_groups G
+            left join stop_types T on G.stop_type_id = T.id
+        ),
+        T03 as (
+            select
+                T01.id, T01.stop_item_id item_id, T01.item_name, T01.line line_id, T01.line_name,
+                T01.date, T01.start_time, T01.stop_time, T01.remark, T01.created_at,
+                T01.shift_id, T01.shift_name, T01.employee, T02.*
+            from T01
+            left join T02 on T01.group_id = T02.group_id
+        )
+        select T03.*, timestampdiff(minute,T03.start_time, T03.stop_time) total_stop_time from T03
+        where 1 = 1
+
+        <if test="fromDate != null and toDate != null">
+            and T03.date between DATE_FORMAT(#{fromDate}, '%Y-%m-%d') and DATE_FORMAT(#{toDate}, '%Y-%m-%d')
+        </if>
+
+        <if test="line != null">
+            and T03.line_id = #{line}
+        </if>
+
+        <if test="shift != null">
+            and T03.shift_id = #{shift}
+        </if>
+
+        <if test="type != null">
+            and T03.type_id = #{type}
+        </if>
+
+        <if test="group != null">
+            and T03.group_id = #{group}
+        </if>
+
+        order by T03.id desc
+    </select>
+</mapper>

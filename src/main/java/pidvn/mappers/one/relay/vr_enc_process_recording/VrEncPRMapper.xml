@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.relay.vr_enc_process_recording.VrEncPRMapper">
+
+    <resultMap id="getMaterialHistories-result"
+               type="pidvn.modules.relay.vr_enc_process_recording.models.MaterialVo">
+        <result column="record_type" property="recordType" javaType="String"/>
+    </resultMap>
+
+    <select id="getMaterialHistories" resultMap="getMaterialHistories-result">
+        select M.* from material_controls M
+        where 1 = 1
+        and M.record_type = 'VEP'
+        and M.clotno = #{clotno}
+    </select>
+
+    <resultMap id="getMaterials-result"
+               type="pidvn.modules.relay.vr_enc_process_recording.models.MaterialVo">
+        <result column="record_type" property="recordType" javaType="String"/>
+    </resultMap>
+    <select id="getMaterials" resultMap="getMaterials-result">
+        select M.* from material_controls M
+        where 1 = 1
+        <if test="qaCard != null">
+            and M.plotno = #{qaCard}
+        </if>
+        <if test="line != null">
+            and M.line = #{line}
+        </if>
+        <if test="recordType != null">
+            and M.record_type = #{recordType}
+        </if>
+    </select>
+
+    <resultMap id="getPartsByModel-result"
+               type="pidvn.modules.relay.vr_enc_process_recording.models.PartVo">
+    </resultMap>
+
+    <select id="getPartsByModel" resultMap="getPartsByModel-result">
+        SELECT
+        P.pnpa, P.pncomp, P.qtpern, P.qtperd, P.umprqt , P.tpstco, P.cdfc, P.std_cost
+        FROM ps_masters P where P.pnpa = #{model}
+    </select>
+
+    <resultMap id="getProcesses-result"
+               type="pidvn.modules.relay.vr_enc_process_recording.models.ProcessVo">
+    </resultMap>
+    <select id="getProcesses" resultMap="getProcesses-result">
+        SELECT P.id, P.name FROM process P
+        inner join product_type T on P.product_type_id = T.id and P.product_id = 2
+        where 1 = 1
+        and T.name = #{productTypeName}
+        order by P.order asc
+    </select>
+
+    <resultMap id="getProcessesVer2-result"
+               type="pidvn.modules.relay.vr_enc_process_recording.models.ProcessVo">
+    </resultMap>
+    <select id="getProcessesVer2" resultMap="getProcessesVer2-result">
+        select
+        L.process_id id, P.name
+        from line_process_pivots L
+        inner join process P on L.process_id = P.id
+        where 1 = 1
+        and L.line = #{line}
+        order by L.order asc
+    </select>
+
+    <resultMap id="getQaCards-result"
+               type="pidvn.modules.relay.vr_enc_process_recording.models.QaCardVo">
+        <result column="lot_no" property="lotNo" javaType="String"/>
+    </resultMap>
+    <select id="getQaCards" resultMap="getQaCards-result">
+        SELECT * FROM lots L
+        where 1=1
+        and L.label_type = 'QA'
+
+        <if test="line != null">
+            and L.line = #{line}
+        </if>
+        <if test="date != null">
+            and L.date = DATE_FORMAT(#{date}, '%Y-%m-%d')
+        </if>
+        <if test="shift != null">
+            and L.shift = #{shift}
+        </if>
+        <if test="model != null">
+            and L.model = #{model}
+        </if>
+        order by L.id desc
+    </select>
+
+
+    <resultMap id="traceability-result"
+               type="pidvn.modules.relay.vr_enc_process_recording.models.MaterialVo">
+        <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="process_name" property="processName" javaType="String"/>
+    </resultMap>
+    <select id="traceability" resultMap="traceability-result">
+        SELECT
+            M.date, M.ppn, M.cpn, M.line, M.shift, M.plotno, M.clotno, M.qty, M.created_at,
+            P.name process_name,U.name employee, U.username, M.remark
+        FROM material_controls M
+        left join process P on M.process_id = P.id
+        left join users U on U.username = M.user1
+        where 1 = 1
+        and record_type = 'VEP'
+        <if test="line != null">
+            and M.line = #{line}
+        </if>
+        <if test="fromDate != null and toDate != null">
+            and DATE_FORMAT(M.created_at, '%Y-%m-%d') between DATE_FORMAT(#{fromDate}, '%Y-%m-%d') and DATE_FORMAT(#{toDate}, '%Y-%m-%d')
+        </if>
+    </select>
+
+
+    <resultMap id="getModels-result"
+               type="pidvn.modules.relay.vr_enc_process_recording.models.ModelVo">
+    </resultMap>
+    <select id="getModels" resultMap="getModels-result">
+        SELECT * FROM model M where M.product_type_id in (2, 3, 4, 5, 9, 18, 22, 54)
+    </select>
+
+
+</mapper>

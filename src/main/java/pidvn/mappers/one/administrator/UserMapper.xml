@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.administrator.UserMapper">
+
+    <resultMap id="getUsers-result"
+               type="pidvn.modules.administrator.models.UserVo">
+
+        <result column="join_date" property="joinDate" javaType="Date"/>
+        <result column="position_id" property="positionId" javaType="Integer"/>
+        <result column="position_name" property="positionName" javaType="String"/>
+        <result column="section_id" property="sectionId" javaType="Integer"/>
+        <result column="section_name" property="sectionName" javaType="String"/>
+        <result column="subsection_id" property="subsectionId" javaType="Integer"/>
+        <result column="subsection_name" property="subsectionName" javaType="String"/>
+
+    </resultMap>
+    <select id="getUsers"
+            resultMap="getUsers-result">
+        <![CDATA[
+            select
+                U.id, U.username, U.name, U.join_date, U.email, U.position_id, P.name as position_name,
+                U.subsection_id, A.name as subsection_name, B.id as section_id, B.name as section_name
+            from users U
+            left join subsection A on U.subsection_id = A.id
+            left join position P on U.position_id = P.id
+            left join section B on A.section_id = B.id
+        ]]>
+    </select>
+</mapper>

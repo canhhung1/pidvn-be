@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.relay.measurement.MeasureXbarRMapper">
+
+    <resultMap id="getXbarData-result"
+               type="pidvn.modules.relay.measurement.models.xbar.MeaDetailDataVo">
+
+        <result column="created_at" property="createdAt" javaType="String"/>
+
+    </resultMap>
+    <select id="getXbarData" resultMap="getXbarData-result">
+        select
+        D.a1, D.b1, D.b2, D.master, D.item, M.line, M.model, DATE_FORMAT(M.created_at, '%Y-%m-%d %H:%m') created_at
+        from mea_detail_data D
+        inner join mea_master_data M on D.master = M.id
+        where 1 = 1
+        <if test="item != null">
+            and D.item = #{item}
+        </if>
+        <if test="line != null">
+            and M.line = #{line}
+        </if>
+        <if test="fromDate != null and toDate != null">
+            and date_format(M.created_at, '%Y-%m-%d')
+            between date_format(#{fromDate}, '%Y-%m-%d') and date_format(#{toDate}, '%Y-%m-%d')
+        </if>
+    </select>
+
+
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.three.personal.tms.UserTmsMapper">
+
+    <resultMap id="getAttendanceDetails-result"
+               type="pidvn.modules.personal.tms.models.AttendanceDetailVo">
+        <result column="first_in_time" property="firstInTime" javaType="Date"/>
+        <result column="last_out_time" property="lastOutTime" javaType="Date"/>
+    </resultMap>
+    <select id="getAttendanceDetails" resultMap="getAttendanceDetails-result">
+        <![CDATA[
+            SELECT
+                A.NgayCong date, DATENAME(WEEKDAY, A.NgayCong) day, A.CaLamViec shift,
+                A.FirstInTime first_in_time, A.LastOutTime last_out_time, A.TrangThaiTinhCong status
+                FROM View_PIDVN_AttendanceDetail A
+            WHERE 1 = 1
+            AND CodeEmp = #{username}
+            AND NgayCong < SYSDATETIME()
+            ORDER BY A.NgayCong DESC
+        ]]>
+    </select>
+
+</mapper>

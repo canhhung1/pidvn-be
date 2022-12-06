@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.hr.uniform.HrUserUniformMapper">
+
+    <resultMap id="getUserUniforms-result"
+               type="pidvn.modules.hr.uniform.models.UserUniformVo">
+        <result column="uniform_type" property="uniformType" javaType="Integer"/>
+        <result column="uniform_type_name" property="uniformTypeName" javaType="String"/>
+        <result column="upload_id" property="uploadId" javaType="String"/>
+    </resultMap>
+    <select id="getUserUniforms" resultMap="getUserUniforms-result">
+        select A.*, B.name uniform_type_name, C.name from user_uniform A
+        left join user_uniform_type B on A.uniform_type = B.id
+        left join users C on A.username = C.username
+        where 1 = 1
+        order by A.id desc
+    </select>
+
+    <resultMap id="getUserUniformUploads-result"
+               type="pidvn.modules.hr.uniform.models.UserUniformUploadVo">
+        <result column="upload_id" property="uploadId" javaType="String"/>
+        <result column="uniform_type" property="uniformType" javaType="Integer"/>
+        <result column="size_type" property="sizeType" javaType="Integer"/>
+        <result column="uniform_type_name" property="uniformTypeName" javaType="String"/>
+    </resultMap>
+    <select id="getUserUniformUploads" resultMap="getUserUniformUploads-result">
+
+        -- Lấy dữ liệu đã upload lên bảng user_uniform_upload (lọc theo upload_id)
+        select A.*, B.size from (
+            SELECT
+                A.upload_id, A.username, A.uniform_type, B.size_type,
+                B.name, A.qty, A.date, A.remark
+            from user_uniform_upload A
+            left join user_uniform_type B on A.uniform_type = B.id
+            where A.upload_id = #{uploadId}
+        ) A
+        left join user_uniform_size B
+        on A.username = B.username and A.size_type = B. size_type
+
+    </select>
+
+    <resultMap id="getUserUniformTypes-result"
+               type="pidvn.modules.hr.uniform.models.UserUniformTypeVo">
+    </resultMap>
+    <select id="getUserUniformTypes" resultMap="getUserUniformTypes-result">
+        SELECT A.*, B.type FROM user_uniform_type A
+        left join user_uniform_size_type B on A.size_type = B.id
+    </select>
+
+    <resultMap id="getUsers-result"
+               type="pidvn.modules.hr.uniform.models.UserVo">
+    </resultMap>
+    <select id="getUsers" resultMap="getUsers-result">
+        SELECT * FROM pidvn.users U
+        where 1 = 1
+        and U.status = 1
+    </select>
+
+
+
+
+</mapper>

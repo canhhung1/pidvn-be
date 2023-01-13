@@ -49,9 +49,9 @@
 
         order by PWR.created_at DESC
 
-        <if test="isPaging == true">
-            LIMIT #{recordStart} , #{recordPerPage}
-        </if>
+<!--        <if test="isPaging == true">-->
+<!--            LIMIT #{recordStart} , #{recordPerPage}-->
+<!--        </if>-->
 
     </select>
 

@@ -1,9 +1,10 @@
-package pidvn.mappers.one.dashboard;
+package pidvn.modules.dashboard.services;
 
 import pidvn.modules.dashboard.models.RelayQtyVo;
 
 import java.util.List;
 
-public interface DashboardMapper {
+public interface IDashboardSvc {
+
     List<RelayQtyVo> getManufacturingQuantity();
 }

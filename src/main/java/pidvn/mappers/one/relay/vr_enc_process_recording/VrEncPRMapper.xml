@@ -71,23 +71,25 @@
         <result column="lot_no" property="lotNo" javaType="String"/>
     </resultMap>
     <select id="getQaCards" resultMap="getQaCards-result">
-        SELECT * FROM lots L
+        SELECT A.id, A.model, A.lot_no, A.date, B.name shift, C.description line FROM lots A
+        left join shifts B on A.shift = B.code
+        left join line C on A.line = C.name
         where 1=1
-        and L.label_type = 'QA'
+        and A.label_type = 'QA'
 
         <if test="line != null">
-            and L.line = #{line}
+            and A.line = #{line}
         </if>
         <if test="date != null">
-            and L.date = DATE_FORMAT(#{date}, '%Y-%m-%d')
+            and A.date = DATE_FORMAT(#{date}, '%Y-%m-%d')
         </if>
         <if test="shift != null">
-            and L.shift = #{shift}
+            and A.shift = #{shift}
         </if>
         <if test="model != null">
-            and L.model = #{model}
+            and A.model = #{model}
         </if>
-        order by L.id desc
+        order by A.id desc
     </select>
 
 

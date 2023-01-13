@@ -26,10 +26,30 @@
         )
         select T02.* from T02
         where 1 = 1
-        <if test="">
+        <if test="lotNo != null">
             and T02.lot_no = 'VN221025*P-0455A*MLD14*B*006'
         </if>
 
+    </select>
+
+    <resultMap id="getManufacturingQuantity-result"
+               type="pidvn.modules.dashboard.models.RelayQtyVo">
+        <result column="status_name" property="statusName" javaType="String"/>
+    </resultMap>
+    <select id="getManufacturingQuantity" resultMap="getManufacturingQuantity-result">
+        <![CDATA[
+            select
+                -- A.date_code,  A.created_at,
+                A.qty, A.model, A.line,
+                CASE
+                    WHEN date_format(A.created_at, '%H:%i') < '09:00' THEN date_format(date_sub(A.created_at, interval 1 day),'%Y-%m-%d')
+                    ELSE date_format(A.created_at, '%Y-%m-%d')
+                END date
+            from relay_date_code A
+            where 1 = 1
+            and A.created_at >= date(now()) - interval 30 day
+            order by A.id desc
+        ]]>
     </select>
 
 

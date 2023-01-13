@@ -17,6 +17,11 @@ public class PihStopLineCtl {
     @Autowired
     private PihStopLineSvc pihStopLineSvc;
 
+    @GetMapping("ProductTypes")
+    public ResponseEntity<?> getProductTypes(@RequestParam Integer productId) {
+        return new ResponseEntity<>(this.pihStopLineSvc.getProductTypes(productId), HttpStatus.OK);
+    }
+
     @GetMapping("StopTypes")
     public ResponseEntity<?> getStopTypes() {
         return new ResponseEntity<>(this.pihStopLineSvc.getStopTypes(), HttpStatus.OK);

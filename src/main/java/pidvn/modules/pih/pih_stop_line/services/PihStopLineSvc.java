@@ -20,6 +20,9 @@ public class PihStopLineSvc implements IPihStopLineSvc {
     private PihStopLineMapper pihStopLineMapper;
 
     @Autowired
+    private ProductTypeRepo productTypeRepo;
+
+    @Autowired
     private ShiftsRepo shiftsRepo;
 
     @Autowired
@@ -33,6 +36,11 @@ public class PihStopLineSvc implements IPihStopLineSvc {
 
     @Autowired
     private StopTimesRepo stopTimesRepo;
+
+    @Override
+    public List<ProductType> getProductTypes(Integer productId) {
+        return this.productTypeRepo.findByProductId(productId);
+    }
 
     @Override
     public List<LineVo> getLines() {

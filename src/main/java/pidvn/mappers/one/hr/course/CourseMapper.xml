@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.hr.course.CourseMapper">
+
+    <resultMap id="getCourse-result"
+               type="pidvn.modules.hr.course.models.CourseVo">
+
+        <result column="username" property="username" javaType="String"/>
+        <result column="id_course" property="idCourse" javaType="String"/>
+        <result column="status" property="status" javaType="String"/>
+        <result column="time_attendance" property="timeAttendance" javaType="String"/>
+        <result column="name" property="name" javaType="String"/>
+        <result column="id_course_groups" property="idCourseGroups" javaType="String"/>
+        <result column="date_start" property="dateStart" javaType="Date"/>
+        <result column="time_start" property="timeStart" javaType="Date"/>
+        <result column="date_finish" property="dateFinish" javaType="Date"/>
+        <result column="time_finish" property="timeFinish" javaType="Date"/>
+        <result column="method" property="method" javaType="String"/>
+        <result column="place" property="place" javaType="String"/>
+        <result column="teacher" property="teacher" javaType="String"/>
+        <result column="name_course" property="nameCourse" javaType="String"/>
+        <result column="description" property="description" javaType="String"/>
+
+    </resultMap>
+
+    <select id="getCourse" resultMap="getCourse-result">
+        select E.*, F.name_course, F.description
+        from (select C.*,
+        D.id_course_groups,
+        D.date_start,
+        D.time_start,
+        D.date_finish,
+        D.time_finish,
+        D.method,
+        D.place,
+        D.teacher
+        from (select A.id, A.username, A.id_course, A.status, A.time_attendance, B.name
+        from hr_course_histories as A
+        left join users as B on A.username = B.username) C
+        left join hr_courses as D on C.id_course = D.id) E
+        left join hr_course_groups as F on E.id_course_groups = F.id
+        where 1=1
+        <if test="username != null">
+            and username = #{username}
+        </if>
+    </select>
+
+
+</mapper>

@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface IPihStopLineSvc {
+
+    List<ProductType> getProductTypes(Integer productId);
     List<LineVo> getLines();
     List<Shifts> getShifts();
 

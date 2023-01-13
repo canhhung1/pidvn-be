@@ -48,33 +48,42 @@
         <result column="line_name" property="lineName" javaType="String"/>
         <result column="shift_id" property="shiftId" javaType="Integer"/>
         <result column="shift_name" property="shiftName" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
     </resultMap>
     <select id="getStopTimes" resultMap="getStopTimes-result">
-        with
-        T01 as (
-            select
-                T.*, L.name line_name, S.id shift_id, concat(S.name, ' (', S.code, ')')  shift_name,
-                I.name item_name, I.stop_group_id group_id, U.name employee
-            from stop_times T
-            left join line L on T.line = L.id
-            left join shifts S on T.shift = S.id
-            left join stop_items I on T.stop_item_id = I.id
-            left join users U on T.user_code = U.username
-        ),
-        T02 as (
-            select G.id group_id, G.name group_name, T.id type_id, T.name type_name from stop_groups G
-            left join stop_types T on G.stop_type_id = T.id
-        ),
-        T03 as (
-            select
-                T01.id, T01.stop_item_id item_id, T01.item_name, T01.line line_id, T01.line_name,
-                T01.date, T01.start_time, T01.stop_time, T01.remark, T01.created_at,
-                T01.shift_id, T01.shift_name, T01.employee, T02.*
-            from T01
-            left join T02 on T01.group_id = T02.group_id
-        )
-        select T03.*, timestampdiff(minute,T03.start_time, T03.stop_time) total_stop_time from T03
-        where 1 = 1
+
+        <![CDATA[
+            with
+            T01 as (
+                select
+                    T.*, L.name line_name, S.id shift_id, concat(S.name, ' (', S.code, ')')  shift_name,
+                    I.name item_name, I.stop_group_id group_id, U.name employee,
+                    case
+                        when hour(T.start_time) <= 6 then DATE_FORMAT(DATE_SUB(T.start_time, INTERVAL 1 DAY) , '%Y-%m-%d')
+                        else DATE_FORMAT(T.start_time, '%Y-%m-%d')
+                    end issue_date
+                from stop_times T
+                left join line L on T.line = L.id
+                left join shifts S on T.shift = S.id
+                left join stop_items I on T.stop_item_id = I.id
+                left join users U on T.user_code = U.username
+            ),
+            T02 as (
+                select G.id group_id, G.name group_name, T.id type_id, T.name type_name from stop_groups G
+                left join stop_types T on G.stop_type_id = T.id
+            ),
+            T03 as (
+                select
+                    T01.id, T01.stop_item_id item_id, T01.item_name, T01.line line_id, T01.line_name,
+                    T01.start_time, T01.stop_time, T01.remark, T01.created_at, T01.shift_id,
+                    T01.shift_name, T01.employee, T02.*, T01.issue_date date
+                from T01
+                left join T02 on T01.group_id = T02.group_id
+            )
+            select T03.*, timestampdiff(minute,T03.start_time, T03.stop_time) total_stop_time from T03
+            where 1 = 1
+
+        ]]>
 
         <if test="fromDate != null and toDate != null">
             and T03.date between DATE_FORMAT(#{fromDate}, '%Y-%m-%d') and DATE_FORMAT(#{toDate}, '%Y-%m-%d')
@@ -96,6 +105,6 @@
             and T03.group_id = #{group}
         </if>
 
-        order by T03.id desc
+        order by isnull(T03.stop_time) desc, T03.id desc
     </select>
 </mapper>

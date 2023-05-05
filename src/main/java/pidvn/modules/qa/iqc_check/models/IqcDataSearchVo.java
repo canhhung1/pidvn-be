@@ -6,6 +6,7 @@ public class IqcDataSearchVo {
     private String lotGroup;
     private String lotNo;
     private String model;
+    private String isAudit;
 
     public String getInvoice() {
         return invoice;
@@ -45,5 +46,13 @@ public class IqcDataSearchVo {
 
     public void setModel(String model) {
         this.model = model;
+    }
+
+    public String getIsAudit() {
+        return isAudit;
+    }
+
+    public void setIsAudit(String isAudit) {
+        this.isAudit = isAudit;
     }
 }

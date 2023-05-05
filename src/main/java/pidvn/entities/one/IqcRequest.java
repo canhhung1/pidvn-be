@@ -45,6 +45,9 @@ public class IqcRequest {
     @Column(name = "evaluate")
     private String evaluate;
 
+    @Column(name = "remark")
+    private String remark;
+
     public Integer getId() {
         return id;
     }
@@ -123,5 +126,13 @@ public class IqcRequest {
 
     public void setEvaluate(String evaluate) {
         this.evaluate = evaluate;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

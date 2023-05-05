@@ -46,6 +46,18 @@ public class OqcRequest {
     @Column(name = "priority")
     private Integer priority;
 
+    @Column(name = "sorting_qty")
+    private Float sortingQty;
+
+    @Column(name = "remark")
+    private String remark;
+
+    @Column(name = "flag")
+    private Integer flag;
+
+    @Column(name = "delivery_date")
+    private Date deliveryDate;
+
     public Integer getId() {
         return id;
     }
@@ -124,5 +136,57 @@ public class OqcRequest {
 
     public void setPriority(Integer priority) {
         this.priority = priority;
+    }
+
+    public Float getSortingQty() {
+        return sortingQty;
+    }
+
+    public void setSortingQty(Float sortingQty) {
+        this.sortingQty = sortingQty;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public Integer getFlag() {
+        return flag;
+    }
+
+    public void setFlag(Integer flag) {
+        this.flag = flag;
+    }
+
+    public Date getDeliveryDate() {
+        return deliveryDate;
+    }
+
+    public void setDeliveryDate(Date deliveryDate) {
+        this.deliveryDate = deliveryDate;
+    }
+
+    @Override
+    public String toString() {
+        return "OqcRequest{" +
+                "id=" + id +
+                ", reqNo='" + reqNo + '\'' +
+                ", qaCard='" + qaCard + '\'' +
+                ", createdBy='" + createdBy + '\'' +
+                ", oqcRequestStatus=" + oqcRequestStatus +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", oqcDate=" + oqcDate +
+                ", judgment='" + judgment + '\'' +
+                ", priority=" + priority +
+                ", sortingQty=" + sortingQty +
+                ", remark='" + remark + '\'' +
+                ", flag=" + flag +
+                ", deliveryDate=" + deliveryDate +
+                '}';
     }
 }

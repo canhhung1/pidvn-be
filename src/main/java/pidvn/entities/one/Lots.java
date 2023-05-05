@@ -83,6 +83,10 @@ public class Lots {
     @Column(name = "s_no")
     private String s_no;
 
+
+    @Column(name = "customer_code")
+    private String customerCode;
+
     public Integer getId() {
         return id;
     }
@@ -257,5 +261,13 @@ public class Lots {
 
     public void setS_no(String s_no) {
         this.s_no = s_no;
+    }
+
+    public String getCustomerCode() {
+        return customerCode;
+    }
+
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
     }
 }

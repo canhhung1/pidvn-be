@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.qa.oqc_document.OqcDocumentMapper">
+
+
+    <resultMap id="getModels-result"
+               type="pidvn.modules.qa.oqc_document.models.ModelVo">
+    </resultMap>
+    <select id="getModels" resultMap="getModels-result">
+        -- Lấy các model theo product_id
+        SELECT
+            M.id, M.name, M.product_type_id
+            FROM model M
+        where product_type_id in (
+            SELECT T.id product_type_id FROM product_type T
+            left join product P on T.product_id = P.id
+            -- where 1 = 1 and P.id = 5
+        )
+    </select>
+
+    <resultMap id="getOqcDocuments-result"
+               type="pidvn.modules.qa.oqc_document.models.OqcDocumentVo">
+        <result column="document_type" property="documentType" javaType="Integer"/>
+        <result column="root_folder" property="rootFolder" javaType="String"/>
+        <result column="file_name" property="fileName" javaType="String"/>
+        <result column="file_format" property="fileFormat" javaType="String"/>
+        <result column="created_by" property="createdBy" javaType="String"/>
+        <result column="created_by_name" property="createdByName" javaType="String"/>
+        <result column="document_type_name" property="documentTypeName" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+    </resultMap>
+    <select id="getOqcDocuments" resultMap="getOqcDocuments-result">
+        select
+            D.*, U.name created_by_name, T.name document_type_name
+        from oqc_document D
+        left join users U on D.created_by = U.username
+        left join oqc_document_type T on D.document_type = T.id
+        where 1 = 1
+        <if test="model != null">
+            and D.model = #{model}
+        </if>
+    </select>
+
+
+    <resultMap id="getDocumentsPE-result"
+               type="pidvn.modules.qa.oqc_document.models.DocumentVo">
+        <result column="issue_no" property="issueNo" javaType="String"/>
+        <result column="doc_type_name" property="docTypeName" javaType="String"/>
+        <result column="doc_group_name" property="docGroupName" javaType="String"/>
+        <result column="spec_type" property="specType" javaType="String"/>
+    </resultMap>
+    <select id="getDocumentsPE" resultMap="getDocumentsPE-result">
+        <![CDATA[
+            with
+            T01 as (
+                select model_id, general_spec_id value from relay_u
+                union all
+                select model_id, marking_spec_id value from relay_u
+                union all
+                select model_id, packing_spec_id value from relay_u
+            ),
+            T02 as (
+                select T01.*, M.name model, D.issue_no from T01
+                left join model M on T01.model_id = M.id
+                left join documents D on T01.value = D.id
+                where 1 = 1
+                and M.name = #{model}
+                union
+                SELECT D.model_id, D.id value, M.name model, D.issue_no FROM documents D
+                left join model M on D.model_id = M.id
+                where 1=1
+                and M.name = #{model}
+            )
+            select distinct
+                D.*, T.name doc_type_name, G.name doc_group_name, T02.model
+            from documents D
+            left join doc_types T on D.doc_type_id = T.id
+            left join doc_groups G on D.doc_group_id = G.id
+            left join T02 on D.issue_no = T02.issue_no
+            where 1 = 1
+            and D.issue_no in (
+                select D.issue_no from documents D where  D.id in (select T02.value from T02)
+            )
+            and D.obsoleted is null;
+        ]]>
+    </select>
+</mapper>

@@ -32,23 +32,27 @@
         <result column="date_code" property="dateCode" javaType="String"/>
         <result column="priority_name" property="priorityName" javaType="String"/>
         <result column="oqc_date" property="oqcDate" javaType="Date"/>
+        <result column="delivery_date" property="deliveryDate" javaType="Date"/>
+        <result column="sorting_qty" property="sortingQty" javaType="Float"/>
 
     </resultMap>
     <select id="getOqcRequests" resultMap="getOqcRequests-result">
         with
-            T01 as (
-                select
-                R.id, R.qa_card, sum(R.qty) qty,
-                group_concat(R.date_code separator '; ') date_code
+        T01 as (
+            select
+                R.id, R.qa_card, sum(R.qty) qty, group_concat(R.date_code separator '; ') date_code
             from relay_date_code R
             group by R.qa_card
             order by R.id desc
         ),
         T02 as (
             select
-                R.id, R.req_no, R.qa_card,R.created_at, R.oqc_request_status request_status_id, S.name request_status_name, R.oqc_date,
-                R.judgment, T01.date_code, R.created_by, U.name created_by_name, R.priority, P.name priority_name, T01.qty
-                from oqc_request R
+                R.id, R.req_no, R.qa_card, SUBSTRING_INDEX(R.qa_card,'*',1) model,
+                SUBSTRING_INDEX(SUBSTRING_INDEX(R.qa_card,'*',-2),'*',1) shift,
+                R.created_at, R.oqc_request_status request_status_id, S.name request_status_name,
+                R.oqc_date, R.judgment, T01.date_code, R.created_by, U.name created_by_name,
+                R.priority, P.name priority_name, T01.qty, R.sorting_qty, R.remark, R.delivery_date, R.flag
+            from oqc_request R
             left join T01 on R.qa_card = T01.qa_card
             left join users U on U.username = R.created_by
             left join oqc_request_status S on R.oqc_request_status = S.id
@@ -57,10 +61,21 @@
         )
         select * from T02
         where 1 = 1
+        and (T02.flag != 0 or T02.flag is null)
         <if test="reqNo">
             and T02.req_no = #{reqNo}
         </if>
-        order by T02.request_status_id asc, T02.priority asc, T02.id desc
+        <if test="requestStatusList != null and requestStatusList.size != 0">
+            and T02.request_status_id in
+            <foreach item="item" index="index" collection="requestStatusList" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="requestDateRange != null and requestDateRange.size != 0">
+            and DATE_FORMAT(T02.created_at, '%Y-%m-%d') between DATE_FORMAT(#{requestDateRange[0]}, '%Y-%m-%d') and DATE_FORMAT(#{requestDateRange[1]}, '%Y-%m-%d')
+        </if>
+
+        order by T02.id desc
 
     </select>
 

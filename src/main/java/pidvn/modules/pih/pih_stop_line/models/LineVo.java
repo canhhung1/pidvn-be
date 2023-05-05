@@ -6,6 +6,8 @@ public class LineVo {
     private String name;
     private Integer productId;
     private String description;
+    private Integer processId;
+    private Integer productTypeId;
 
     public Integer getId() {
         return id;
@@ -37,5 +39,21 @@ public class LineVo {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getProcessId() {
+        return processId;
+    }
+
+    public void setProcessId(Integer processId) {
+        this.processId = processId;
+    }
+
+    public Integer getProductTypeId() {
+        return productTypeId;
+    }
+
+    public void setProductTypeId(Integer productTypeId) {
+        this.productTypeId = productTypeId;
     }
 }

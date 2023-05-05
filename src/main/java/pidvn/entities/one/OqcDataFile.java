@@ -40,6 +40,9 @@ public class OqcDataFile {
     @Column(name = "updated_at")
     private Date updatedAt;
 
+    @Column(name = "root_folder")
+    private String rootFolder;
+
     public Integer getId() {
         return id;
     }
@@ -102,5 +105,13 @@ public class OqcDataFile {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getRootFolder() {
+        return rootFolder;
+    }
+
+    public void setRootFolder(String rootFolder) {
+        this.rootFolder = rootFolder;
     }
 }

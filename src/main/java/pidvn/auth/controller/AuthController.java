@@ -48,12 +48,16 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AccountVo accountDto) throws Exception {
 
+        LOGGER.debug("LOGGER ===>: createAuthenticationToken: ");
+
         final UserDetails userDetails = userDetailsService
                 .loadUserByUsername(accountDto.getUsername());
 
         authenticate(accountDto.getUsername(), accountDto.getPassword());
 
         final String token = jwtTokenUtil.generateToken(userDetails);
+
+        LOGGER.debug("LOGGER ===> JWT: " + token);
 
         return ResponseEntity.ok(new JwtResponse(token));
     }

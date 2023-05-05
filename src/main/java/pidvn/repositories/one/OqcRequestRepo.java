@@ -15,4 +15,9 @@ public interface OqcRequestRepo extends JpaRepository<OqcRequest, Integer> {
     @Query(value = "select count(R.id) from oqc_request R where DATE_FORMAT(R.created_at, '%Y-%m-%d') = CURDATE()", nativeQuery = true)
     Integer getTotalRequestInDay();
 
+    @Query(value = "select count(R.id) from oqc_request R where DATE_FORMAT(R.created_at, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')", nativeQuery = true)
+    Integer getTotalRequestInMonth();
+
+//    @Query(value = "select * from oqc_request R where DATE_FORMAT(R.created_at, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')")
+//    List<OqcRequest> getAllByCurrentMonth();
 }

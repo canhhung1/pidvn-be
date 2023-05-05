@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.packing.oqc_request.PackingOqcRequestMapper">
+
+    <resultMap id="summaryData-result"
+               type="pidvn.modules.packing.oqc_request.models.DataSummaryVo">
+    </resultMap>
+    <select id="summaryData" resultMap="summaryData-result">
+        <choose>
+            <when test="type == 1">
+
+            </when>
+            <when test="type == 2">
+                with
+                T01 as (
+                    select
+                        R.id, R.qa_card, sum(R.qty) qty, SUBSTRING_INDEX(R.qa_card,'*', 1) model,
+                        group_concat(R.date_code separator '; ') date_code
+                    from relay_date_code R
+                    group by R.qa_card
+                ),
+                T02 as (
+                    select
+                        T01.model, R.created_at, R.oqc_request_status request_status_id, ifnull(R.judgment, 'NA') judgment, T01.qty
+                    from oqc_request R
+                    left join T01 on R.qa_card = T01.qa_card
+                    where 1 = 1
+                    and DATE_FORMAT(R.created_at, '%Y-%m-%d') between DATE_FORMAT(#{fromDate}, '%Y-%m-%d') and DATE_FORMAT(#{toDate}, '%Y-%m-%d')
+                ),
+                T03 as (
+                    select T02.model, T02.judgment, sum(T02.qty) qty from T02
+                    group by T02.model, T02.judgment
+                )
+                select
+                    T03.model,
+                    sum(case when T03.judgment = 'OK' then T03.qty else 0 end) as ok,
+                    sum(case when T03.judgment = 'NG' then T03.qty else 0 end) as ng,
+                    sum(case when T03.judgment = 'NA' then T03.qty else 0 end) as na
+                from T03
+                group by T03.model;
+            </when>
+        </choose>
+    </select>
+
+</mapper>

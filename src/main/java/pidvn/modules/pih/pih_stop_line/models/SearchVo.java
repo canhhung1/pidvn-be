@@ -1,6 +1,7 @@
 package pidvn.modules.pih.pih_stop_line.models;
 
 import java.util.Date;
+import java.util.List;
 
 public class SearchVo {
     private Date fromDate;
@@ -9,6 +10,8 @@ public class SearchVo {
     private Integer shift;
     private Integer group;
     private Integer type;
+    private List<Date> startTimeRange;
+    private List<Date> createdAtRange;
 
     public Date getFromDate() {
         return fromDate;
@@ -56,5 +59,21 @@ public class SearchVo {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public List<Date> getStartTimeRange() {
+        return startTimeRange;
+    }
+
+    public void setStartTimeRange(List<Date> startTimeRange) {
+        this.startTimeRange = startTimeRange;
+    }
+
+    public List<Date> getCreatedAtRange() {
+        return createdAtRange;
+    }
+
+    public void setCreatedAtRange(List<Date> createdAtRange) {
+        this.createdAtRange = createdAtRange;
     }
 }

@@ -7,7 +7,9 @@ public class OqcRequestVo {
     private Integer id;
     private String reqNo;
     private String qaCard;
-    private Integer qty;
+    private String model;
+    private Float qty;
+    private Float sortingQty;
     private Date createdAt;
     private String requestStatusName;
     private Integer requestStatusId;
@@ -18,6 +20,9 @@ public class OqcRequestVo {
     private Integer priority;
     private String priorityName;
     private Date oqcDate;
+    private String remark;
+    private String shift;
+    private Date deliveryDate;
 
     public Integer getId() {
         return id;
@@ -43,12 +48,28 @@ public class OqcRequestVo {
         this.qaCard = qaCard;
     }
 
-    public Integer getQty() {
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public Float getQty() {
         return qty;
     }
 
-    public void setQty(Integer qty) {
+    public void setQty(Float qty) {
         this.qty = qty;
+    }
+
+    public Float getSortingQty() {
+        return sortingQty;
+    }
+
+    public void setSortingQty(Float sortingQty) {
+        this.sortingQty = sortingQty;
     }
 
     public Date getCreatedAt() {
@@ -129,5 +150,29 @@ public class OqcRequestVo {
 
     public void setOqcDate(Date oqcDate) {
         this.oqcDate = oqcDate;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public String getShift() {
+        return shift;
+    }
+
+    public void setShift(String shift) {
+        this.shift = shift;
+    }
+
+    public Date getDeliveryDate() {
+        return deliveryDate;
+    }
+
+    public void setDeliveryDate(Date deliveryDate) {
+        this.deliveryDate = deliveryDate;
     }
 }

@@ -176,4 +176,16 @@ public class Users {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+    @Override
+    public String toString() {
+        return "Users{" +
+                "username='" + username + '\'' +
+                ", name='" + name + '\'' +
+                ", joinDate=" + joinDate +
+                ", positionId=" + positionId +
+                ", email='" + email + '\'' +
+                ", subsectionId=" + subsectionId +
+                '}';
+    }
 }

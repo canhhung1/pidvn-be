@@ -13,6 +13,8 @@ public class IqcRequestVo {
     private Date createdAt;
     private Date updatedAt;
 
+    private String remark;
+
     public String getRequestNo() {
         return requestNo;
     }
@@ -83,5 +85,13 @@ public class IqcRequestVo {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

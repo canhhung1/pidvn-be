@@ -64,7 +64,7 @@ public class MaterialReceiptService implements IMaterialReceiptService {
                 obj.setModel(material.getModel());
                 obj.setDate(new Date());
                 obj.setQty(material.getQty());
-                obj.setUserCode("3012982");
+                obj.setUserCode(material.getWhUserCode());
                 obj.setLotGroup(material.getLotGroup());
                 obj.setInvoice(material.getInvoiceNo());
                 obj.setPo(material.getPoNo());
@@ -88,7 +88,7 @@ public class MaterialReceiptService implements IMaterialReceiptService {
             obj.setQty(material.getQty());
             obj.setModel(material.getModel());
             obj.setDate(new Date());
-            obj.setPihUserCode("3012982");
+            obj.setPihUserCode(material.getWhUserCode());
             obj.setWhUserCode(material.getWhUserCode());
             obj.setFlag("1");
             obj.setVendorCode(material.getVendorCode());

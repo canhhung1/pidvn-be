@@ -51,6 +51,7 @@ public class WhIqcService implements IWhIqcService {
         obj.setSupplier(iqcRequest.getSupplier().toUpperCase());
         obj.setRequestedBy(iqcRequest.getRequestedBy());
         obj.setStatus(1);
+        obj.setRemark(iqcRequest.getRemark());
         return this.iqcRequestRepo.save(obj);
     }
 

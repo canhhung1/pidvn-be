@@ -6,6 +6,7 @@ public class IqcRequestSearchVo {
     private Integer status;
     private String fromDate;
     private String toDate;
+    private String isAudit;
 
     public String getRequestNo() {
         return requestNo;
@@ -45,5 +46,13 @@ public class IqcRequestSearchVo {
 
     public void setToDate(String toDate) {
         this.toDate = toDate;
+    }
+
+    public String getIsAudit() {
+        return isAudit;
+    }
+
+    public void setIsAudit(String isAudit) {
+        this.isAudit = isAudit;
     }
 }

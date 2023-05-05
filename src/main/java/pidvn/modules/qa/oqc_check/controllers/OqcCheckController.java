@@ -20,7 +20,7 @@ import java.util.Date;
 @RequestMapping("QA/OqcCheck")
 public class OqcCheckController {
 
-    private String FILE_PATH_ROOT = "P:\\IS\\CanhHung\\FDCS\\QA\\OQC\\Relay";
+    private String FILE_PATH_ROOT = "P:\\IS\\CanhHung\\FDCS\\QA\\OQC\\Relay\\";
 
     @Autowired
     private OqcCheckSvc oqcCheckSvc;
@@ -30,9 +30,14 @@ public class OqcCheckController {
         return new ResponseEntity<>(this.oqcCheckSvc.getOqcMasterData(reqNo,qaCard), HttpStatus.OK);
     }
 
-    @GetMapping("Requests")
-    public ResponseEntity<?> getOqcRequests(@RequestParam @Nullable String reqNo) {
-        return new ResponseEntity<>(this.oqcCheckSvc.getOqcRequests(reqNo), HttpStatus.OK);
+    /**
+     * Tìm kiếm Request theo phương thức post, truyền params bằng @RequestBody
+     * @return
+     */
+    @PostMapping("Requests")
+    public ResponseEntity<?> getOqcRequests(@RequestBody SearchVo searchVo) {
+
+        return new ResponseEntity<>(this.oqcCheckSvc.getOqcRequests(searchVo), HttpStatus.OK);
     }
 
     @PutMapping("Request")
@@ -74,6 +79,8 @@ public class OqcCheckController {
 
         return ResponseEntity.ok().body(file);
     }
+
+
 
 
 }

@@ -79,4 +79,15 @@ public class IqcCheckController {
         headers.add("Content-Disposition", "inline; filename=IqcData.xlsx");
         return ResponseEntity.ok().headers(headers).body(new InputStreamResource(inputStream));
     }
+
+    @GetMapping("ConfigAudit")
+    public ResponseEntity<?> getConfigAudit() {
+        String configName = "iqc_check_audit";
+        return new ResponseEntity<>(this.iqcCheckSvc.getConfigAudit(configName), HttpStatus.OK);
+    }
+
+    @GetMapping("ChangeConfigAudit")
+    public ResponseEntity<?> changeConfigAudit(@RequestParam String configValue) {
+        return new ResponseEntity<>(this.iqcCheckSvc.changeConfigAudit(configValue), HttpStatus.OK);
+    }
 }

@@ -22,10 +22,12 @@
     <resultMap id="getLines-result"
                type="pidvn.modules.pih.pih_stop_line.models.LineVo">
         <result column="product_id" property="productId" javaType="Integer"/>
+        <result column="process_id" property="processId" javaType="Integer"/>
+        <result column="product_type_id" property="productTypeId" javaType="Integer"/>
     </resultMap>
     <select id="getLines" resultMap="getLines-result">
         select
-            L.id, L.name, L.product_id, L.description
+            L.id, L.name, L.product_id, L.process_id, L.description, L.product_type_id, L.description
         from line L
         where 1 = 1
         and L.product_id = 4;
@@ -104,6 +106,17 @@
         <if test="group != null">
             and T03.group_id = #{group}
         </if>
+
+
+        <if test="startTimeRange != null and startTimeRange.size != 0">
+            and DATE_FORMAT(T03.start_time, '%Y-%m-%d') between DATE_FORMAT(#{startTimeRange[0]}, '%Y-%m-%d') and DATE_FORMAT(#{startTimeRange[1]}, '%Y-%m-%d')
+        </if>
+
+        <if test="createdAtRange != null and createdAtRange.size != 0">
+            and DATE_FORMAT(T03.created_at, '%Y-%m-%d') between DATE_FORMAT(#{createdAtRange[0]}, '%Y-%m-%d') and DATE_FORMAT(#{createdAtRange[1]}, '%Y-%m-%d')
+        </if>
+
+
 
         order by isnull(T03.stop_time) desc, T03.id desc
     </select>

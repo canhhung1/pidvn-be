@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.warehouse.check_date_iqc.CheckDateIqcMapper">
+
+    <resultMap id="getCheckLotNoIqc-result"
+               type="pidvn.modules.warehouse.check_date_iqc.models.CheckDateIqcVo">
+
+        <result column="month" property="month" javaType="String"/>
+        <result column="date" property="date" javaType="Date"/>
+        <result column="model" property="model" javaType="String"/>
+        <result column="lot_no" property="lotNo" javaType="String"/>
+        <result column="qty" property="qty" javaType="Float"/>
+        <result column="lot_group" property="lotGroup" javaType="String"/>
+        <result column="updated_at" property="updateAt" javaType="Date"/>
+        <result column="concat_groups_iqc_masters" property="concatGroupsIqcMaster" javaType="String"/>
+        <result column="result1" property="result1" javaType="String"/>
+        <result column="result2" property="result2" javaType="String"/>
+        <result column="concat_groups_iqc_results" property="concatGroupsIqcResults" javaType="String"/>
+
+    </resultMap>
+
+    <select id="getCheckLotNoIqc" resultMap="getCheckLotNoIqc-result">
+        with data_iqc_masters as (
+            select *, concat_ws(result1,result2,result3) as concat_groups_iqc_masters  from (
+                select lot_group as lotgroup,result1, ifnull(result2,'NULL') as result2, ifnull(result3,'NULL') as result3,updated_at from iqc_data_master) A
+        ), lot_no as (
+            select lot_no as lotno,lot_group from lots
+        ), data_inventories as (
+            select `month`,model,lot_no,qty from pur_wh_inventories
+        ), data_iqc_results as (
+            select *, concat_ws(result1,'',result2) as concat_groups_iqc_results  from(
+                select lot_no as lotno, `date`, result1, ifnull(result2,'NULL') as result2 from iqc_results) B
+        ), left_join_inventory_lots as (
+            select C.`month`,C.model,C.lot_no,C.qty,C.lot_group from (
+                select * from data_inventories left join lot_no on data_inventories.lot_no = lot_no.lotno) C
+        ), left_join_invertory_lot_iqcmasters as (
+            select D.`month`,D.model,D.lot_no,D.qty,D.lot_group,D.updated_at,D.concat_groups_iqc_masters from (
+            select * from left_join_inventory_lots left join data_iqc_masters on left_join_inventory_lots.lot_group = data_iqc_masters.lotgroup)D)
+                select * from (
+                    select * from left_join_invertory_lot_iqcmasters left join data_iqc_results on left_join_invertory_lot_iqcmasters.lot_no = data_iqc_results.lotno) E
+                        where 1 = 1
+                        <if test="month != null">
+                        and E.`month` = #{month}
+                        </if>
+                        and( (E.`date` <![CDATA[<]]> date_add(sysdate(), INTERVAL -5 MONTH) and  E.`date` <![CDATA[>=]]> date_add(sysdate(), INTERVAL -6 MONTH))
+        or (E.updated_at <![CDATA[<]]> date_add(sysdate(), INTERVAL -5 month) and E.updated_at <![CDATA[>=]]> date_add(sysdate(), INTERVAL -6 month)));
+
+    </select>
+
+
+</mapper>

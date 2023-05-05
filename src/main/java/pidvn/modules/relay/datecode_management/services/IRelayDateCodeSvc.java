@@ -1,5 +1,6 @@
 package pidvn.modules.relay.datecode_management.services;
 
+import pidvn.entities.one.Lots;
 import pidvn.entities.one.RelayDateCode;
 import pidvn.modules.relay.datecode_management.models.DateCodeVo;
 import pidvn.modules.relay.datecode_management.models.QaCardVo;
@@ -13,4 +14,7 @@ public interface IRelayDateCodeSvc {
     RelayDateCode createDateCode(RelayDateCode dateCode) throws Exception;
     Map deleteDateCode(Integer id);
     List<QaCardVo> getQaCards();
+    Lots getQACardByValue(String qaCard);
+
+
 }

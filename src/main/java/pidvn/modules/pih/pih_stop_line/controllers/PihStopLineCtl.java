@@ -10,6 +10,8 @@ import pidvn.entities.one.StopTimes;
 import pidvn.modules.pih.pih_stop_line.models.SearchVo;
 import pidvn.modules.pih.pih_stop_line.services.PihStopLineSvc;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("PIH/StopLine")
 public class PihStopLineCtl {
@@ -77,5 +79,16 @@ public class PihStopLineCtl {
     @PostMapping("StopTimes")
     public ResponseEntity<?> getStopTimes(@RequestBody SearchVo searchVo) {
         return new ResponseEntity<>(this.pihStopLineSvc.getStopTimes(searchVo), HttpStatus.OK);
+    }
+
+
+    /**
+     * Tìm ProductTypeId (Khu vực) theo user
+     * @param username
+     * @return
+     */
+    @GetMapping("ProductTypeIdByUser")
+    public ResponseEntity<?> getProductTypeIdByUser(@RequestParam String username) throws IOException {
+        return new ResponseEntity<>(this.pihStopLineSvc.getProductTypeIdByUser(username), HttpStatus.OK);
     }
 }

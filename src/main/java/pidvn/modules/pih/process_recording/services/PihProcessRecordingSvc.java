@@ -71,10 +71,14 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
         MaterialControls material = new MaterialControls();
         material.setRecordType("PIC");
         material.setPpn(label[1]);
-        material.setCpn(label[0] + "*" + label[1] + "*" + label[2] + "*" +label[3]);
+        //material.setCpn(label[0] + "*" + label[1] + "*" + label[2] + "*" +label[3]);
+        material.setCpn(lot.getModel());
+
         material.setLine(label[2]);
         material.setDate(new Date());
-        material.setPlotno(lot.getModel());
+        //material.setPlotno(lot.getModel());
+        material.setPlotno(label[0] + "*" + label[1] + "*" + label[2] + "*" +label[3]);
+
         material.setClotno(scannerVo.getNewCoil());
         material.setQty(lot.getQty());
         material.setFrBox(scannerVo.getSequence());
@@ -167,10 +171,13 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
         for (Lots lot: lots) {
             MaterialControls material = new MaterialControls();
             material.setPpn(data[1]);
-            material.setCpn(scannerVo.getLabel());
+            //material.setCpn(scannerVo.getLabel());
+            material.setCpn(lot.getModel());
             material.setLine(data[2]);
             material.setDate(new Date());
-            material.setPlotno(lot.getModel());
+            //material.setPlotno(lot.getModel());
+            material.setPlotno(scannerVo.getLabel());
+
             material.setClotno(lot.getLotNo());
             material.setQty(lot.getQty());
             material.setFrBox(1);
@@ -295,10 +302,15 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
         MaterialControls material = new MaterialControls();
         material.setRecordType("PIC");
         material.setPpn(label[1]);
-        material.setCpn(label[0] + "*" + label[1] + "*" + label[2] + "*" +label[3]);
+        //material.setCpn(label[0] + "*" + label[1] + "*" + label[2] + "*" +label[3]);
+        material.setCpn(lot.getModel());
+
         material.setLine(label[2]);
         material.setDate(new Date());
-        material.setPlotno(lot.getModel());
+        //material.setPlotno(lot.getModel());
+        material.setPlotno(label[0] + "*" + label[1] + "*" + label[2] + "*" +label[3]);
+
+
         material.setClotno(scannerVo.getNewCoil());
         material.setQty(lot.getQty());
         material.setFrBox(scannerVo.getSequence());

@@ -66,4 +66,17 @@ public class AuthVo {
     public void setRoles(String roles) {
         this.roles = roles;
     }
+
+    @Override
+    public String toString() {
+        return "AuthVo{" +
+                "userId=" + userId +
+                ", roleId=" + roleId +
+                ", roleName='" + roleName + '\'' +
+                ", permission='" + permission + '\'' +
+                ", username='" + username + '\'' +
+                ", permissions='" + permissions + '\'' +
+                ", roles='" + roles + '\'' +
+                '}';
+    }
 }

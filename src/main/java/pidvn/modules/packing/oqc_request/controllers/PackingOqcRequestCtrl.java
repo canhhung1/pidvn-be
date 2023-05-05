@@ -3,11 +3,9 @@ package pidvn.modules.packing.oqc_request.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pidvn.modules.packing.oqc_request.models.OqcRequestVo;
+import pidvn.modules.packing.oqc_request.models.SearchVo;
 import pidvn.modules.packing.oqc_request.services.PackingOqcRequestSvc;
 
 
@@ -22,5 +20,16 @@ public class PackingOqcRequestCtrl {
     public ResponseEntity<?> createOqcRequest(@RequestBody OqcRequestVo oqcRequestVo) {
         return new ResponseEntity<>(this.packingOqcRequestSvc.createOqcRequest(oqcRequestVo), HttpStatus.OK);
     }
+
+    @PutMapping("Request")
+    public ResponseEntity<?> updateOqcRequest(@RequestBody OqcRequestVo oqcRequestVo) {
+        return new ResponseEntity<>(this.packingOqcRequestSvc.updateOqcRequest(oqcRequestVo), HttpStatus.OK);
+    }
+
+    @PostMapping("DataSummary")
+    public ResponseEntity<?> summaryData(@RequestBody SearchVo searchVo) {
+        return new ResponseEntity<>(this.packingOqcRequestSvc.summaryData(searchVo), HttpStatus.OK);
+    }
+
 
 }

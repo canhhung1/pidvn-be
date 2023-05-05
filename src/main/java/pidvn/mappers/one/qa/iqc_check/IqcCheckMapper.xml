@@ -36,6 +36,19 @@
         <if test="fromDate != null and toDate != null">
             and DATE_FORMAT(R.created_at, '%Y-%m-%d') between DATE_FORMAT(#{fromDate}, '%Y-%m-%d') and DATE_FORMAT(#{toDate}, '%Y-%m-%d')
         </if>
+        <if test="isAudit == 'TRUE'">
+            and R.id not in (
+                SELECT
+                    R.id
+                FROM
+                    iqc_request R
+                WHERE 1 = 1
+                and R.created_at between '2023-02-01' and '2023-02-17'
+                and R.status = 2
+            )
+        </if>
+
+
         order by R.created_at desc
     </select>
 
@@ -71,13 +84,23 @@
             </if>
             <if test="model != null">
                 and P.model = #{model}
-        </if>
+            </if>
             group by P.model, L.lot_group
         ),
         T02 as (
             select
-                T01.*, M.result1, M.result2, M.result3 , M.remark,
-                M.created_by, M.updated_at as iqc_at, A.checked_amount
+                T01.*, M.created_by, M.updated_at as iqc_at, A.checked_amount,
+                CONCAT_WS(';', M.result1, M.result2, M.result3) result_all,
+                <choose>
+                    <when test="isAudit == 'TRUE'">
+                        if(M.result1='NG' || M.result1='CA', "OK", M.result1) result1,
+                        if(M.result2='NG' || M.result2='CA', "OK", M.result2) result2,
+                        if(M.result3='NG' || M.result3='CA', "OK", M.result3) result3
+                    </when>
+                    <when test="isAudit == 'FALSE'">
+                        M.result1, M.result2, M.result3, M.remark
+                    </when>
+                </choose>
             from T01
             left join iqc_data_master M
                 on T01.lot_group = M.lot_group and T01.model = M.model
@@ -91,6 +114,10 @@
             ) as A on T01.lot_group = A.lot_group and A.request_no = #{requestNo} and A.invoice = #{invoice} and T01.model = A.model
         )
         select T02.* from T02
+        where 1 = 1
+        <if test="isAudit == 'TRUE'">
+            and T02.result_all not like '%NG%'
+        </if>
         order by T02.model, T02.lot_group;
 
     </select>
@@ -128,13 +155,29 @@
         ),
         T02 as (
             select
-                T01.*, D.id, D.result1, D.result2, D.result3, D.remark, D.updated_at as iqc_at, D.created_by,
-                (select U.name from users U where U.username = D.created_by) as created_by_name
+                T01.*, D.id, D.updated_at as iqc_at, D.created_by,
+                (select U.name from users U where U.username = D.created_by) as created_by_name,
+                CONCAT_WS(';', D.result1, D.result2, D.result3) result_all,
+                <choose>
+                    <when test="isAudit == 'TRUE'">
+                        if(D.result1='NG' || D.result1='CA', "OK", D.result1) result1,
+                        if(D.result2='NG' || D.result2='CA', "OK", D.result2) result2,
+                        if(D.result3='NG' || D.result3='CA', "OK", D.result3) result3
+                    </when>
+                    <when test="isAudit == 'FALSE'">
+                        D.result1, D.result2, D.result3, D.remark
+                    </when>
+                </choose>
             from T01
             left join iqc_data_detail D on T01.lot_no = D.lot_no and T01.request_no = D.request_no
         )
         select T02.* from T02
-        order by T02.lot_no asc;
+        where 1 = 1
+        <if test="isAudit == 'TRUE'">
+            and T02.result_all not like '%NG%'
+        </if>
+
+        order by T02.lot_no asc
 
 
     </select>

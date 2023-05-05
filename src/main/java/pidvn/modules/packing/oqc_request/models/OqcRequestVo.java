@@ -1,13 +1,32 @@
 package pidvn.modules.packing.oqc_request.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.Date;
+
 public class OqcRequestVo {
 
+    private Integer id;
     private String reqNo;
     private String qaCard;
-    private String qty;
+    private Float qty;
     private String createdBy;
-    private String oqcRequestStatus;
+    private Integer requestStatusId;
     private Integer priority;
+    private Float sortingQty;
+    private String remark;
+    private Date deliveryDate;
+
+    @JsonProperty
+    private boolean isSorting;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getReqNo() {
         return reqNo;
@@ -25,11 +44,11 @@ public class OqcRequestVo {
         this.qaCard = qaCard;
     }
 
-    public String getQty() {
+    public Float getQty() {
         return qty;
     }
 
-    public void setQty(String qty) {
+    public void setQty(Float qty) {
         this.qty = qty;
     }
 
@@ -41,12 +60,12 @@ public class OqcRequestVo {
         this.createdBy = createdBy;
     }
 
-    public String getOqcRequestStatus() {
-        return oqcRequestStatus;
+    public Integer getRequestStatusId() {
+        return requestStatusId;
     }
 
-    public void setOqcRequestStatus(String oqcRequestStatus) {
-        this.oqcRequestStatus = oqcRequestStatus;
+    public void setRequestStatusId(Integer requestStatusId) {
+        this.requestStatusId = requestStatusId;
     }
 
     public Integer getPriority() {
@@ -55,5 +74,37 @@ public class OqcRequestVo {
 
     public void setPriority(Integer priority) {
         this.priority = priority;
+    }
+
+    public Float getSortingQty() {
+        return sortingQty;
+    }
+
+    public void setSortingQty(Float sortingQty) {
+        this.sortingQty = sortingQty;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public boolean isSorting() {
+        return isSorting;
+    }
+
+    public void setSorting(boolean sorting) {
+        isSorting = sorting;
+    }
+
+    public Date getDeliveryDate() {
+        return deliveryDate;
+    }
+
+    public void setDeliveryDate(Date deliveryDate) {
+        this.deliveryDate = deliveryDate;
     }
 }

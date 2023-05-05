@@ -3,18 +3,13 @@ package pidvn.modules.qa.iqc_check.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
-import pidvn.entities.one.IqcData;
-import pidvn.entities.one.IqcDataDetail;
-import pidvn.entities.one.IqcDataMaster;
-import pidvn.entities.one.IqcRequest;
+import pidvn.entities.one.*;
 import pidvn.mappers.one.qa.iqc_check.IqcCheckMapper;
 import pidvn.modules.qa.iqc_check.models.*;
-import pidvn.repositories.one.IqcDataDetailRepo;
-import pidvn.repositories.one.IqcDataMasterRepo;
-import pidvn.repositories.one.IqcDataRepo;
-import pidvn.repositories.one.IqcRequestRepo;
+import pidvn.repositories.one.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class IqcCheckService implements IIqcCheckService {
@@ -34,18 +29,37 @@ public class IqcCheckService implements IIqcCheckService {
     @Autowired
     private IqcDataDetailRepo iqcDataDetailRepo;
 
+    @Autowired
+    private AuditConfigFdcsRepo auditConfigFdcsRepo;
+
     @Override
     public List<IqcRequestVo> getIqcRequests(IqcRequestSearchVo searchVo) {
+        String isConfig = this.auditConfigFdcsRepo.findByConfigName("iqc_check_audit").get(0).getConfigValue();
+        searchVo.setIsAudit(isConfig);
         return this.iqcCheckMapper.getIqcRequests(searchVo);
     }
 
     @Override
     public List<IqcDataVo> getIqcDataMaster(IqcDataSearchVo searchVo) {
+        /**
+         * Config khi audit
+         * Nếu điều kiện = "TRUE"
+         * Lấy thông tin config từ bảng audit_config_fdcs
+         */
+        String isConfig = this.auditConfigFdcsRepo.findByConfigName("iqc_check_audit").get(0).getConfigValue();
+        searchVo.setIsAudit(isConfig);
         return this.iqcCheckMapper.getIqcDataMaster(searchVo);
     }
 
     @Override
     public List<IqcDataVo> getIqcDataDetail(IqcDataSearchVo searchVo) {
+        /**
+         * Config khi audit
+         * Nếu điều kiện = "TRUE"
+         * Lấy thông tin config từ bảng audit_config_fdcs
+         */
+         String isConfig = this.auditConfigFdcsRepo.findByConfigName("iqc_check_audit").get(0).getConfigValue();
+         searchVo.setIsAudit(isConfig);
         return this.iqcCheckMapper.getIqcDataDetail(searchVo);
     }
 
@@ -120,6 +134,20 @@ public class IqcCheckService implements IIqcCheckService {
     @Override
     public void deleteIqcDataDetail(Integer id) {
         this.iqcDataDetailRepo.deleteById(id);
+    }
+
+    @Override
+    public AuditConfigFdcs changeConfigAudit(String configValue) {
+        String configName = "iqc_check_audit";
+        AuditConfigFdcs config = this.auditConfigFdcsRepo.findByConfigName(configName).get(0);
+        config.setConfigValue(configValue);
+        return this.auditConfigFdcsRepo.save(config);
+    }
+
+    @Override
+    public AuditConfigFdcs getConfigAudit(String configName) {
+        AuditConfigFdcs configFdcs = this.auditConfigFdcsRepo.findByConfigName(configName).get(0);
+        return configFdcs;
     }
 
 }

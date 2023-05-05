@@ -10,4 +10,7 @@ import java.util.List;
 public interface LineRepo extends JpaRepository<Line, Integer> {
 
     List<Line> findByProductIdOrderByName(Integer productId);
+
+    List<Line> findByProductIdIn(List<Integer> productIds);
+
 }

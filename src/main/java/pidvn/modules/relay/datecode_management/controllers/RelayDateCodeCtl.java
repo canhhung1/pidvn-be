@@ -39,4 +39,9 @@ public class RelayDateCodeCtl {
         return new ResponseEntity<>(this.relayDateCodeSvc.getQaCards(), HttpStatus.OK);
     }
 
+    @GetMapping("QACard")
+    public ResponseEntity<?> getQACardByValue(@RequestParam String qaCard) {
+        return new ResponseEntity<>(this.relayDateCodeSvc.getQACardByValue(qaCard), HttpStatus.OK);
+    }
+
 }

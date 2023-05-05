@@ -1,13 +1,11 @@
 package pidvn.modules.qa.iqc_check.services;
 
 import org.springframework.web.bind.annotation.RequestParam;
-import pidvn.entities.one.IqcData;
-import pidvn.entities.one.IqcDataDetail;
-import pidvn.entities.one.IqcDataMaster;
-import pidvn.entities.one.IqcRequest;
+import pidvn.entities.one.*;
 import pidvn.modules.qa.iqc_check.models.*;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IIqcCheckService {
     List<IqcRequestVo> getIqcRequests(IqcRequestSearchVo searchVo);
@@ -21,4 +19,6 @@ public interface IIqcCheckService {
 
     void deleteIqcDataDetail(Integer id);
 
+    AuditConfigFdcs changeConfigAudit(String configValue);
+    AuditConfigFdcs getConfigAudit(String configName);
 }

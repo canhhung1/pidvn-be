@@ -1,6 +1,8 @@
 package pidvn.security;
 
 import org.apache.commons.compress.utils.Sets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
 
+    Logger logger = LoggerFactory.getLogger(JwtUserDetailsService.class);
     @Autowired
     private UsersRepo usersRepo;
 
@@ -40,6 +43,8 @@ public class JwtUserDetailsService implements UserDetailsService {
 
         Users user = this.usersRepo.findByUsername(username);
 
+        logger.debug("LOGGER ===>: User Login: "  + user.toString());
+
         List<AuthVo> authVoList = this.authMapper.getRoleAndPermissionByUsername(username);
 
         AuthVo result = authVoList.get(0);
@@ -56,6 +61,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         }
 
         if (user == null) {
+            logger.debug("LOGGER ===>: User chưa được đăng ký");
             throw new UsernameNotFoundException("Nhân viên: " + username + " chưa được đăng ký !");
         }
 

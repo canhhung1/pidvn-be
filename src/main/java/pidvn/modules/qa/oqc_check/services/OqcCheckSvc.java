@@ -11,6 +11,7 @@ import pidvn.entities.one.OqcRequest;
 import pidvn.mappers.one.qa.oqc_check.OqcCheckMapper;
 import pidvn.modules.qa.oqc_check.models.OqcDataVo;
 import pidvn.modules.qa.oqc_check.models.OqcRequestVo;
+import pidvn.modules.qa.oqc_check.models.SearchVo;
 import pidvn.modules.relay.measurement.utils.FileUploadUtil;
 import pidvn.repositories.one.OqcDataFileRepo;
 import pidvn.repositories.one.OqcRequestRepo;
@@ -40,9 +41,16 @@ public class OqcCheckSvc implements IOqcCheckSvc {
         return this.oqcCheckMapper.getOqcMasterData(reqNo,qaCard);
     }
 
+    /**
+     * Tìm kiếm oqc Requests
+     * @param searchVo
+     * @return
+     */
     @Override
-    public List<OqcRequestVo> getOqcRequests(String reqNo) {
-        return this.oqcCheckMapper.getOqcRequests(reqNo);
+    public List<OqcRequestVo> getOqcRequests(SearchVo searchVo) {
+
+        List<OqcRequestVo> result = this.oqcCheckMapper.getOqcRequests(searchVo);
+        return result;
     }
 
     @Override
@@ -81,6 +89,8 @@ public class OqcCheckSvc implements IOqcCheckSvc {
         oqcDataFile.setUrl(uploadDir);
         oqcDataFile.setFileName(fileName);
         oqcDataFile.setCreatedBy(createdBy);
+        oqcDataFile.setRootFolder(filePathRoot);
+
 
         // TODO: Lưu vào database
         OqcDataFile result = this.oqcDataFileRepo.save(oqcDataFile);
@@ -104,7 +114,7 @@ public class OqcCheckSvc implements IOqcCheckSvc {
      */
     private String getFinalJudgment(MultipartFile file) throws IOException {
         XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
-        String result = workbook.getSheetAt(0).getRow(36).getCell(21).getStringCellValue();
+        String result = workbook.getSheetAt(0).getRow(37).getCell(20).getStringCellValue();
         return result;
     }
 

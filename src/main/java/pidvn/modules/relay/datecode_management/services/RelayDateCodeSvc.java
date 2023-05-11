@@ -38,9 +38,9 @@ public class RelayDateCodeSvc implements IRelayDateCodeSvc {
 
     @Override
     public RelayDateCode createDateCode(RelayDateCode dateCode) throws Exception {
-        List<RelayDateCode> relayDateCodes = this.relayDateCodeRepo.findByQaCardAndDateCode(dateCode.getQaCard(), dateCode.getDateCode());
+        List<RelayDateCode> relayDateCodes = this.relayDateCodeRepo.findByQaCardAndDateCodeAndCustomerCode(dateCode.getQaCard(), dateCode.getDateCode(), dateCode.getCustomerCode());
         if (relayDateCodes.size() > 0) {
-            throw new Exception("Date Code: " + dateCode.getDateCode() + " đã tồn tại !");
+            throw new Exception("DateCode: " + dateCode.getDateCode() + "và CustomerCode: " + dateCode.getCustomerCode() + " đã tồn tại !");
         }
         return this.relayDateCodeRepo.save(dateCode);
     }

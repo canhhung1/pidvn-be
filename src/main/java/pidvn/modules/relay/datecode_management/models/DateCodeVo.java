@@ -17,6 +17,8 @@ public class DateCodeVo {
     private Date createdAt;
     private Date updatedAt;
 
+    private String customerCode;
+
     public Integer getId() {
         return id;
     }
@@ -111,5 +113,13 @@ public class DateCodeVo {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getCustomerCode() {
+        return customerCode;
+    }
+
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
     }
 }

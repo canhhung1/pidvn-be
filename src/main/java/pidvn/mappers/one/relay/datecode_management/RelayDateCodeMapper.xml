@@ -10,6 +10,8 @@
         <result column="user_code" property="userCode" javaType="Integer"/>
         <result column="employee_name" property="employeeName" javaType="String"/>
         <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="customer_code" property="customerCode" javaType="String"/>
+
     </resultMap>
     <select id="getDateCodes" resultMap="getDateCodes-result">
         SELECT D.*, U.name employee_name FROM relay_date_code D

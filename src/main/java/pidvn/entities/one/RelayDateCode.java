@@ -41,6 +41,9 @@ public class RelayDateCode {
     @Column(name = "shift")
     private String shift;
 
+    @Column(name = "customer_code")
+    private String customerCode;
+
     @CreatedDate
     @Column(name = "created_at")
     private Date createdAt;
@@ -119,6 +122,14 @@ public class RelayDateCode {
 
     public void setShift(String shift) {
         this.shift = shift;
+    }
+
+    public String getCustomerCode() {
+        return customerCode;
+    }
+
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
     }
 
     public Date getCreatedAt() {

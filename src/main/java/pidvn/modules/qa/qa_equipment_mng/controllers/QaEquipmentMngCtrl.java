@@ -49,10 +49,10 @@ public class QaEquipmentMngCtrl {
 
     @PostMapping("Upload")
     public ResponseEntity<?> uploadDocument(
-            @RequestBody MultipartFile file, @RequestParam String deviceNo, @RequestParam Integer deviceId, @RequestParam Integer fileType, @RequestParam String createdBy
+            @RequestBody MultipartFile file, @RequestParam String controlNo, @RequestParam Integer deviceId, @RequestParam Integer fileType, @RequestParam String createdBy
     ) throws IOException {
 
-        Map result = this.qaEquipmentMngSvc.uploadDocument(file, deviceNo, deviceId, fileType, createdBy);
+        Map result = this.qaEquipmentMngSvc.uploadDocument(file, controlNo, deviceId, fileType, createdBy);
 
         if (result.get("status").equals("ERROR")) {
             return new ResponseEntity<>(result, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -66,9 +66,14 @@ public class QaEquipmentMngCtrl {
         return new ResponseEntity<>(this.qaEquipmentMngSvc.getQaDocDevices(deviceId), HttpStatus.OK);
     }
 
+    @GetMapping("DeviceInfo")
+    public ResponseEntity<?> getDeviceInfo(@RequestParam String controlNo) throws Exception {
+        return new ResponseEntity<>(this.qaEquipmentMngSvc.getDeviceInfo(controlNo), HttpStatus.OK);
+    }
+
     @PostMapping(value = "Preview")
     public Object previewFile(@RequestBody QaDocDeviceVo qaDocDeviceVo) {
-        String url = qaDocDeviceVo.getRootFolder() + "\\" + qaDocDeviceVo.getFileTypeName() + "\\" + qaDocDeviceVo.getDeviceNo() + "\\" + qaDocDeviceVo.getFileName();
+        String url = qaDocDeviceVo.getRootFolder() + "\\" + qaDocDeviceVo.getControlNo() + "\\" + qaDocDeviceVo.getFileTypeName() + "\\" + qaDocDeviceVo.getFileName();
 
         File file = new File(url);
         try {
@@ -82,7 +87,7 @@ public class QaEquipmentMngCtrl {
 
     @PostMapping("Download")
     public ResponseEntity<byte[]> downloadDocument(@RequestBody QaDocDeviceVo qaDocDeviceVo) {
-        String url = qaDocDeviceVo.getRootFolder() + "\\" + qaDocDeviceVo.getFileTypeName() + "\\" + qaDocDeviceVo.getDeviceNo() + "\\" + qaDocDeviceVo.getFileName();
+        String url = qaDocDeviceVo.getRootFolder() + "\\" + qaDocDeviceVo.getControlNo() + "\\" + qaDocDeviceVo.getFileTypeName() + "\\" + qaDocDeviceVo.getFileName();
         byte[] file = new byte[0];
 
         try {

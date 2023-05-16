@@ -6,7 +6,7 @@ public class QaDocDeviceVo {
 
     private Integer id;
     private Integer deviceId;
-    private String deviceNo;
+    private String controlNo;
     private Integer fileType;
     private String fileTypeName;
     private String rootFolder;
@@ -33,12 +33,12 @@ public class QaDocDeviceVo {
         this.deviceId = deviceId;
     }
 
-    public String getDeviceNo() {
-        return deviceNo;
+    public String getControlNo() {
+        return controlNo;
     }
 
-    public void setDeviceNo(String deviceNo) {
-        this.deviceNo = deviceNo;
+    public void setControlNo(String controlNo) {
+        this.controlNo = controlNo;
     }
 
     public Integer getFileType() {

@@ -22,8 +22,4 @@ public class QaDeviceCtrl {
         return new ResponseEntity<>(this.qaDeviceSvc.getById(id), HttpStatus.OK);
     }
 
-    @GetMapping("QaDevices/GetByDeviceNo")
-    public ResponseEntity<?> getByDeviceNo(@RequestParam String deviceNo) {
-        return new ResponseEntity<>(this.qaDeviceSvc.getByDeviceNo(deviceNo), HttpStatus.OK);
-    }
 }

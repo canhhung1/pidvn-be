@@ -22,7 +22,4 @@ public class QaDeviceSvc {
         return this.qaDeviceRepo.findById(id);
     }
 
-    public Optional<QaDevice> getByDeviceNo(String deviceNo) {
-        return this.qaDeviceRepo.findByDeviceNo(deviceNo) ;
-    }
 }

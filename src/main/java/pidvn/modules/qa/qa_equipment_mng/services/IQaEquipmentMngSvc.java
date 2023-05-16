@@ -11,8 +11,10 @@ import java.util.Map;
 public interface IQaEquipmentMngSvc {
     List<LabelVo> createLabel( MultipartFile file) throws IOException;
 
-    Map uploadDocument(MultipartFile file, String deviceNo, Integer deviceId, Integer fileType, String createdBy) throws IOException;
+    Map uploadDocument(MultipartFile file, String controlNo, Integer deviceId, Integer fileType, String createdBy) throws IOException;
 
     List<QaDocDeviceVo> getQaDocDevices(Integer deviceId);
+
+    Map getDeviceInfo(String controlNo) throws Exception;
 
 }

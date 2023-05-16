@@ -17,23 +17,22 @@ public class QaDevice {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "device_no")
-    private String deviceNo;
-
-    @Column(name = "name")
-    private String name;
+    @Column(name = "control_no")
+    private String controlNo;
+    @Column(name = "equipment_name")
+    private String equipmentName;
 
     @Column(name = "serial_no")
     private String serialNo;
+    @Column(name = "type_no")
+    private String typeNo;
+    @Column(name = "manufacturer")
+    private String manufacturer;
 
-    @Column(name = "model")
-    private String model;
-
-    @Column(name = "marker")
-    private String marker;
-
-    @Column(name = "position")
-    private String position;
+    @Column(name = "range_of_measuring")
+    private String rangeOfMeasuring;
+    @Column(name = "distribution_location")
+    private String distributionLocation;
 
     @CreatedDate
     @Column(name = "created_at")
@@ -51,20 +50,20 @@ public class QaDevice {
         this.id = id;
     }
 
-    public String getDeviceNo() {
-        return deviceNo;
+    public String getControlNo() {
+        return controlNo;
     }
 
-    public void setDeviceNo(String deviceNo) {
-        this.deviceNo = deviceNo;
+    public void setControlNo(String controlNo) {
+        this.controlNo = controlNo;
     }
 
-    public String getName() {
-        return name;
+    public String getEquipmentName() {
+        return equipmentName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setEquipmentName(String equipmentName) {
+        this.equipmentName = equipmentName;
     }
 
     public String getSerialNo() {
@@ -75,28 +74,36 @@ public class QaDevice {
         this.serialNo = serialNo;
     }
 
-    public String getModel() {
-        return model;
+    public String getTypeNo() {
+        return typeNo;
     }
 
-    public void setModel(String model) {
-        this.model = model;
+    public void setTypeNo(String typeNo) {
+        this.typeNo = typeNo;
     }
 
-    public String getMarker() {
-        return marker;
+    public String getManufacturer() {
+        return manufacturer;
     }
 
-    public void setMarker(String marker) {
-        this.marker = marker;
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
     }
 
-    public String getPosition() {
-        return position;
+    public String getRangeOfMeasuring() {
+        return rangeOfMeasuring;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
+    public void setRangeOfMeasuring(String rangeOfMeasuring) {
+        this.rangeOfMeasuring = rangeOfMeasuring;
+    }
+
+    public String getDistributionLocation() {
+        return distributionLocation;
+    }
+
+    public void setDistributionLocation(String distributionLocation) {
+        this.distributionLocation = distributionLocation;
     }
 
     public Date getCreatedAt() {

@@ -5,6 +5,7 @@
     <resultMap id="getQaDocDevices-result"
                type="pidvn.modules.qa.qa_equipment_mng.models.QaDocDeviceVo">
         <result column="device_id" property="deviceId" javaType="Integer"/>
+        <result column="control_no" property="controlNo" javaType="String"/>
         <result column="file_type" property="fileType" javaType="Integer"/>
         <result column="file_type_name" property="fileTypeName" javaType="String"/>
         <result column="root_folder" property="rootFolder" javaType="String"/>
@@ -14,9 +15,13 @@
         <result column="created_by_name" property="createdByName" javaType="String"/>
         <result column="created_at" property="createdAt" javaType="Date"/>
         <result column="updated_at" property="updatedAt" javaType="Date"/>
+
     </resultMap>
     <select id="getQaDocDevices" resultMap="getQaDocDevices-result">
-        select D.*, T.name as file_type_name, U.name created_by_name from qa_doc_device D
+        select
+            D.*, T.name as file_type_name, U.name created_by_name, A.control_no
+        from qa_doc_device D
+        left join qa_device A on D.device_id = A.id
         left join qa_doc_type_device T on D.file_type = T.id
         left join users U on D.created_by = U.username
         where 1 = 1

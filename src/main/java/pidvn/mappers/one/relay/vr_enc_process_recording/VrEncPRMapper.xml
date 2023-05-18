@@ -124,4 +124,14 @@
     </select>
 
 
+    <resultMap id="getDefectRecord-result"
+               type="pidvn.modules.relay.vr_enc_process_recording.models.DefectRecordVo">
+    </resultMap>
+    <select id="getDefectRecord" resultMap="getDefectRecord-result">
+        SELECT * FROM defect_records D
+        where 1 = 1
+        and D.lot_no = #{lotNo}
+        and D.defect_code in ('RC000','MD000', 'EPR000', 'EMD000', 'EDC000', 'IMD000', 'EMDEB000')
+    </select>
+
 </mapper>

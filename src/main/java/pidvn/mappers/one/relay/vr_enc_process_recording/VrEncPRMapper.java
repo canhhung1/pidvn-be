@@ -15,4 +15,9 @@ public interface VrEncPRMapper {
     List<QaCardVo> getQaCards(SearchVo searchVo);
     List<MaterialVo> traceability(SearchVo searchVo);
     List<ModelVo> getModels();
+
+    List<DefectRecordVo> getDefectRecord(String lotNo);
+
+
+
 }

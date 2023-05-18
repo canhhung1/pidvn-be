@@ -296,6 +296,10 @@ public class VrEncPRService implements IVrEncPRService {
 
         Map result = new HashMap();
         List<MaterialVo> materialHistories = this.vrEncPRMapper.getMaterialHistories(material.getClotno());
+        List<DefectRecordVo> defectRecords = this.vrEncPRMapper.getDefectRecord(material.getClotno());
+
+        // Số lượng sản xuất OK
+        float stockQty = defectRecords.get(0).getQty();
 
         // NVL chưa được nhập LINE
         if (materialHistories.size() == 0) {
@@ -308,7 +312,7 @@ public class VrEncPRService implements IVrEncPRService {
         // Nếu NVL đã được nhập vào LINE
         // Kiểm tra NVL đã sử dụng hết hay chưa
         float lineQty = this.getActualQtyInLine(materialHistories);
-        if (lineQty >= material.getQty()) {
+        if (lineQty >= stockQty) {
             String message = "Lot: " + material.getClotno() + " đã được sử dụng hết !";
             result.put("status", "ERROR");
             result.put("message", message);

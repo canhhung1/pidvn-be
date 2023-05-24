@@ -7,12 +7,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import pidvn.entities.one.QaDeviceCalibrationLabel;
+import pidvn.modules.qa.qa_equipment_mng.models.LabelVo;
 import pidvn.modules.qa.qa_equipment_mng.models.QaDocDeviceVo;
 import pidvn.modules.qa.qa_equipment_mng.services.QaEquipmentMngSvc;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -99,5 +103,9 @@ public class QaEquipmentMngCtrl {
         return ResponseEntity.ok().body(file);
     }
 
+    @PostMapping("PrintLabel")
+    public ResponseEntity<?> printLabel(@RequestBody List<LabelVo> labelVos, @RequestParam Integer userId ) {
+        return new ResponseEntity<>(this.qaEquipmentMngSvc.printLabel(labelVos, userId), HttpStatus.OK);
+    }
 
 }

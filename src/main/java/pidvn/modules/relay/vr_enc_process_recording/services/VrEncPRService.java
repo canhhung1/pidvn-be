@@ -294,12 +294,40 @@ public class VrEncPRService implements IVrEncPRService {
 
     private Map validateMaterial(MaterialVo material) {
 
+        /**
+         * Kiểm tra Qty sản xuất ra
+         * Có 2 trường hợp:
+         * TH1: VR-ENC sx và in tem
+         * TH2: PIH sx và in tem
+         */
+
+        /**
+         * Kiểm tra lot và check label_type = ('swb','contact_base','to_hop')
+         * Nếu label_type không thuộc các loại trên thì lấy qty trong bảng defect_records
+         * Ngược lại lấy qty trong bảng lots
+         */
+
+        Lots lot = this.lotsRepo.findByLotNo(material.getClotno());
+
+        // Số lượng ban đầu
+        float stockQty = 0;
+
+        if (lot.getLabelType().equals("swb") ||
+                lot.getLabelType().equals("contact_base") ||
+                lot.getLabelType().equals("to_hop")) {
+
+            stockQty = lot.getQty();
+
+        } else {
+
+            List<DefectRecordVo> defectRecords = this.vrEncPRMapper.getDefectRecord(material.getClotno());
+            stockQty = defectRecords.get(0).getQty();
+
+        }
+
+
         Map result = new HashMap();
         List<MaterialVo> materialHistories = this.vrEncPRMapper.getMaterialHistories(material.getClotno());
-        List<DefectRecordVo> defectRecords = this.vrEncPRMapper.getDefectRecord(material.getClotno());
-
-        // Số lượng sản xuất OK
-        float stockQty = defectRecords.get(0).getQty();
 
         // NVL chưa được nhập LINE
         if (materialHistories.size() == 0) {

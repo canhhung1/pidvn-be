@@ -28,5 +28,37 @@
         and D.device_id = #{deviceId}
     </select>
 
+    <resultMap id="getPrintCodeInDay-result"
+               type="pidvn.entities.one.QaDeviceCalibrationLabel">
+    </resultMap>
+    <select id="getPrintCodeInDay" resultMap="getPrintCodeInDay-result">
+        select distinct A.print_code
+        from qa_device_calibration_label A
+        where 1 = 1
+        and DATE_FORMAT(A.created_at, '%Y-%m-%d') = DATE_FORMAT(curdate(), '%Y-%m-%d')
+    </select>
+
+    <resultMap id="getDeviceInfo-result"
+               type="pidvn.modules.qa.qa_equipment_mng.models.QaDeviceVo">
+
+        <result column="control_no" property="controlNo" javaType="String"/>
+        <result column="equipment_name" property="equipmentName" javaType="String"/>
+        <result column="serial_no" property="serialNo" javaType="String"/>
+        <result column="type_no" property="typeNo" javaType="String"/>
+        <result column="range_of_measuring" property="rangeOfMeasuring" javaType="String"/>
+        <result column="distribution_location" property="distributionLocation" javaType="String"/>
+        <result column="label_created_at" property="labelCreatedAt" javaType="Date"/>
+
+    </resultMap>
+    <select id="getDeviceInfo" resultMap="getDeviceInfo-result">
+        SELECT D.*, L.print_code, L.user_id, L.date, L.due, L.created_at label_created_at
+        FROM qa_device D
+        left join qa_device_calibration_label L on D.control_no = L.control_no
+        where 1 = 1
+        and D.control_no = #{controlNo}
+        order by L.id desc
+        LIMIT 1
+    </select>
+
 
 </mapper>

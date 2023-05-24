@@ -7,10 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pidvn.entities.one.QaDevice;
+import pidvn.entities.one.QaDeviceCalibrationLabel;
 import pidvn.entities.one.QaDocDevice;
 import pidvn.mappers.one.qa.qa_equipment_mng.QaEquipmentMngMapper;
 import pidvn.modules.qa.qa_equipment_mng.models.LabelVo;
+import pidvn.modules.qa.qa_equipment_mng.models.QaDeviceVo;
 import pidvn.modules.qa.qa_equipment_mng.models.QaDocDeviceVo;
+import pidvn.repositories.one.QaDeviceCalibrationLabelRepo;
 import pidvn.repositories.one.QaDeviceRepo;
 import pidvn.repositories.one.QaDocDeviceRepo;
 import pidvn.repositories.one.QaDocTypeDeviceRepo;
@@ -20,10 +23,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class QaEquipmentMngSvc implements IQaEquipmentMngSvc {
@@ -39,6 +40,9 @@ public class QaEquipmentMngSvc implements IQaEquipmentMngSvc {
 
     @Autowired
     private QaDeviceRepo qaDeviceRepo;
+
+    @Autowired
+    private QaDeviceCalibrationLabelRepo qaDeviceCalibrationLabelRepo;
 
 
     private String ROOT_FOLDER = "P:\\IS\\CanhHung\\FDCS\\QA\\QC\\DocumentDevice";
@@ -139,18 +143,44 @@ public class QaEquipmentMngSvc implements IQaEquipmentMngSvc {
     @Override
     public Map getDeviceInfo(String controlNo) throws Exception {
 
-        QaDevice qaDevice = this.qaDeviceRepo.findByControlNo(controlNo).get();
+        QaDeviceVo qaDeviceVo = this.qaEquipmentMngMapper.getDeviceInfo(controlNo).get(0);
 
-        if (qaDevice == null) {
+
+        if (qaDeviceVo == null) {
             throw new Exception("Thiết bị không tồn tại");
         }
-        List<QaDocDeviceVo> documents = this.getQaDocDevices(qaDevice.getId());
+        List<QaDocDeviceVo> documents = this.getQaDocDevices(qaDeviceVo.getId());
 
         Map result = new HashMap();
-        result.put("info", qaDevice);
+        result.put("info", qaDeviceVo);
         result.put("documents", documents);
 
         return result;
+    }
+
+    @Override
+    public List<QaDeviceCalibrationLabel> printLabel(List<LabelVo> labelVos, Integer userId) {
+
+        List<QaDeviceCalibrationLabel> arrLabels = new ArrayList<>();
+
+        // Số lần đã in tem
+        int printTimes = this.qaEquipmentMngMapper.getPrintCodeInDay().size();
+        int sequenceNo = printTimes+=1;
+
+        String strDate = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+        String printCode = "PrintLabel-" + strDate + "-" + sequenceNo;
+
+        for (LabelVo item: labelVos) {
+            QaDeviceCalibrationLabel label = new QaDeviceCalibrationLabel();
+            label.setControlNo(item.getIdNo());
+            label.setDate(item.getDate());
+            label.setDue(item.getDue());
+            label.setUserId(userId);
+            label.setPrintCode(printCode);
+            arrLabels.add(label);
+        }
+
+        return this.qaDeviceCalibrationLabelRepo.saveAll(arrLabels);
     }
 
 

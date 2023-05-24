@@ -18,6 +18,8 @@ public class QaDeviceVo {
     private Date due;
     private Date labelCreatedAt;
 
+    private String calibrationUnit;
+
     public Integer getId() {
         return id;
     }
@@ -128,5 +130,13 @@ public class QaDeviceVo {
 
     public void setLabelCreatedAt(Date labelCreatedAt) {
         this.labelCreatedAt = labelCreatedAt;
+    }
+
+    public String getCalibrationUnit() {
+        return calibrationUnit;
+    }
+
+    public void setCalibrationUnit(String calibrationUnit) {
+        this.calibrationUnit = calibrationUnit;
     }
 }

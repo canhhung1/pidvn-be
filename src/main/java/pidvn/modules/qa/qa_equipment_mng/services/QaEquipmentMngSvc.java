@@ -173,6 +173,7 @@ public class QaEquipmentMngSvc implements IQaEquipmentMngSvc {
         for (LabelVo item: labelVos) {
             QaDeviceCalibrationLabel label = new QaDeviceCalibrationLabel();
             label.setControlNo(item.getIdNo());
+            label.setCalibrationUnit(item.getBy());
             label.setDate(item.getDate());
             label.setDue(item.getDue());
             label.setUserId(userId);

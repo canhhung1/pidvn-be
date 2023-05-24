@@ -22,6 +22,8 @@ public class QaDeviceCalibrationLabel {
 
     @Column(name = "control_no")
     private String controlNo;
+    @Column(name = "calibration_unit")
+    private String calibrationUnit;
 
     @Column(name = "date")
     private Date date;
@@ -62,6 +64,14 @@ public class QaDeviceCalibrationLabel {
 
     public void setControlNo(String controlNo) {
         this.controlNo = controlNo;
+    }
+
+    public String getCalibrationUnit() {
+        return calibrationUnit;
+    }
+
+    public void setCalibrationUnit(String calibrationUnit) {
+        this.calibrationUnit = calibrationUnit;
     }
 
     public Date getDate() {

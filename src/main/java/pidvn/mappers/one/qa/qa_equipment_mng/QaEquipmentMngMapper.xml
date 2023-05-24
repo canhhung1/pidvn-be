@@ -48,10 +48,11 @@
         <result column="range_of_measuring" property="rangeOfMeasuring" javaType="String"/>
         <result column="distribution_location" property="distributionLocation" javaType="String"/>
         <result column="label_created_at" property="labelCreatedAt" javaType="Date"/>
+        <result column="calibration_unit" property="calibrationUnit" javaType="String"/>
 
     </resultMap>
     <select id="getDeviceInfo" resultMap="getDeviceInfo-result">
-        SELECT D.*, L.print_code, L.user_id, L.date, L.due, L.created_at label_created_at
+        SELECT D.*, L.print_code, L.user_id, L.date, L.due, L.created_at label_created_at, L.calibration_unit
         FROM qa_device D
         left join qa_device_calibration_label L on D.control_no = L.control_no
         where 1 = 1

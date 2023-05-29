@@ -66,7 +66,8 @@ public class IqcCheckService implements IIqcCheckService {
     @Override
     public IqcDataMaster saveIqcDataMaster(IqcDataVo iqcDataVo) {
 
-        List<IqcDataMaster> data = this.iqcDataMasterRepo.findByRequestNoAndLotGroup(iqcDataVo.getRequestNo(), iqcDataVo.getLotGroup());
+        //List<IqcDataMaster> data = this.iqcDataMasterRepo.findByRequestNoAndLotGroup(iqcDataVo.getRequestNo(), iqcDataVo.getLotGroup());
+        List<IqcDataMaster> data = this.iqcDataMasterRepo.findByRequestNoAndLotGroupAndModel(iqcDataVo.getRequestNo(), iqcDataVo.getLotGroup(), iqcDataVo.getModel());
 
         IqcDataMaster master;
 

@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface IqcDataMasterRepo extends JpaRepository<IqcDataMaster, Integer> {
     List<IqcDataMaster> findByRequestNoAndLotGroup(String requestNo, String lotGroup);
+    List<IqcDataMaster> findByRequestNoAndLotGroupAndModel(String requestNo, String lotGroup, String model);
+
 }

@@ -70,6 +70,11 @@ public class QaEquipmentMngCtrl {
         return new ResponseEntity<>(this.qaEquipmentMngSvc.getQaDocDevices(deviceId), HttpStatus.OK);
     }
 
+    @DeleteMapping("QaDocDevices")
+    public ResponseEntity<?> deleteQaDocDevice(@RequestParam Integer docDeviceId) {
+        return new ResponseEntity<>(this.qaEquipmentMngSvc.deleteQaDocDevice(docDeviceId), HttpStatus.OK);
+    }
+
     @GetMapping("DeviceInfo")
     public ResponseEntity<?> getDeviceInfo(@RequestParam String controlNo) throws Exception {
         return new ResponseEntity<>(this.qaEquipmentMngSvc.getDeviceInfo(controlNo), HttpStatus.OK);
@@ -107,5 +112,7 @@ public class QaEquipmentMngCtrl {
     public ResponseEntity<?> printLabel(@RequestBody List<LabelVo> labelVos, @RequestParam Integer userId ) {
         return new ResponseEntity<>(this.qaEquipmentMngSvc.printLabel(labelVos, userId), HttpStatus.OK);
     }
+
+
 
 }

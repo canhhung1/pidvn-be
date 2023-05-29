@@ -2,6 +2,7 @@ package pidvn.modules.qa.qa_equipment_mng.services;
 
 import org.springframework.web.multipart.MultipartFile;
 import pidvn.entities.one.QaDeviceCalibrationLabel;
+import pidvn.entities.one.QaDocDevice;
 import pidvn.modules.qa.qa_equipment_mng.models.LabelVo;
 import pidvn.modules.qa.qa_equipment_mng.models.QaDocDeviceVo;
 
@@ -19,5 +20,7 @@ public interface IQaEquipmentMngSvc {
     Map getDeviceInfo(String controlNo) throws Exception;
 
     List<QaDeviceCalibrationLabel> printLabel(List<LabelVo> labelVos, Integer userId);
+
+    QaDocDevice deleteQaDocDevice(Integer docDeviceId);
 
 }

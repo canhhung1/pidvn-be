@@ -17,6 +17,10 @@ public class QaDocDeviceVo {
     private Date createdAt;
     private Date updatedAt;
 
+    private Integer isDelete;
+
+    private String deleteBy;
+
     public Integer getId() {
         return id;
     }
@@ -111,5 +115,21 @@ public class QaDocDeviceVo {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Integer getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(Integer isDelete) {
+        this.isDelete = isDelete;
+    }
+
+    public String getDeleteBy() {
+        return deleteBy;
+    }
+
+    public void setDeleteBy(String deleteBy) {
+        this.deleteBy = deleteBy;
     }
 }

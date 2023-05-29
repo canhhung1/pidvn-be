@@ -15,6 +15,8 @@
         <result column="created_by_name" property="createdByName" javaType="String"/>
         <result column="created_at" property="createdAt" javaType="Date"/>
         <result column="updated_at" property="updatedAt" javaType="Date"/>
+        <result column="is_delete" property="isDelete" javaType="Integer"/>
+        <result column="delete_by" property="deleteBy" javaType="String"/>
 
     </resultMap>
     <select id="getQaDocDevices" resultMap="getQaDocDevices-result">
@@ -26,6 +28,7 @@
         left join users U on D.created_by = U.username
         where 1 = 1
         and D.device_id = #{deviceId}
+        order by D.id desc
     </select>
 
     <resultMap id="getPrintCodeInDay-result"

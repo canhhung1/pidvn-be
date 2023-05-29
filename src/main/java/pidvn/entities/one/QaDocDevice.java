@@ -43,6 +43,12 @@ public class QaDocDevice {
     @Column(name = "updated_at")
     private Date updatedAt;
 
+    @Column(name = "is_delete")
+    private Integer isDelete;
+
+    @Column(name = "delete_by")
+    private String deleteBy;
+
     public Integer getId() {
         return id;
     }
@@ -113,5 +119,21 @@ public class QaDocDevice {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Integer getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(Integer isDelete) {
+        this.isDelete = isDelete;
+    }
+
+    public String getDeleteBy() {
+        return deleteBy;
+    }
+
+    public void setDeleteBy(String deleteBy) {
+        this.deleteBy = deleteBy;
     }
 }

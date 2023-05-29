@@ -4,6 +4,8 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pidvn.entities.one.QaDevice;
@@ -44,7 +46,6 @@ public class QaEquipmentMngSvc implements IQaEquipmentMngSvc {
     @Autowired
     private QaDeviceCalibrationLabelRepo qaDeviceCalibrationLabelRepo;
 
-
     private String ROOT_FOLDER = "P:\\IS\\CanhHung\\FDCS\\QA\\QC\\DocumentDevice";
 
     /**
@@ -79,7 +80,7 @@ public class QaEquipmentMngSvc implements IQaEquipmentMngSvc {
         String fileTypeName = this.qaDocTypeDeviceRepo.findById(fileType).get().getName();
 
         String fileName = file.getOriginalFilename();
-        String url = this.ROOT_FOLDER + "\\" + fileTypeName + "\\" + controlNo + "\\" + fileName;
+        String url = this.ROOT_FOLDER + "\\" + controlNo + "\\" + fileTypeName + "\\" + fileName;
 
         /**
          * Kiểm tra file đã tồn tại chưa
@@ -182,6 +183,17 @@ public class QaEquipmentMngSvc implements IQaEquipmentMngSvc {
         }
 
         return this.qaDeviceCalibrationLabelRepo.saveAll(arrLabels);
+    }
+
+    @Override
+    public QaDocDevice deleteQaDocDevice(Integer docDeviceId) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        QaDocDevice qaDocDevice = this.qaDocDeviceRepo.findById(docDeviceId).get();
+        qaDocDevice.setIsDelete(1);
+        qaDocDevice.setDeleteBy(auth.getName());
+        return this.qaDocDeviceRepo.save(qaDocDevice);
     }
 
 

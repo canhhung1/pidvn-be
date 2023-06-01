@@ -30,6 +30,9 @@ public class IqcCheckService implements IIqcCheckService {
     private IqcDataDetailRepo iqcDataDetailRepo;
 
     @Autowired
+    private IqcDataSortingDetailRepo iqcDataSortingDetailRepo;
+
+    @Autowired
     private AuditConfigFdcsRepo auditConfigFdcsRepo;
 
     @Override
@@ -149,6 +152,42 @@ public class IqcCheckService implements IIqcCheckService {
     public AuditConfigFdcs getConfigAudit(String configName) {
         AuditConfigFdcs configFdcs = this.auditConfigFdcsRepo.findByConfigName(configName).get(0);
         return configFdcs;
+    }
+
+    @Override
+    public List<IqcDataVo> getIqcDataSortingMaster(String requestNo) {
+        return this.iqcCheckMapper.getIqcDataSortingMaster(requestNo);
+    }
+
+    @Override
+    public List<IqcDataVo> getIqcDataSortingDetail(String requestNo) {
+        return this.iqcCheckMapper.getIqcDataSortingDetail(requestNo);
+    }
+
+    @Override
+    public IqcDataSortingDetail saveIqcDataSortingDetail(IqcDataVo iqcDataVo) {
+
+        List<IqcDataSortingDetail> data = this.iqcDataSortingDetailRepo.findByRequestNo(iqcDataVo.getRequestNo());
+
+        if (data.size() != 0) {
+            IqcDataSortingDetail detail = data.get(0);
+            detail.setResult1(iqcDataVo.getResult1());
+            detail.setResult2(iqcDataVo.getResult2());
+            detail.setResult3(iqcDataVo.getResult3());
+            detail.setRemark(iqcDataVo.getRemark());
+            detail.setCreatedBy(iqcDataVo.getCreatedBy());
+            return this.iqcDataSortingDetailRepo.save(detail);
+        }
+
+        IqcDataSortingDetail detail = new IqcDataSortingDetail();
+        detail.setRequestNo(iqcDataVo.getRequestNo());
+        detail.setLotNo(iqcDataVo.getLotNo());
+        detail.setResult1(iqcDataVo.getResult1());
+        detail.setResult2(iqcDataVo.getResult2());
+        detail.setResult3(iqcDataVo.getResult3());
+        detail.setRemark(iqcDataVo.getRemark());
+        detail.setCreatedBy(iqcDataVo.getCreatedBy());
+        return this.iqcDataSortingDetailRepo.save(detail);
     }
 
 }

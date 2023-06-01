@@ -1,18 +1,20 @@
 package pidvn.modules.warehouse.iqc.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pidvn.entities.one.IqcRequest;
+import pidvn.entities.one.IqcRequestSortingDetail;
 import pidvn.entities.one.PurWhRecords;
 import pidvn.mappers.one.warehouse.iqc.WhIqcMapper;
 import pidvn.modules.warehouse.iqc.models.*;
 import pidvn.repositories.one.IqcRequestRepo;
+import pidvn.repositories.one.IqcRequestSortingDetailRepo;
 import pidvn.repositories.one.PurWhRecordsRepo;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class WhIqcService implements IWhIqcService {
@@ -22,6 +24,9 @@ public class WhIqcService implements IWhIqcService {
 
     @Autowired
     private IqcRequestRepo iqcRequestRepo;
+
+    @Autowired
+    private IqcRequestSortingDetailRepo iqcRequestSortingDetailRepo;
 
     @Autowired
     private PurWhRecordsRepo purWhRecordsRepo;
@@ -72,5 +77,41 @@ public class WhIqcService implements IWhIqcService {
 
 
         return result;
+    }
+
+    @Override
+    public IqcRequest createIqcRequestSorting(List<String> lotNos) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        /**
+         * 1. Tạo record trong bảng iqc_request type = 'sorting'
+         * 2. Lưu danh sách lotNo vào bảng iqc_request_sorting_detail
+         */
+
+        int totalRequest = this.iqcRequestRepo.getTotalRequestSortingInDay();
+        int sequenceNo = totalRequest+=1;
+        String strDate = new SimpleDateFormat("yyyyMMdd").format(Calendar.getInstance().getTime());
+        String reqNo = "RST-" + strDate + "-" + sequenceNo;
+
+        IqcRequest iqcRequest = new IqcRequest();
+        iqcRequest.setRequestNo(reqNo);
+        iqcRequest.setRequestedBy(auth.getName());
+        iqcRequest.setStatus(1);
+        iqcRequest.setType("sorting");
+
+        IqcRequest req = this.iqcRequestRepo.save(iqcRequest);
+
+        List<IqcRequestSortingDetail> listLot = new ArrayList<>();
+        for (String lot: lotNos) {
+            IqcRequestSortingDetail obj = new IqcRequestSortingDetail();
+            obj.setRequestNo(reqNo);
+            obj.setLotNo(lot);
+            listLot.add(obj);
+        }
+
+        this.iqcRequestSortingDetailRepo.saveAll(listLot);
+
+        return req;
     }
 }

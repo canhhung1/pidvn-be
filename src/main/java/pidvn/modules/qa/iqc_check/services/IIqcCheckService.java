@@ -21,4 +21,10 @@ public interface IIqcCheckService {
 
     AuditConfigFdcs changeConfigAudit(String configValue);
     AuditConfigFdcs getConfigAudit(String configName);
+
+    List<IqcDataVo> getIqcDataSortingMaster(String requestNo);
+
+    List<IqcDataVo> getIqcDataSortingDetail(String requestNo);
+
+    IqcDataSortingDetail saveIqcDataSortingDetail(IqcDataVo iqcDataVo);
 }

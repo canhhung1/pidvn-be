@@ -11,4 +11,6 @@ public interface IWhIqcService {
     IqcRequest createIqcRequest(IqcRequestVo iqcRequest) throws Exception;
     List<IqcRequestVo> getIqcRequests(IqcRequestSearchVo searchVo);
     List<String> getSlipNoByInvoice(String invoice);
+
+    IqcRequest createIqcRequestSorting(List<String> lotNos);
 }

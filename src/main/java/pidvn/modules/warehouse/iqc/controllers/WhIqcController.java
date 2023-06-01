@@ -12,6 +12,7 @@ import pidvn.modules.warehouse.iqc.models.IqcRequestVo;
 import pidvn.modules.warehouse.iqc.services.WhIqcService;
 
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping("WH/IQC")
@@ -39,6 +40,16 @@ public class WhIqcController {
     @PostMapping("Request")
     public ResponseEntity<?> createIqcRequest(@RequestBody IqcRequestVo iqcRequestVo) throws Exception {
         return new ResponseEntity<>(this.whIqcSvc.createIqcRequest(iqcRequestVo), HttpStatus.OK);
+    }
+
+    /**
+     * Tạo yêu cầu IQC cho hàng sorting
+     * @param lotNo
+     * @return
+     */
+    @PostMapping("IqcRequestSorting")
+    public ResponseEntity<?> createIqcRequestSorting(@RequestBody List<String> lotNo) {
+        return new ResponseEntity<>(this.whIqcSvc.createIqcRequestSorting(lotNo), HttpStatus.OK);
     }
 
     @GetMapping("SlipNo")

@@ -58,6 +58,11 @@ public class IqcCheckController {
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
+    @DeleteMapping("DeleteIqcDataMaster")
+    public ResponseEntity<?> deleteIqcDataMaster(@RequestParam Integer id) {
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
+
     @GetMapping("UpdateIqcRequest")
     public ResponseEntity<?> updateIqcRequest(@RequestParam String requestNo, @RequestParam Integer status) throws Exception {
         return new ResponseEntity<>(this.iqcCheckSvc.updateIqcRequest(requestNo, status), HttpStatus.OK);
@@ -89,5 +94,29 @@ public class IqcCheckController {
     @GetMapping("ChangeConfigAudit")
     public ResponseEntity<?> changeConfigAudit(@RequestParam String configValue) {
         return new ResponseEntity<>(this.iqcCheckSvc.changeConfigAudit(configValue), HttpStatus.OK);
+    }
+
+    /**
+     *
+     */
+
+
+
+
+
+    @GetMapping("IqcDataSortingMaster/{requestNo}")
+    public ResponseEntity<?> getIqcDataSortingMaster(@PathVariable String requestNo) {
+        return new ResponseEntity<>(this.iqcCheckSvc.getIqcDataSortingMaster(requestNo), HttpStatus.OK);
+    }
+
+
+    @GetMapping("IqcDataSortingDetail/{requestNo}")
+    public ResponseEntity<?> getIqcDataSortingDetail(@PathVariable String requestNo) {
+        return new ResponseEntity<>(this.iqcCheckSvc.getIqcDataSortingDetail(requestNo), HttpStatus.OK);
+    }
+
+    @PostMapping("SaveIqcDataSortingDetail")
+    public ResponseEntity<?> saveIqcDataSortingDetail(@RequestBody IqcDataVo iqcDataVo) {
+        return new ResponseEntity<>(this.iqcCheckSvc.saveIqcDataSortingDetail(iqcDataVo), HttpStatus.OK);
     }
 }

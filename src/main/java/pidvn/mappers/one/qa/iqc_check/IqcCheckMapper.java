@@ -10,4 +10,6 @@ public interface IqcCheckMapper {
     List<IqcRequestVo> getIqcRequests(IqcRequestSearchVo searchVo);
     List<IqcDataVo> getIqcDataMaster(IqcDataSearchVo searchVo);
     List<IqcDataVo> getIqcDataDetail(IqcDataSearchVo searchVo);
+    List<IqcDataVo> getIqcDataSortingMaster(String requestNo);
+    List<IqcDataVo> getIqcDataSortingDetail(String requestNo);
 }

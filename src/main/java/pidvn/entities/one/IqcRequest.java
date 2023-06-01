@@ -29,7 +29,7 @@ public class IqcRequest {
     private String supplier;
 
     @Column(name = "type")
-    private Integer type;
+    private String type;
 
     @Column(name = "requested_by")
     private String requestedBy;
@@ -88,11 +88,11 @@ public class IqcRequest {
         this.supplier = supplier;
     }
 
-    public Integer getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(Integer type) {
+    public void setType(String type) {
         this.type = type;
     }
 

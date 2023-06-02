@@ -191,8 +191,9 @@
     </resultMap>
     <select id="getIqcDataSortingMaster" resultMap="getIqcDataSortingMaster-result">
         select
-            R.request_no, M.id, M.result1, M.result2, M.result3,
-            M.created_by, M.created_at, M.updated_at
+            R.request_no, M.id, M.result1, M.result2, M.result3, M.remark,
+            M.created_by, M.created_at, M.updated_at,
+            (select count(*) from iqc_request_sorting_detail where 1 = 1 and R.request_no = #{requestNo}) amount
         from iqc_request R
         left join iqc_data_sorting_master M on R.request_no = M.request_no
         where 1 = 1

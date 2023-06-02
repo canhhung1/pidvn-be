@@ -75,7 +75,7 @@ public class VrEncPRController {
     }
 
     @PostMapping("ScanLabel")
-    public ResponseEntity<?> scanLabel(@RequestBody ScannerVo scannerVo) throws ParseException {
+    public ResponseEntity<?> scanLabel(@RequestBody ScannerVo scannerVo) throws Exception {
         return new ResponseEntity<>(this.vrEncPRSvc.scanLabel(scannerVo), HttpStatus.OK);
     }
 

@@ -101,9 +101,6 @@ public class IqcCheckController {
      */
 
 
-
-
-
     @GetMapping("IqcDataSortingMaster/{requestNo}")
     public ResponseEntity<?> getIqcDataSortingMaster(@PathVariable String requestNo) {
         return new ResponseEntity<>(this.iqcCheckSvc.getIqcDataSortingMaster(requestNo), HttpStatus.OK);
@@ -115,8 +112,22 @@ public class IqcCheckController {
         return new ResponseEntity<>(this.iqcCheckSvc.getIqcDataSortingDetail(requestNo), HttpStatus.OK);
     }
 
+    @PostMapping("SaveIqcDataSortingMaster")
+    public ResponseEntity<?> saveIqcDataSortingMaster(@RequestBody IqcDataVo iqcDataVo) {
+        return new ResponseEntity<>(this.iqcCheckSvc.saveIqcDataSortingMaster(iqcDataVo), HttpStatus.OK);
+    }
+
     @PostMapping("SaveIqcDataSortingDetail")
     public ResponseEntity<?> saveIqcDataSortingDetail(@RequestBody IqcDataVo iqcDataVo) {
         return new ResponseEntity<>(this.iqcCheckSvc.saveIqcDataSortingDetail(iqcDataVo), HttpStatus.OK);
+    }
+
+
+    @DeleteMapping("DeleteIqcDataSortingDetail")
+    public ResponseEntity<?> deleteIqcDataSortingDetail(@RequestParam Integer id) {
+        HashMap map = new HashMap();
+        map.put("result", "Đã xóa dữ liệu");
+        this.iqcCheckSvc.deleteIqcDataSortingDetail(id);
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 }

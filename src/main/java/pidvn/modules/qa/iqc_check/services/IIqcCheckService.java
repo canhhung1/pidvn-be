@@ -27,4 +27,8 @@ public interface IIqcCheckService {
     List<IqcDataVo> getIqcDataSortingDetail(String requestNo);
 
     IqcDataSortingDetail saveIqcDataSortingDetail(IqcDataVo iqcDataVo);
+
+    IqcDataSortingMaster saveIqcDataSortingMaster(IqcDataVo iqcDataVo);
+
+    void deleteIqcDataSortingDetail(Integer id);
 }

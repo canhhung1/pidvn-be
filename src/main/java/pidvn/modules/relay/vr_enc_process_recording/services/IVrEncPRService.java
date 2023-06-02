@@ -15,7 +15,7 @@ public interface IVrEncPRService {
     List<Line> getLines(Integer productId);
     List<ProcessVo> getProcesses(String productTypeName);
     List<ProcessVo> getProcessesVer2(String line);
-    Map scanLabel(ScannerVo scannerVo) throws ParseException;
+    Map scanLabel(ScannerVo scannerVo) throws Exception;
     List<MaterialControls> insertMaterials(List<MaterialVo> materialVos);
     MaterialControls updateMaterial(MaterialVo materialVo);
     List<MaterialVo> getMaterials(SearchVo searchVo);

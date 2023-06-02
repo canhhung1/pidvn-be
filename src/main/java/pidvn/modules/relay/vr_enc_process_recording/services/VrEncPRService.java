@@ -52,7 +52,7 @@ public class VrEncPRService implements IVrEncPRService {
     }
 
     @Override
-    public Map scanLabel(ScannerVo scannerVo) throws ParseException {
+    public Map scanLabel(ScannerVo scannerVo) throws Exception {
 
         QaCardVo qaCardVo = this.parseQaCard(scannerVo.getQaCard());
         LabelVo labelVo = this.parseLabel(scannerVo.getLabel());
@@ -292,7 +292,7 @@ public class VrEncPRService implements IVrEncPRService {
         return result;
     }
 
-    private Map validateMaterial(MaterialVo material) {
+    private Map validateMaterial(MaterialVo material) throws Exception {
 
         /**
          * Kiểm tra Qty sản xuất ra
@@ -312,15 +312,18 @@ public class VrEncPRService implements IVrEncPRService {
         // Số lượng ban đầu
         float stockQty = 0;
 
-        if (lot.getLabelType().equals("swb") ||
-                lot.getLabelType().equals("contact_base") ||
-                lot.getLabelType().equals("to_hop")) {
+        if ("swb".equals(lot.getLabelType()) || "contact_base".equals(lot.getLabelType()) || "to_hop".equals(lot.getLabelType())) {
 
             stockQty = lot.getQty();
 
         } else {
 
             List<DefectRecordVo> defectRecords = this.vrEncPRMapper.getDefectRecord(material.getClotno());
+
+            if (defectRecords.size() == 0) {
+                throw new Exception("Lot không tồn tại trong bảng: defect_records");
+            }
+
             stockQty = defectRecords.get(0).getQty();
 
         }

@@ -10,6 +10,7 @@ import pidvn.repositories.one.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class IqcCheckService implements IIqcCheckService {
@@ -28,6 +29,9 @@ public class IqcCheckService implements IIqcCheckService {
 
     @Autowired
     private IqcDataDetailRepo iqcDataDetailRepo;
+
+    @Autowired
+    private IqcDataSortingMasterRepo iqcDataSortingMasterRepo;
 
     @Autowired
     private IqcDataSortingDetailRepo iqcDataSortingDetailRepo;
@@ -167,10 +171,8 @@ public class IqcCheckService implements IIqcCheckService {
     @Override
     public IqcDataSortingDetail saveIqcDataSortingDetail(IqcDataVo iqcDataVo) {
 
-        List<IqcDataSortingDetail> data = this.iqcDataSortingDetailRepo.findByRequestNo(iqcDataVo.getRequestNo());
-
-        if (data.size() != 0) {
-            IqcDataSortingDetail detail = data.get(0);
+        if (iqcDataVo.getId() != null) {
+            IqcDataSortingDetail detail = this.iqcDataSortingDetailRepo.findById(iqcDataVo.getId()).get();
             detail.setResult1(iqcDataVo.getResult1());
             detail.setResult2(iqcDataVo.getResult2());
             detail.setResult3(iqcDataVo.getResult3());
@@ -188,6 +190,33 @@ public class IqcCheckService implements IIqcCheckService {
         detail.setRemark(iqcDataVo.getRemark());
         detail.setCreatedBy(iqcDataVo.getCreatedBy());
         return this.iqcDataSortingDetailRepo.save(detail);
+    }
+
+    @Override
+    public IqcDataSortingMaster saveIqcDataSortingMaster(IqcDataVo iqcDataVo) {
+
+        List<IqcDataSortingMaster> data = this.iqcDataSortingMasterRepo.findByRequestNo(iqcDataVo.getRequestNo());
+
+        IqcDataSortingMaster master;
+        if (data.size() != 0) {
+            master = data.get(0);
+        } else {
+            master = new IqcDataSortingMaster();
+        }
+
+        master.setRequestNo(iqcDataVo.getRequestNo());
+        master.setResult1(iqcDataVo.getResult1());
+        master.setResult2(iqcDataVo.getResult2());
+        master.setResult3(iqcDataVo.getResult3());
+        master.setRemark(iqcDataVo.getRemark());
+        master.setCreatedBy(iqcDataVo.getCreatedBy());
+
+        return this.iqcDataSortingMasterRepo.save(master);
+    }
+
+    @Override
+    public void deleteIqcDataSortingDetail(Integer id) {
+        this.iqcDataSortingDetailRepo.deleteById(id);
     }
 
 }

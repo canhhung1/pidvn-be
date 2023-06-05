@@ -58,4 +58,10 @@ public class WhIqcController {
     }
 
 
+    @GetMapping("IqcDataSorting")
+    public ResponseEntity<?> getIqcDataSortingInfo(@RequestParam String requestNo) {
+        return new ResponseEntity<>(this.whIqcSvc.getIqcDataSortingInfo(requestNo), HttpStatus.OK);
+    }
+
+
 }

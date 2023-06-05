@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import pidvn.entities.one.IqcRequest;
 import pidvn.entities.one.IqcRequestSortingDetail;
 import pidvn.entities.one.PurWhRecords;
+import pidvn.mappers.one.qa.iqc_check.IqcCheckMapper;
 import pidvn.mappers.one.warehouse.iqc.WhIqcMapper;
+import pidvn.modules.qa.iqc_check.models.IqcDataVo;
 import pidvn.modules.warehouse.iqc.models.*;
 import pidvn.repositories.one.IqcRequestRepo;
 import pidvn.repositories.one.IqcRequestSortingDetailRepo;
@@ -30,6 +32,9 @@ public class WhIqcService implements IWhIqcService {
 
     @Autowired
     private PurWhRecordsRepo purWhRecordsRepo;
+
+    @Autowired
+    private IqcCheckMapper iqcCheckMapper;
 
     @Override
     public List<InvoiceVo> getInvoices() {
@@ -113,5 +118,20 @@ public class WhIqcService implements IWhIqcService {
         this.iqcRequestSortingDetailRepo.saveAll(listLot);
 
         return req;
+    }
+
+    @Override
+    public Map getIqcDataSortingInfo(String requestNo) {
+
+        Map result = new HashMap();
+
+        List<IqcDataVo> masters = this.iqcCheckMapper.getIqcDataSortingMaster(requestNo);
+
+        List<IqcDataVo> details = this.iqcCheckMapper.getIqcDataSortingDetail(requestNo);
+
+        result.put("masters", masters);
+        result.put("details", details);
+
+        return result;
     }
 }

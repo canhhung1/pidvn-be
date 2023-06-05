@@ -36,6 +36,9 @@ public class VrEncPRService implements IVrEncPRService {
     @Autowired
     private LotsRepo lotsRepo;
 
+    @Autowired
+    private PurWhRecordsRepo purWhRecordsRepo;
+
     @Override
     public List<Line> getLines(Integer productId) {
         return this.lineRepo.findByProductIdOrderByName(productId);
@@ -318,13 +321,19 @@ public class VrEncPRService implements IVrEncPRService {
 
         } else {
 
-            List<DefectRecordVo> defectRecords = this.vrEncPRMapper.getDefectRecord(material.getClotno());
+            List<PurWhRecords> data = this.purWhRecordsRepo.findByLotNoAndRecordTypeInOrderByIdDesc(material.getClotno(), Arrays.asList(new String("IM")));
 
-            if (defectRecords.size() == 0) {
-                throw new Exception("Lot không tồn tại trong bảng: defect_records");
+            if (data.size() >= 1) {
+                stockQty = data.get(0).getQty();
+            }else {
+                List<DefectRecordVo> defectRecords = this.vrEncPRMapper.getDefectRecord(material.getClotno());
+
+                if (defectRecords.size() == 0) {
+
+                    throw new Exception("Không tồn tại trong bảng defect_record");
+                }
+                stockQty = defectRecords.get(0).getQty();
             }
-
-            stockQty = defectRecords.get(0).getQty();
 
         }
 

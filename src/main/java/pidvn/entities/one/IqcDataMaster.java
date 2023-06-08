@@ -52,6 +52,12 @@ public class IqcDataMaster {
     @Column(name = "created_by")
     private String createdBy;
 
+    @Column(name = "level_of_control_ngoai_quan")
+    private String levelOfControlNgoaiQuan;
+    @Column(name = "level_of_control_kich_thuoc")
+
+    private String levelOfControlKichThuoc;
+
     public Integer getId() {
         return id;
     }
@@ -146,5 +152,21 @@ public class IqcDataMaster {
 
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public String getLevelOfControlNgoaiQuan() {
+        return levelOfControlNgoaiQuan;
+    }
+
+    public void setLevelOfControlNgoaiQuan(String levelOfControlNgoaiQuan) {
+        this.levelOfControlNgoaiQuan = levelOfControlNgoaiQuan;
+    }
+
+    public String getLevelOfControlKichThuoc() {
+        return levelOfControlKichThuoc;
+    }
+
+    public void setLevelOfControlKichThuoc(String levelOfControlKichThuoc) {
+        this.levelOfControlKichThuoc = levelOfControlKichThuoc;
     }
 }

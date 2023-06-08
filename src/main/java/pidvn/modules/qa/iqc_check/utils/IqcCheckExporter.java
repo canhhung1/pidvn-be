@@ -3,7 +3,6 @@ package pidvn.modules.qa.iqc_check.utils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import pidvn.modules.qa.iqc_check.models.IqcDataVo;
-import pidvn.modules.relay.checksheet.models.DetailVo;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

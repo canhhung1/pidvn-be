@@ -25,6 +25,10 @@ public class IqcDataVo {
     private Integer checkedAmount;
     private Date requestedAt;
 
+    private String levelOfControlNgoaiQuan;
+
+    private String levelOfControlKichThuoc;
+
     public Integer getId() {
         return id;
     }
@@ -183,5 +187,21 @@ public class IqcDataVo {
 
     public void setRequestedAt(Date requestedAt) {
         this.requestedAt = requestedAt;
+    }
+
+    public String getLevelOfControlNgoaiQuan() {
+        return levelOfControlNgoaiQuan;
+    }
+
+    public void setLevelOfControlNgoaiQuan(String levelOfControlNgoaiQuan) {
+        this.levelOfControlNgoaiQuan = levelOfControlNgoaiQuan;
+    }
+
+    public String getLevelOfControlKichThuoc() {
+        return levelOfControlKichThuoc;
+    }
+
+    public void setLevelOfControlKichThuoc(String levelOfControlKichThuoc) {
+        this.levelOfControlKichThuoc = levelOfControlKichThuoc;
     }
 }

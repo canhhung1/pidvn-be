@@ -61,6 +61,8 @@
         <result column="updated_at" property="updatedAt" javaType="Date"/>
         <result column="requested_at" property="requestedAt" javaType="Date"/>
         <result column="iqc_at" property="iqcAt" javaType="Date"/>
+        <result column="level_of_control_ngoai_quan" property="levelOfControlNgoaiQuan" javaType="String"/>
+        <result column="level_of_control_kich_thuoc" property="levelOfControlKichThuoc" javaType="String"/>
     </resultMap>
     <select id="getIqcDataMaster" resultMap="getIqcDataMaster-result">
 
@@ -91,6 +93,8 @@
             select
                 T01.*, M.created_by, M.updated_at as iqc_at, A.checked_amount,
                 CONCAT_WS(';', M.result1, M.result2, M.result3) result_all,
+                M.level_of_control_ngoai_quan,
+                M.level_of_control_kich_thuoc,
                 <choose>
                     <when test="isAudit == 'TRUE'">
                         if(M.result1='NG' || M.result1='CA', "OK", M.result1) result1,

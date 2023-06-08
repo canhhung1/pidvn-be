@@ -93,6 +93,8 @@ public class IqcCheckService implements IIqcCheckService {
         master.setResult3(iqcDataVo.getResult3());
         master.setRemark(iqcDataVo.getRemark());
         master.setCreatedBy(iqcDataVo.getCreatedBy());
+        master.setLevelOfControlNgoaiQuan(iqcDataVo.getLevelOfControlNgoaiQuan());
+        master.setLevelOfControlKichThuoc(iqcDataVo.getLevelOfControlKichThuoc());
 
         return this.iqcDataMasterRepo.save(master);
     }

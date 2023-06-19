@@ -6,6 +6,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import pidvn.entities.one.AuditConfigFdcs;
 import pidvn.entities.one.OqcDataFile;
 import pidvn.entities.one.OqcRequest;
 import pidvn.mappers.one.qa.oqc_check.OqcCheckMapper;
@@ -13,6 +14,7 @@ import pidvn.modules.qa.oqc_check.models.OqcDataVo;
 import pidvn.modules.qa.oqc_check.models.OqcRequestVo;
 import pidvn.modules.qa.oqc_check.models.SearchVo;
 import pidvn.modules.relay.measurement.utils.FileUploadUtil;
+import pidvn.repositories.one.AuditConfigFdcsRepo;
 import pidvn.repositories.one.OqcDataFileRepo;
 import pidvn.repositories.one.OqcRequestRepo;
 
@@ -36,6 +38,9 @@ public class OqcCheckSvc implements IOqcCheckSvc {
     @Autowired
     private OqcCheckMapper oqcCheckMapper;
 
+    @Autowired
+    private AuditConfigFdcsRepo auditConfigFdcsRepo;
+
     @Override
     public List<OqcDataVo> getOqcMasterData(String reqNo, String qaCard) {
         return this.oqcCheckMapper.getOqcMasterData(reqNo,qaCard);
@@ -49,7 +54,18 @@ public class OqcCheckSvc implements IOqcCheckSvc {
     @Override
     public List<OqcRequestVo> getOqcRequests(SearchVo searchVo) {
 
+        /**
+         * Config khi audit
+         * Nếu điều kiện = "TRUE"
+         * Lấy thông tin config từ bảng audit_config_fdcs
+         */
+        String isConfig = this.auditConfigFdcsRepo.findByConfigName("oqc_check_audit").get(0).getConfigValue();
+        searchVo.setIsAudit(isConfig);
+
         List<OqcRequestVo> result = this.oqcCheckMapper.getOqcRequests(searchVo);
+
+
+
         return result;
     }
 
@@ -121,5 +137,19 @@ public class OqcCheckSvc implements IOqcCheckSvc {
     @Override
     public List<OqcDataFile> getOqcDataFiles(String reqNo) {
         return this.oqcDataFileRepo.findByReqNoOrderByIdDesc(reqNo);
+    }
+
+    @Override
+    public AuditConfigFdcs changeConfigAudit(String configValue) {
+        String configName = "oqc_check_audit";
+        AuditConfigFdcs config = this.auditConfigFdcsRepo.findByConfigName(configName).get(0);
+        config.setConfigValue(configValue);
+        return this.auditConfigFdcsRepo.save(config);
+    }
+
+    @Override
+    public AuditConfigFdcs getConfigAudit(String configName) {
+        AuditConfigFdcs configFdcs = this.auditConfigFdcsRepo.findByConfigName(configName).get(0);
+        return configFdcs;
     }
 }

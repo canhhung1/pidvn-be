@@ -74,6 +74,9 @@
         <if test="requestDateRange != null and requestDateRange.size != 0">
             and DATE_FORMAT(T02.created_at, '%Y-%m-%d') between DATE_FORMAT(#{requestDateRange[0]}, '%Y-%m-%d') and DATE_FORMAT(#{requestDateRange[1]}, '%Y-%m-%d')
         </if>
+        <if test="isAudit == 'TRUE'">
+            and (T02.judgment != 'NG' or T02.judgment is null)
+        </if>
 
         order by T02.id desc
 

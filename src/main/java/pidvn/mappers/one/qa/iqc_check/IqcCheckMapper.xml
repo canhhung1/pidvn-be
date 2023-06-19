@@ -43,7 +43,7 @@
                 FROM
                     iqc_request R
                 WHERE 1 = 1
-                and R.created_at between '2023-02-01' and '2023-02-17'
+                and R.created_at between '2023-02-01' and '2023-06-19'
                 and R.status = 2
             )
         </if>

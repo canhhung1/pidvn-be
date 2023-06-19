@@ -1,6 +1,7 @@
 package pidvn.modules.qa.oqc_check.services;
 
 import org.springframework.web.multipart.MultipartFile;
+import pidvn.entities.one.AuditConfigFdcs;
 import pidvn.entities.one.OqcDataFile;
 import pidvn.entities.one.OqcRequest;
 import pidvn.modules.qa.oqc_check.models.OqcDataVo;
@@ -17,5 +18,7 @@ public interface IOqcCheckSvc {
     OqcRequest oqcRequestHandle(OqcRequestVo oqcRequestVo);
     OqcDataFile uploadFile(MultipartFile file, String createdBy, String filePathRoot, String reqNo) throws IOException;
     List<OqcDataFile> getOqcDataFiles(String reqNo);
+    AuditConfigFdcs changeConfigAudit(String configValue);
+    AuditConfigFdcs getConfigAudit(String configName);
 
 }

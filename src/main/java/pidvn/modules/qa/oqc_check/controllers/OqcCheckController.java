@@ -80,7 +80,16 @@ public class OqcCheckController {
         return ResponseEntity.ok().body(file);
     }
 
+    @GetMapping("ConfigAudit")
+    public ResponseEntity<?> getConfigAudit() {
+        String configName = "oqc_check_audit";
+        return new ResponseEntity<>(this.oqcCheckSvc.getConfigAudit(configName), HttpStatus.OK);
+    }
 
+    @GetMapping("ChangeConfigAudit")
+    public ResponseEntity<?> changeConfigAudit(@RequestParam String configValue) {
+        return new ResponseEntity<>(this.oqcCheckSvc.changeConfigAudit(configValue), HttpStatus.OK);
+    }
 
 
 }

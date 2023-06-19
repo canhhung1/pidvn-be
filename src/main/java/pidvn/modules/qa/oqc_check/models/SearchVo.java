@@ -12,6 +12,8 @@ public class SearchVo {
 
     private List<Date> requestDateRange;
 
+    private String isAudit;
+
     public String getUrl() {
         return url;
     }
@@ -42,5 +44,13 @@ public class SearchVo {
 
     public void setRequestDateRange(List<Date> requestDateRange) {
         this.requestDateRange = requestDateRange;
+    }
+
+    public String getIsAudit() {
+        return isAudit;
+    }
+
+    public void setIsAudit(String isAudit) {
+        this.isAudit = isAudit;
     }
 }

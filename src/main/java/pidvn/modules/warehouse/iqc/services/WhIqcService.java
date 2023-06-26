@@ -127,10 +127,10 @@ public class WhIqcService implements IWhIqcService {
 
         List<IqcDataVo> masters = this.iqcCheckMapper.getIqcDataSortingMaster(requestNo);
 
-        List<IqcDataVo> details = this.iqcCheckMapper.getIqcDataSortingDetail(requestNo);
+        //List<IqcDataVo> details = this.iqcCheckMapper.getIqcDataSortingDetail(requestNo);
 
         result.put("masters", masters);
-        result.put("details", details);
+        //result.put("details", details);
 
         return result;
     }

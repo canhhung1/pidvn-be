@@ -190,36 +190,77 @@
     <resultMap id="getIqcDataSortingMaster-result"
                type="pidvn.modules.qa.iqc_check.models.IqcDataVo">
         <result column="request_no" property="requestNo" javaType="String"/>
+        <result column="lot_group" property="lotGroup" javaType="String"/>
         <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="updated_at" property="updatedAt" javaType="Date"/>
         <result column="created_by" property="createdBy" javaType="String"/>
     </resultMap>
     <select id="getIqcDataSortingMaster" resultMap="getIqcDataSortingMaster-result">
-        select
-            R.request_no, M.id, M.result1, M.result2, M.result3, M.remark,
-            M.created_by, M.created_at, M.updated_at,
-            (select count(*) from iqc_request_sorting_detail where 1 = 1 and R.request_no = #{requestNo}) amount
-        from iqc_request R
-        left join iqc_data_sorting_master M on R.request_no = M.request_no
-        where 1 = 1
-        and R.request_no = #{requestNo}
+
+        -- Lấy dữ liệu IQC Sorting Master
+        with
+        T01 as (
+            select R.request_no, L.lot_group, count(*) amount, R.created_at
+            from iqc_request_sorting_detail R
+            left join lots L on R.lot_no = L.lot_no
+            where 1 = 1
+            and R.request_no = #{requestNo}
+            group by L.lot_group
+        ),
+        T02 as (
+            select
+                T01.*, M.result1, M.result2, M.result3, M.remark,
+                M.created_by, M.updated_at, M.id
+            from T01
+            left join iqc_data_sorting_master M on (T01.request_no = M.request_no and T01.lot_group = M.lot_group and M.request_no = #{requestNo})
+        )
+        select * from T02
+
     </select>
 
 
     <resultMap id="getIqcDataSortingDetail-result"
                type="pidvn.modules.qa.iqc_check.models.IqcDataVo">
         <result column="lot_no" property="lotNo" javaType="String"/>
+        <result column="lot_group" property="lotGroup" javaType="String"/>
         <result column="request_no" property="requestNo" javaType="String"/>
         <result column="created_at" property="createdAt" javaType="Date"/>
         <result column="created_by" property="createdBy" javaType="String"/>
     </resultMap>
     <select id="getIqcDataSortingDetail" resultMap="getIqcDataSortingDetail-result">
-        select
-            R.lot_no, D.id, D.result1,D.result2,D.result3, D.remark,
-            D.created_by, D.created_at, D.updated_at
-        from iqc_request_sorting_detail R
-        left join iqc_data_sorting_detail D on R.lot_no = D.lot_no
+        with
+        T01 as (
+            select
+                R.request_no, R.lot_no, L.lot_group
+                from iqc_request_sorting_detail R
+            left join lots L on R.lot_no = L.lot_no
+            where 1 = 1
+            and R.request_no = #{requestNo}
+            and L.lot_group = #{lotGroup}
+        ),
+        T02 as (
+            select
+                T01.*, D.result1, D.result2, D.result3, D.remark,
+                D.created_by, D.created_at, D.updated_at, D.id
+            from T01
+            left join iqc_data_sorting_detail D on (T01.request_no = D.request_no and T01.lot_group = D.lot_group and T01.lot_no = D.lot_no)
+        )
+        select * from T02
+    </select>
+
+
+    <resultMap id="getIqcRequestSortingDetails-result"
+               type="pidvn.entities.one.IqcRequestSortingDetail">
+        <result column="request_no" property="requestNo" javaType="String"/>
+        <result column="lot_no" property="lotNo" javaType="String"/>
+        <result column="request_no" property="requestNo" javaType="String"/>
+    </resultMap>
+    <select id="getIqcRequestSortingDetails" resultMap="getIqcRequestSortingDetails-result">
+        select D.* from iqc_request_sorting_detail D
+        left join lots L on D.lot_no = L.lot_no
         where 1 = 1
-        and R.request_no = #{requestNo}
+        and D.request_no = #{requestNo}
+        and L.lot_group = #{lotGroup}
     </select>
 
 </mapper>

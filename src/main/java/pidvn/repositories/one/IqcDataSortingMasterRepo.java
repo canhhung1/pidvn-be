@@ -10,4 +10,5 @@ import java.util.List;
 public interface IqcDataSortingMasterRepo extends JpaRepository<IqcDataSortingMaster, Integer> {
 
     List<IqcDataSortingMaster> findByRequestNo(String requestNo);
+    List<IqcDataSortingMaster> findByRequestNoAndLotGroup(String requestNo, String lotGroup);
 }

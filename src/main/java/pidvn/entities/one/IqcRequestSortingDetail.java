@@ -23,6 +23,16 @@ public class IqcRequestSortingDetail {
     @Column(name = "lot_no")
     private String lotNo;
 
+    @Column(name = "result1")
+    private String result1;
+    @Column(name = "result2")
+    private String result2;
+    @Column(name = "result3")
+    private String result3;
+
+    @Column(name = "remark")
+    private String remark;
+
     @CreatedDate
     @Column(name = "created_at")
     private Date createdAt;
@@ -53,6 +63,38 @@ public class IqcRequestSortingDetail {
 
     public void setLotNo(String lotNo) {
         this.lotNo = lotNo;
+    }
+
+    public String getResult1() {
+        return result1;
+    }
+
+    public void setResult1(String result1) {
+        this.result1 = result1;
+    }
+
+    public String getResult2() {
+        return result2;
+    }
+
+    public void setResult2(String result2) {
+        this.result2 = result2;
+    }
+
+    public String getResult3() {
+        return result3;
+    }
+
+    public void setResult3(String result3) {
+        this.result3 = result3;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public Date getCreatedAt() {

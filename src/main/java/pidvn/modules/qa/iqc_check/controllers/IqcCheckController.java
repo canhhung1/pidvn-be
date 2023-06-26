@@ -108,8 +108,8 @@ public class IqcCheckController {
 
 
     @GetMapping("IqcDataSortingDetail/{requestNo}")
-    public ResponseEntity<?> getIqcDataSortingDetail(@PathVariable String requestNo) {
-        return new ResponseEntity<>(this.iqcCheckSvc.getIqcDataSortingDetail(requestNo), HttpStatus.OK);
+    public ResponseEntity<?> getIqcDataSortingDetail(@PathVariable String requestNo, @RequestParam String lotGroup) {
+        return new ResponseEntity<>(this.iqcCheckSvc.getIqcDataSortingDetail(requestNo, lotGroup), HttpStatus.OK);
     }
 
     @PostMapping("SaveIqcDataSortingMaster")

@@ -20,6 +20,9 @@ public class IqcDataSortingMaster {
     @Column(name = "request_no")
     private String requestNo;
 
+    @Column(name = "lot_group")
+    private String lotGroup;
+
     @Column(name = "result1")
     private String result1;
 
@@ -57,6 +60,14 @@ public class IqcDataSortingMaster {
 
     public void setRequestNo(String requestNo) {
         this.requestNo = requestNo;
+    }
+
+    public String getLotGroup() {
+        return lotGroup;
+    }
+
+    public void setLotGroup(String lotGroup) {
+        this.lotGroup = lotGroup;
     }
 
     public String getResult1() {

@@ -21,4 +21,6 @@ public interface IPihProcessRecordingSvc {
     List<Line> getLines(Integer productId);
     Map scanCoil(MaterialSearchVo searchVo);
 
+    Map checkSetupSaiNVL(String model, String coil);
+
 }

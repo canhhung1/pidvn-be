@@ -8,9 +8,7 @@ import pidvn.mappers.one.qa.iqc_check.IqcCheckMapper;
 import pidvn.modules.qa.iqc_check.models.*;
 import pidvn.repositories.one.*;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class IqcCheckService implements IIqcCheckService {
@@ -35,6 +33,9 @@ public class IqcCheckService implements IIqcCheckService {
 
     @Autowired
     private IqcDataSortingDetailRepo iqcDataSortingDetailRepo;
+
+    @Autowired
+    private IqcRequestSortingDetailRepo iqcRequestSortingDetailRepo;
 
     @Autowired
     private AuditConfigFdcsRepo auditConfigFdcsRepo;
@@ -166,8 +167,8 @@ public class IqcCheckService implements IIqcCheckService {
     }
 
     @Override
-    public List<IqcDataVo> getIqcDataSortingDetail(String requestNo) {
-        return this.iqcCheckMapper.getIqcDataSortingDetail(requestNo);
+    public List<IqcDataVo> getIqcDataSortingDetail(String requestNo, String lotGroup) {
+        return this.iqcCheckMapper.getIqcDataSortingDetail(requestNo, lotGroup);
     }
 
     @Override
@@ -197,7 +198,7 @@ public class IqcCheckService implements IIqcCheckService {
     @Override
     public IqcDataSortingMaster saveIqcDataSortingMaster(IqcDataVo iqcDataVo) {
 
-        List<IqcDataSortingMaster> data = this.iqcDataSortingMasterRepo.findByRequestNo(iqcDataVo.getRequestNo());
+        List<IqcDataSortingMaster> data = this.iqcDataSortingMasterRepo.findByRequestNoAndLotGroup(iqcDataVo.getRequestNo(), iqcDataVo.getLotGroup());
 
         IqcDataSortingMaster master;
         if (data.size() != 0) {
@@ -207,13 +208,46 @@ public class IqcCheckService implements IIqcCheckService {
         }
 
         master.setRequestNo(iqcDataVo.getRequestNo());
+        master.setLotGroup(iqcDataVo.getLotGroup());
         master.setResult1(iqcDataVo.getResult1());
         master.setResult2(iqcDataVo.getResult2());
         master.setResult3(iqcDataVo.getResult3());
         master.setRemark(iqcDataVo.getRemark());
         master.setCreatedBy(iqcDataVo.getCreatedBy());
 
-        return this.iqcDataSortingMasterRepo.save(master);
+        IqcDataSortingMaster result = this.iqcDataSortingMasterRepo.save(master);
+
+
+        /**
+         * Lưu giá trị vào bảng iqc_request_sorting_detail;
+         */
+        // B1: Tìm các lot cần lưu
+
+        List<IqcRequestSortingDetail> details = this.iqcCheckMapper.getIqcRequestSortingDetails(iqcDataVo.getRequestNo(), iqcDataVo.getLotGroup());
+
+
+        List<IqcRequestSortingDetail> dataSave = new ArrayList<>();
+
+        for (IqcRequestSortingDetail item : details) {
+
+            String result1 = iqcDataVo.getResult1();
+            String result2 = iqcDataVo.getResult2();
+            String result3 = iqcDataVo.getResult3();
+            String remark = iqcDataVo.getRemark();
+            Date createdAt = iqcDataVo.getCreatedAt();
+
+            item.setResult1(result1);
+            item.setResult2(result2);
+            item.setResult3(result3);
+            item.setRemark(remark);
+            item.setCreatedAt(createdAt);
+
+            dataSave.add(item);
+        }
+
+        this.iqcRequestSortingDetailRepo.saveAll(dataSave);
+
+        return result;
     }
 
     @Override

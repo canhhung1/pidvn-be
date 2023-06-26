@@ -51,4 +51,15 @@ public class PihProcessRecordingCtl {
     public ResponseEntity<?> changeModel(@RequestBody ScannerVo scannerVo) {
         return new ResponseEntity<>(this.processRecordingSvc.changeModel(scannerVo), HttpStatus.OK);
     }
+
+    @GetMapping("PsMasters")
+    public ResponseEntity<?> getPsMasters(@RequestParam String model) {
+        return new ResponseEntity<>(this.processRecordingSvc.getPsMasters(model), HttpStatus.OK);
+    }
+
+    @GetMapping("CheckSetupSaiNVL")
+    public ResponseEntity<?> checkSaiNVL(@RequestParam String model, @RequestParam String coil) {
+        return new ResponseEntity<>(this.processRecordingSvc.checkSetupSaiNVL(model, coil), HttpStatus.OK);
+    }
+
 }

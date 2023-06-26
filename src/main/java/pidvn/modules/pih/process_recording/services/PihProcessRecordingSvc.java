@@ -243,6 +243,28 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
         return result;
     }
 
+    @Override
+    public Map checkSetupSaiNVL(String model, String coil) {
+
+        List<PsMaster> psMasters = this.psMasterRepo.findByPnpa(model);
+
+        String modelCoil = this.lotsRepo.findByLotNo(coil).getModel();
+
+        Map result1 = new HashMap();
+        result1.put("result", "OK");
+
+        for (PsMaster ps: psMasters) {
+            if (ps.getPncomp().equals(modelCoil)) {
+                return result1;
+            }
+        }
+
+        Map result2 = new HashMap();
+        result2.put("result", "NG");
+
+        return result2;
+    }
+
     /**
      * Lấy các lot thực tế đang sử dụng ở LINE
      * @param oldLabel

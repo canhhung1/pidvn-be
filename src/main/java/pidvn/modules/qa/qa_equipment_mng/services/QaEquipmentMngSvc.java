@@ -196,5 +196,26 @@ public class QaEquipmentMngSvc implements IQaEquipmentMngSvc {
         return this.qaDocDeviceRepo.save(qaDocDevice);
     }
 
+    @Override
+    public QaDevice saveDeviceInfo(QaDevice qaDevice) throws Exception {
+
+        if (qaDevice.getId() == null) {
+
+            List<QaDevice> data = this.qaDeviceRepo.findByControlNo(qaDevice.getControlNo());
+
+            if (data.size() > 0) {
+                throw new Exception("Thiết bị đã tồn tại !");
+            }
+
+
+
+            return this.qaDeviceRepo.save(qaDevice);
+
+        }
+
+
+        return this.qaDeviceRepo.save(qaDevice);
+    }
+
 
 }

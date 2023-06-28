@@ -1,6 +1,7 @@
 package pidvn.modules.qa.qa_equipment_mng.services;
 
 import org.springframework.web.multipart.MultipartFile;
+import pidvn.entities.one.QaDevice;
 import pidvn.entities.one.QaDeviceCalibrationLabel;
 import pidvn.entities.one.QaDocDevice;
 import pidvn.modules.qa.qa_equipment_mng.models.LabelVo;
@@ -23,4 +24,5 @@ public interface IQaEquipmentMngSvc {
 
     QaDocDevice deleteQaDocDevice(Integer docDeviceId);
 
+    QaDevice saveDeviceInfo(QaDevice qaDevice) throws Exception;
 }

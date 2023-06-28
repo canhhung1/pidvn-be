@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import pidvn.entities.one.QaDevice;
 import pidvn.entities.one.QaDeviceCalibrationLabel;
 import pidvn.modules.qa.qa_equipment_mng.models.LabelVo;
 import pidvn.modules.qa.qa_equipment_mng.models.QaDocDeviceVo;
@@ -111,6 +112,11 @@ public class QaEquipmentMngCtrl {
     @PostMapping("PrintLabel")
     public ResponseEntity<?> printLabel(@RequestBody List<LabelVo> labelVos, @RequestParam Integer userId ) {
         return new ResponseEntity<>(this.qaEquipmentMngSvc.printLabel(labelVos, userId), HttpStatus.OK);
+    }
+
+    @PostMapping("SaveDeviceInfo")
+    public ResponseEntity<?> saveDeviceInfo(@RequestBody QaDevice qaDevice) throws Exception {
+        return new ResponseEntity<>(this.qaEquipmentMngSvc.saveDeviceInfo(qaDevice), HttpStatus.OK);
     }
 
 

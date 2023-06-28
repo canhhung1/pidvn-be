@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface QaDeviceRepo extends JpaRepository<QaDevice, Integer> {
 
-    Optional<QaDevice> findByControlNo(String controlNo);
+    List<QaDevice> findByControlNo(String controlNo);
 }

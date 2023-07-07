@@ -43,13 +43,14 @@ public class WhIqcController {
     }
 
     /**
-     * Tạo yêu cầu IQC cho hàng sorting
+     * Tạo yêu cầu IQC cho hàng sorting hoặc hàng IQC quá 6 tháng
      * @param lotNo
+     * @param requestType sorting || over6month
      * @return
      */
     @PostMapping("IqcRequestSorting")
-    public ResponseEntity<?> createIqcRequestSorting(@RequestBody List<String> lotNo) {
-        return new ResponseEntity<>(this.whIqcSvc.createIqcRequestSorting(lotNo), HttpStatus.OK);
+    public ResponseEntity<?> createIqcRequestSorting(@RequestBody List<String> lotNo, @RequestParam String requestType) {
+        return new ResponseEntity<>(this.whIqcSvc.createIqcRequestSorting(lotNo, requestType), HttpStatus.OK);
     }
 
     @GetMapping("SlipNo")

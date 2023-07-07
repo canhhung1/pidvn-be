@@ -13,7 +13,7 @@ public interface IWhIqcService {
     List<IqcRequestVo> getIqcRequests(IqcRequestSearchVo searchVo);
     List<String> getSlipNoByInvoice(String invoice);
 
-    IqcRequest createIqcRequestSorting(List<String> lotNos);
+    IqcRequest createIqcRequestSorting(List<String> lotNos, String requestType);
 
     Map getIqcDataSortingInfo(String requestNo);
 }

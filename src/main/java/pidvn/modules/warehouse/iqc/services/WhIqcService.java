@@ -85,25 +85,25 @@ public class WhIqcService implements IWhIqcService {
     }
 
     @Override
-    public IqcRequest createIqcRequestSorting(List<String> lotNos) {
+    public IqcRequest createIqcRequestSorting(List<String> lotNos, String requestType) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         /**
-         * 1. Tạo record trong bảng iqc_request type = 'sorting'
+         * 1. Tạo record trong bảng iqc_request type = 'sorting' or 'over6month'
          * 2. Lưu danh sách lotNo vào bảng iqc_request_sorting_detail
          */
 
         int totalRequest = this.iqcRequestRepo.getTotalRequestSortingInDay();
         int sequenceNo = totalRequest+=1;
         String strDate = new SimpleDateFormat("yyyyMMdd").format(Calendar.getInstance().getTime());
-        String reqNo = "RST-" + strDate + "-" + sequenceNo;
+        String reqNo = (requestType == "sorting" ? "RST-" : "ROD-") + strDate + "-" + sequenceNo;
 
         IqcRequest iqcRequest = new IqcRequest();
         iqcRequest.setRequestNo(reqNo);
         iqcRequest.setRequestedBy(auth.getName());
         iqcRequest.setStatus(1);
-        iqcRequest.setType("sorting");
+        iqcRequest.setType(requestType);
 
         IqcRequest req = this.iqcRequestRepo.save(iqcRequest);
 

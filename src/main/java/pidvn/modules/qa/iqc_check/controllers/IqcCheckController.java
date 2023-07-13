@@ -130,4 +130,14 @@ public class IqcCheckController {
         this.iqcCheckSvc.deleteIqcDataSortingDetail(id);
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
+
+    /**
+     * Tìm mức độ kiểm soát theo Model
+     * @param model
+     * @return
+     */
+    @GetMapping("GetMucDoKiemSoat")
+    public ResponseEntity<?> getMucDoKiemSoat(@RequestParam String model) {
+        return new ResponseEntity<>(this.iqcCheckSvc.getMucDoKiemSoat(model), HttpStatus.OK);
+    }
 }

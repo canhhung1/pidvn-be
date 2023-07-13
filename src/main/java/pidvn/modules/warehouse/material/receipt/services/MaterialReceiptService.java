@@ -32,6 +32,9 @@ public class MaterialReceiptService implements IMaterialReceiptService {
     @Autowired
     private PurWhHeadersRepo purWhHeaderRepo;
 
+    @Autowired
+    private IqcRequestRepo iqcRequestRepo;
+
     /**
      * Lưu data vào bảng pur_wh_records
      *
@@ -93,7 +96,6 @@ public class MaterialReceiptService implements IMaterialReceiptService {
             obj.setFlag("1");
             obj.setVendorCode(material.getVendorCode());
             obj.setInvoice(material.getInvoiceNo());
-            obj.setSlipNo(material.getInvoiceNo());
             obj.setPo(material.getPoNo());
             obj.setSlipNo(material.getSlipNo());
 
@@ -113,6 +115,18 @@ public class MaterialReceiptService implements IMaterialReceiptService {
         Map response = new HashMap();
         response.put("duplicateList", duplicateList);
         response.put("amountSaved", amountSaved);
+
+
+        /**
+         * Trường hợp scan thêm hàng vào request
+         */
+        String slipNo = materials.get(0).getSlipNo();
+        IqcRequest request = this.iqcRequestRepo.findByRequestNo(slipNo);
+        // Nếu đã tồn tại request thì cập nhật trạng thái request thành 1 (st)
+        if (request != null) {
+            request.setStatus(1);
+            this.iqcRequestRepo.save(request);
+        }
 
         return response;
     }
@@ -155,7 +169,7 @@ public class MaterialReceiptService implements IMaterialReceiptService {
             obj.setQty(material.getQty());
             obj.setModel(material.getModel());
             obj.setDate(new Date());
-            obj.setPihUserCode("3012982");
+            obj.setPihUserCode(material.getWhUserCode());
             obj.setWhUserCode(material.getWhUserCode());
             obj.setFlag("1");
             obj.setVendorCode(material.getVendorCode());
@@ -172,6 +186,17 @@ public class MaterialReceiptService implements IMaterialReceiptService {
         Map response = new HashMap();
         response.put("duplicateList", duplicateList);
         response.put("amountSaved", amountSaved);
+
+        /**
+         * Trường hợp scan thêm hàng vào request
+         */
+        String slipNo = materials.get(0).getSlipNo();
+        IqcRequest request = this.iqcRequestRepo.findByRequestNo(slipNo);
+        // Nếu đã tồn tại request thì cập nhật trạng thái request thành 1 (st)
+        if (request != null) {
+            request.setStatus(1);
+            this.iqcRequestRepo.save(request);
+        }
 
         return response;
     }

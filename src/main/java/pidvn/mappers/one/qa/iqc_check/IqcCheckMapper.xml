@@ -9,10 +9,15 @@
         <result column="requested_by" property="requestedBy" javaType="String"/>
         <result column="requested_by_name" property="requestedByName" javaType="String"/>
         <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="type_name" property="typeName" javaType="String"/>
     </resultMap>
     <select id="getIqcRequests" resultMap="getIqcRequests-result">
         SELECT
-            R.*, S.name AS status_name, U.name requested_by_name
+            R.*, S.name AS status_name, U.name requested_by_name,
+            case
+                when R.type = 'sorting' then 'Hàng sorting'
+                when R.type = 'over6month' then 'Hàng quá 6 tháng'
+            end as type_name
         FROM
             iqc_request R
         LEFT JOIN
@@ -261,6 +266,26 @@
         where 1 = 1
         and D.request_no = #{requestNo}
         and L.lot_group = #{lotGroup}
+    </select>
+
+
+    <resultMap id="getMucDoKiemSoat-result"
+               type="pidvn.entities.one.IqcDataMaster">
+        <result column="level_of_control_ngoai_quan" property="levelOfControlNgoaiQuan" javaType="String"/>
+        <result column="level_of_control_kich_thuoc" property="levelOfControlKichThuoc" javaType="String"/>
+        <result column="updated_at" property="updatedAt" javaType="Date"/>
+        <result column="created_by" property="createdBy" javaType="String"/>
+    </resultMap>
+    <select id="getMucDoKiemSoat" resultMap="getMucDoKiemSoat-result">
+        SELECT
+            M.level_of_control_kich_thuoc, M.level_of_control_ngoai_quan,M.updated_at, concat(M.created_by, ' - ', U.name ) created_by
+        FROM iqc_data_master M left join users U on M.created_by = U.username
+        where 1 = 1
+        and (M.level_of_control_ngoai_quan is not null or M.level_of_control_kich_thuoc is not null)
+        and M.model = #{model}
+        order by M.updated_at desc
+        limit 10
+
     </select>
 
 </mapper>

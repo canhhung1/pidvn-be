@@ -11,5 +11,6 @@ public interface RelayDateCodeRepo extends JpaRepository<RelayDateCode, Integer>
 
     List<RelayDateCode> findByQaCardAndDateCode(String qaCard, String dateCode);
 
+
     List<RelayDateCode> findByQaCardAndDateCodeAndCustomerCode(String qaCard, String dateCode, String customerCode);
 }

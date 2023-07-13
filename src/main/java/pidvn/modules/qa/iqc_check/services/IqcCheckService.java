@@ -186,6 +186,7 @@ public class IqcCheckService implements IIqcCheckService {
 
         IqcDataSortingDetail detail = new IqcDataSortingDetail();
         detail.setRequestNo(iqcDataVo.getRequestNo());
+        detail.setLotGroup(iqcDataVo.getLotGroup());
         detail.setLotNo(iqcDataVo.getLotNo());
         detail.setResult1(iqcDataVo.getResult1());
         detail.setResult2(iqcDataVo.getResult2());
@@ -253,6 +254,11 @@ public class IqcCheckService implements IIqcCheckService {
     @Override
     public void deleteIqcDataSortingDetail(Integer id) {
         this.iqcDataSortingDetailRepo.deleteById(id);
+    }
+
+    @Override
+    public List<IqcDataMaster> getMucDoKiemSoat(String model) {
+        return this.iqcCheckMapper.getMucDoKiemSoat(model);
     }
 
 }

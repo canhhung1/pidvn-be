@@ -31,4 +31,7 @@ public interface IIqcCheckService {
     IqcDataSortingMaster saveIqcDataSortingMaster(IqcDataVo iqcDataVo);
 
     void deleteIqcDataSortingDetail(Integer id);
+
+    List<IqcDataMaster> getMucDoKiemSoat(String model);
+
 }

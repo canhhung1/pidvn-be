@@ -38,6 +38,8 @@ public class PidvnStkPayment {
     @Column(name = "branchname")
     private String branchName;
 
+    @Column(name = "benificiary")
+    private String benificiary;
 
     @CreatedDate
     @Column(name = "created_at")
@@ -109,6 +111,14 @@ public class PidvnStkPayment {
 
     public void setBranchName(String branchName) {
         this.branchName = branchName;
+    }
+
+    public String getBenificiary() {
+        return benificiary;
+    }
+
+    public void setBenificiary(String benificiary) {
+        this.benificiary = benificiary;
     }
 
     public Date getCreatedAt() {

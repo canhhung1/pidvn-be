@@ -11,4 +11,8 @@ import java.util.List;
 public interface PihStopLineMapper {
     List<LineVo> getLines();
     List<StopTime>getStopTimes(SearchVo searchVo);
+
+    List<StopTime> getTotalStopTimeByShift(StopTime stopTime);
+
+
 }

@@ -160,4 +160,16 @@ public class PihStopLineSvc implements IPihStopLineSvc {
 
         return result;
     }
+
+
+    private boolean checkTotalStopTime(StopTimes stopTime) {
+
+        
+
+
+
+
+
+        return false;
+    }
 }

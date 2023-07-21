@@ -34,4 +34,6 @@ public interface IIqcCheckService {
 
     List<IqcDataMaster> getMucDoKiemSoat(String model);
 
+    List<IqcLevelOfControl> getIqcLevelOfControls();
+
 }

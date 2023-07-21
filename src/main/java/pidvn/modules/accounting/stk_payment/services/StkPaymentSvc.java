@@ -35,6 +35,7 @@ public class StkPaymentSvc implements IStkPaymentSvc {
         stkPayment.setCurrency(pidvnStkPayment.getCurrency());
         stkPayment.setBank(pidvnStkPayment.getBank());
         stkPayment.setBranchName(pidvnStkPayment.getBranchName());
+        stkPayment.setBenificiary(pidvnStkPayment.getBenificiary());
 
         return this.pidvnStkPaymentRepo.save(stkPayment);
     }

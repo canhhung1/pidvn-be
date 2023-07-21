@@ -140,4 +140,9 @@ public class IqcCheckController {
     public ResponseEntity<?> getMucDoKiemSoat(@RequestParam String model) {
         return new ResponseEntity<>(this.iqcCheckSvc.getMucDoKiemSoat(model), HttpStatus.OK);
     }
+
+    @GetMapping("LevelOfControls")
+    public ResponseEntity<?> getIqcLevelOfControl() {
+        return new ResponseEntity<>(this.iqcCheckSvc.getIqcLevelOfControls(), HttpStatus.OK);
+    }
 }

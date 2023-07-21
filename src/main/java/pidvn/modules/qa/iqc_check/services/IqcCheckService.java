@@ -40,6 +40,9 @@ public class IqcCheckService implements IIqcCheckService {
     @Autowired
     private AuditConfigFdcsRepo auditConfigFdcsRepo;
 
+    @Autowired
+    private IqcLevelOfControlRepo iqcLevelOfControlRepo;
+
     @Override
     public List<IqcRequestVo> getIqcRequests(IqcRequestSearchVo searchVo) {
         String isConfig = this.auditConfigFdcsRepo.findByConfigName("iqc_check_audit").get(0).getConfigValue();
@@ -259,6 +262,11 @@ public class IqcCheckService implements IIqcCheckService {
     @Override
     public List<IqcDataMaster> getMucDoKiemSoat(String model) {
         return this.iqcCheckMapper.getMucDoKiemSoat(model);
+    }
+
+    @Override
+    public List<IqcLevelOfControl> getIqcLevelOfControls() {
+        return this.iqcLevelOfControlRepo.findAll();
     }
 
 }

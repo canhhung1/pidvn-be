@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.three.hr.meal.HrMealMapper">
+
+    <resultMap id="getMealRecords-result"
+               type="pidvn.modules.hr.meal.models.MealRecordVo">
+        <result column="RowNum" property="rowNum" javaType="Integer"/>
+        <result column="CodeEmp" property="codeEmp" javaType="String"/>
+        <result column="ProfileName" property="profileName" javaType="String"/>
+        <result column="TimeLog" property="timeLog" javaType="Date"/>
+        <result column="MachineCode" property="machineCode" javaType="String"/>
+        <result column="CanteenCode" property="canteenCode" javaType="String"/>
+        <result column="CanteenName" property="canteenName" javaType="String"/>
+        <result column="LineCode" property="lineCode" javaType="String"/>
+        <result column="LineName" property="lineName" javaType="String"/>
+        <result column="OrgStructureName" property="orgStructureName" javaType="String"/>
+    </resultMap>
+    <select id="getMealRecords" resultMap="getMealRecords-result">
+        SELECT
+            ROW_NUMBER() OVER (ORDER BY TimeLog DESC) as RowNum, A.*
+        FROM PIDVN_MealRecord A
+        WHERE 1 = 1
+        <if test="timeLogRange != null and timeLogRange.size != 0">
+            and convert(date, A.TimeLog) between convert(date,#{timeLogRange[0]}) and convert(date,#{timeLogRange[1]})
+        </if>
+        ORDER BY TimeLog DESC
+    </select>
+
+</mapper>

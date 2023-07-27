@@ -15,6 +15,8 @@ public class MealRecordVo {
     private String lineCode;
     private String lineName;
 
+    private String orgStructureName;
+
     public Integer getRowNum() {
         return rowNum;
     }
@@ -93,5 +95,13 @@ public class MealRecordVo {
 
     public void setLineName(String lineName) {
         this.lineName = lineName;
+    }
+
+    public String getOrgStructureName() {
+        return orgStructureName;
+    }
+
+    public void setOrgStructureName(String orgStructureName) {
+        this.orgStructureName = orgStructureName;
     }
 }

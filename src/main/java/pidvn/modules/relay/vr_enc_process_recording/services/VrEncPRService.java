@@ -17,6 +17,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class VrEncPRService implements IVrEncPRService {
@@ -88,6 +90,13 @@ public class VrEncPRService implements IVrEncPRService {
     @Override
     public List<MaterialControls> insertMaterials(List<MaterialVo> materialVos) {
 
+        /**
+         * Tìm list LotNo
+         */
+        Map<String, MaterialVo> map = materialVos.stream().collect(Collectors.toMap(MaterialVo::getClotno, Function.identity()));
+        List<Lots> lots = this.lotsRepo.findByLotNoIn(new ArrayList<>(map.keySet()));
+
+
         List<MaterialControls> insertList = new ArrayList<>();
 
         for (MaterialVo material: materialVos) {
@@ -106,15 +115,58 @@ public class VrEncPRService implements IVrEncPRService {
             obj.setRecordType(material.getRecordType());
             obj.setProcessId(material.getProcessId());
             obj.setNgQty(0);
+            obj.setRemark("Hung Test update qty LotNo");
             insertList.add(obj);
         }
 
-        return this.materialControlsRepo.saveAll(insertList);
+        // Lưu dữ liệu vào material_controls
+        List<MaterialControls> insertResult = this.materialControlsRepo.saveAll(insertList);
+
+
+        /**
+         * Update lại số lượng trong bảng lot
+         */
+        for (Lots item: lots) {
+            MaterialVo obj = map.get(item.getLotNo());
+            Float qty = item.getQty() - obj.getQty();
+            item.setQty(qty);
+            item.setRemark("Hung Test update qty LotNo");
+        }
+
+        this.lotsRepo.saveAll(lots);
+
+
+        return insertResult;
     }
 
     @Override
     public MaterialControls updateMaterial(MaterialVo materialVo) {
+        /**
+         * Logic mới: update Qty trong bảng lot
+         *
+         * Kiểm tra nếu qty truyền lên backend mà nhỏ hơn qty hiện tại thì cộng số lượng vào qty của lot và ngược lại
+         *
+         * TODO
+         */
+        Lots lot = this.lotsRepo.findByLotNo(materialVo.getClotno());
         MaterialControls material = this.materialControlsRepo.findById(materialVo.getId()).get();
+
+        float clientQty = materialVo.getQty();
+        float actualQty = material.getQty();
+        float chenhLech = clientQty - actualQty;
+
+        if (chenhLech < 0) {
+            float lotQty = lot.getQty();
+            lotQty+=chenhLech;
+            lot.setQty(lotQty);
+            this.lotsRepo.save(lot);
+        } else if (chenhLech > 0) {
+            float lotQty = lot.getQty();
+            lotQty-=chenhLech;
+            lot.setQty(lotQty);
+            this.lotsRepo.save(lot);
+        }
+
         material.setQty(materialVo.getQty());
         material.setRemark(materialVo.getRemark());
         return this.materialControlsRepo.save(material);

@@ -17,6 +17,10 @@ public class MealRecordVo {
 
     private String orgStructureName;
 
+    private String ticketType;
+
+    private Integer total;
+
     public Integer getRowNum() {
         return rowNum;
     }
@@ -103,5 +107,21 @@ public class MealRecordVo {
 
     public void setOrgStructureName(String orgStructureName) {
         this.orgStructureName = orgStructureName;
+    }
+
+    public String getTicketType() {
+        return ticketType;
+    }
+
+    public void setTicketType(String ticketType) {
+        this.ticketType = ticketType;
+    }
+
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
     }
 }

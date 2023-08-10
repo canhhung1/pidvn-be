@@ -9,4 +9,5 @@ import java.util.List;
 @Mapper
 public interface HrMealMapper {
     List<MealRecordVo> getMealRecords(SearchVo searchVo);
+    List<MealRecordVo> getMealRecordsSummary(SearchVo searchVo);
 }

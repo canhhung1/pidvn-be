@@ -7,8 +7,8 @@
     <groupId>pidvn</groupId>
     <artifactId>pidvn</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>war</packaging>
-    <name>pidvn-be</name>
+    <packaging>jar</packaging>
+    <name>apidvn-be</name>
 
     <properties>
         <java.version>1.8</java.version>

@@ -157,7 +157,7 @@ public class VrEncPRService implements IVrEncPRService {
 
         if (chenhLech < 0) {
             float lotQty = lot.getQty();
-            lotQty+=chenhLech;
+            lotQty+=(chenhLech*-1);
             lot.setQty(lotQty);
             this.lotsRepo.save(lot);
         } else if (chenhLech > 0) {
@@ -364,30 +364,7 @@ public class VrEncPRService implements IVrEncPRService {
 
         Lots lot = this.lotsRepo.findByLotNo(material.getClotno());
 
-        // Số lượng ban đầu
-        float stockQty = 0;
 
-        if ("swb".equals(lot.getLabelType()) || "contact_base".equals(lot.getLabelType()) || "to_hop".equals(lot.getLabelType())) {
-
-            stockQty = lot.getQty();
-
-        } else {
-
-            List<PurWhRecords> data = this.purWhRecordsRepo.findByLotNoAndRecordTypeInOrderByIdDesc(material.getClotno(), Arrays.asList(new String("IM")));
-
-            if (data.size() >= 1) {
-                stockQty = data.get(0).getQty();
-            }else {
-                List<DefectRecordVo> defectRecords = this.vrEncPRMapper.getDefectRecord(material.getClotno());
-
-                if (defectRecords.size() == 0) {
-
-                    throw new Exception("Không tồn tại trong bảng defect_record");
-                }
-                stockQty = defectRecords.get(0).getQty();
-            }
-
-        }
 
 
         Map result = new HashMap();
@@ -403,8 +380,9 @@ public class VrEncPRService implements IVrEncPRService {
 
         // Nếu NVL đã được nhập vào LINE
         // Kiểm tra NVL đã sử dụng hết hay chưa
-        float lineQty = this.getActualQtyInLine(materialHistories);
-        if (lineQty >= stockQty) {
+        // Số lượng tồn
+        float intQty = lot.getQty();
+        if (intQty <= 0) {
             String message = "Lot: " + material.getClotno() + " đã được sử dụng hết !";
             result.put("status", "ERROR");
             result.put("message", message);

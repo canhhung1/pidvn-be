@@ -6,7 +6,9 @@ import pidvn.mappers.three.hr.meal.HrMealMapper;
 import pidvn.modules.hr.meal.models.MealRecordVo;
 import pidvn.modules.hr.meal.models.SearchVo;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class HrMealSvc implements IHrMealSvc {
@@ -15,7 +17,15 @@ public class HrMealSvc implements IHrMealSvc {
     private HrMealMapper hrMealMapper;
 
     @Override
-    public List<MealRecordVo> getMealRecords(SearchVo searchVo) {
-        return this.hrMealMapper.getMealRecords(searchVo);
+    public Map getMealRecords(SearchVo searchVo) {
+        Map result = new HashMap();
+
+        List<MealRecordVo> records = this.hrMealMapper.getMealRecords(searchVo);
+        List<MealRecordVo> recordsSummary = this.hrMealMapper.getMealRecordsSummary(searchVo);
+
+        result.put("records", records);
+        result.put("recordsSummary", recordsSummary);
+
+        return result;
     }
 }

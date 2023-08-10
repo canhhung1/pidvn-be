@@ -64,7 +64,7 @@ public class MaterialReceiptService implements IMaterialReceiptService {
                 // Nếu chưa có lotNo thì tạo lotNo
                 Lots obj = new Lots();
                 obj.setLotNo(material.getLotNo());
-                obj.setModel(material.getModel());
+                obj.setModel(material.getModel().toUpperCase());
                 obj.setDate(new Date());
                 obj.setQty(material.getQty());
                 obj.setUserCode(material.getWhUserCode());
@@ -89,7 +89,7 @@ public class MaterialReceiptService implements IMaterialReceiptService {
             obj.setLotNo(material.getLotNo());
             obj.setRecordType("IM");
             obj.setQty(material.getQty());
-            obj.setModel(material.getModel());
+            obj.setModel(material.getModel().toUpperCase());
             obj.setDate(new Date());
             obj.setPihUserCode(material.getWhUserCode());
             obj.setWhUserCode(material.getWhUserCode());

@@ -1,10 +1,10 @@
 package pidvn.modules.hr.meal.services;
 
-import pidvn.modules.hr.meal.models.MealRecordVo;
 import pidvn.modules.hr.meal.models.SearchVo;
 
-import java.util.List;
+import java.util.Map;
 
 public interface IHrMealSvc {
-    List<MealRecordVo> getMealRecords(SearchVo searchVo);
+
+    Map getMealRecords(SearchVo searchVo) ;
 }

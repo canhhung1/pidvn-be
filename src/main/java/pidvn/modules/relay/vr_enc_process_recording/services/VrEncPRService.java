@@ -115,7 +115,7 @@ public class VrEncPRService implements IVrEncPRService {
             obj.setRecordType(material.getRecordType());
             obj.setProcessId(material.getProcessId());
             obj.setNgQty(0);
-            obj.setRemark("Hung Test update qty LotNo");
+            obj.setRemark(material.getRemark());
             insertList.add(obj);
         }
 
@@ -130,7 +130,6 @@ public class VrEncPRService implements IVrEncPRService {
             MaterialVo obj = map.get(item.getLotNo());
             Float qty = item.getQty() - obj.getQty();
             item.setQty(qty);
-            item.setRemark("Hung Test update qty LotNo");
         }
 
         this.lotsRepo.saveAll(lots);

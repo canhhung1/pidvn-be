@@ -1,5 +1,6 @@
 package pidvn.modules.pih.pih_inventory.services;
 
+import pidvn.entities.one.Lots;
 import pidvn.entities.one.PihInventoryData;
 import pidvn.entities.one.PihInventoryRequest;
 
@@ -12,7 +13,11 @@ public interface IPihInventorySvc {
 
     PihInventoryRequest createInventoryRequest(PihInventoryRequest ivtReq) throws Exception;
 
-    Map saveInventoryData(List<PihInventoryData> inventoryData);
+    Map saveListInventoryData(List<PihInventoryData> inventoryDataList);
+
+    PihInventoryData saveInventoryData(PihInventoryData inventoryData);
 
     List<PihInventoryData> getInventoryDataByRequestId(Integer requestId);
+
+    Lots scanLabel(String lotNo);
 }

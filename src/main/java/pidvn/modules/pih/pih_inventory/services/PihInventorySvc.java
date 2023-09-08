@@ -4,8 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pidvn.entities.one.Lots;
 import pidvn.entities.one.PihInventoryData;
 import pidvn.entities.one.PihInventoryRequest;
+import pidvn.mappers.one.pih.pih_inventory.PihInventoryMapper;
+import pidvn.repositories.one.LotsRepo;
 import pidvn.repositories.one.PihInventoryDataRepo;
 import pidvn.repositories.one.PihInventoryRequestRepo;
 
@@ -25,6 +28,12 @@ public class PihInventorySvc implements IPihInventorySvc {
     @Autowired
     private PihInventoryDataRepo pihInventoryDataRepo;
 
+    @Autowired
+    private LotsRepo lotsRepo;
+
+    @Autowired
+    private PihInventoryMapper pihInventoryMapper;
+
     @Override
     public List<PihInventoryRequest> getInventoryRequests() {
         return this.pihInventoryRequestRepo.findAllByOrderByIdDesc();
@@ -37,15 +46,17 @@ public class PihInventorySvc implements IPihInventorySvc {
 
         PihInventoryRequest request = this.pihInventoryRequestRepo.findByReqNo(ivtReq.getReqNo());
 
-        if (request != null) {
-            throw new Exception("Request đã tồn tại !");
+        List<PihInventoryRequest> requests = this.pihInventoryRequestRepo.findByCurrentMonth();
+
+        if (requests != null || requests.size() > 0) {
+            throw new Exception("Đã có phiếu kiểm kê tháng này");
         }
 
         return this.pihInventoryRequestRepo.save(ivtReq);
     }
 
     @Override
-    public Map saveInventoryData(List<PihInventoryData> inventoryData) {
+    public Map saveListInventoryData(List<PihInventoryData> inventoryData) {
 
         List<PihInventoryData> resultOK = new ArrayList<>();
         List<PihInventoryData> resultNG = new ArrayList<>();
@@ -68,8 +79,18 @@ public class PihInventorySvc implements IPihInventorySvc {
     }
 
     @Override
+    public PihInventoryData saveInventoryData(PihInventoryData inventoryData) {
+        return this.pihInventoryDataRepo.save(inventoryData);
+    }
+
+    @Override
     public List<PihInventoryData> getInventoryDataByRequestId(Integer requestId) {
-        return this.pihInventoryDataRepo.findByRequestId(requestId);
+        return this.pihInventoryMapper.getInventoryData(requestId);
+    }
+
+    @Override
+    public Lots scanLabel(String lotNo) {
+        return this.lotsRepo.findByLotNo(lotNo);
     }
 
 

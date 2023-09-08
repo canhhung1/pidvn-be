@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.pih.pih_inventory.PihInventoryMapper">
+
+    <resultMap id="getInventoryData-result"
+               type="pidvn.entities.one.PihInventoryData">
+        <result column="request_id" property="requestId" javaType="Integer"/>
+        <result column="lot_no" property="lotNo" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="updated_at" property="updatedAt" javaType="Date"/>
+        <result column="part_no" property="partNo" javaType="String"/>
+    </resultMap>
+    <select id="getInventoryData" resultMap="getInventoryData-result">
+        SELECT D.id, D.request_id, D.lot_no, D.qty, D.created_at, D.updated_at, L.model as part_no
+        FROM pih_inventory_data D
+        left join lots L on D.lot_no = L.lot_no
+        where 1 = 1
+        and D.request_id = #{requestId}
+        order by D.id desc
+    </select>
+
+
+
+
+
+
+</mapper>

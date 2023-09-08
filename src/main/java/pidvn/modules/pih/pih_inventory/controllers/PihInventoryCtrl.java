@@ -27,8 +27,13 @@ public class PihInventoryCtrl {
         return new ResponseEntity<>(this.pihInventorySvc.createInventoryRequest(ivtReq), HttpStatus.OK);
     }
 
+    @PostMapping("SaveListInventoryData")
+    public ResponseEntity<?> saveListInventoryData(@RequestBody List<PihInventoryData> inventoryDataList) {
+        return new ResponseEntity<>(this.pihInventorySvc.saveListInventoryData(inventoryDataList), HttpStatus.OK);
+    }
+
     @PostMapping("InventoryData")
-    public ResponseEntity<?> saveInventoryData(@RequestBody List<PihInventoryData> inventoryData) {
+    public ResponseEntity<?> saveInventoryData(@RequestBody PihInventoryData inventoryData) {
         return new ResponseEntity<>(this.pihInventorySvc.saveInventoryData(inventoryData), HttpStatus.OK);
     }
 
@@ -36,5 +41,11 @@ public class PihInventoryCtrl {
     public ResponseEntity<?> getInventoryData(@RequestParam Integer requestId) {
         return new ResponseEntity<>(this.pihInventorySvc.getInventoryDataByRequestId(requestId), HttpStatus.OK);
     }
+
+    @GetMapping("ScanLabel")
+    public ResponseEntity<?> scanLabel(@RequestParam String lotNo) {
+        return new ResponseEntity<>(this.pihInventorySvc.scanLabel(lotNo), HttpStatus.OK);
+    }
+
 
 }

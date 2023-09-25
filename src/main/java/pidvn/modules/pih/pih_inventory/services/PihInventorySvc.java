@@ -8,14 +8,12 @@ import pidvn.entities.one.Lots;
 import pidvn.entities.one.PihInventoryData;
 import pidvn.entities.one.PihInventoryRequest;
 import pidvn.mappers.one.pih.pih_inventory.PihInventoryMapper;
+import pidvn.modules.pih.pih_inventory.models.InventoryVo;
 import pidvn.repositories.one.LotsRepo;
 import pidvn.repositories.one.PihInventoryDataRepo;
 import pidvn.repositories.one.PihInventoryRequestRepo;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class PihInventorySvc implements IPihInventorySvc {
@@ -84,13 +82,29 @@ public class PihInventorySvc implements IPihInventorySvc {
     }
 
     @Override
-    public List<PihInventoryData> getInventoryDataByRequestId(Integer requestId) {
+    public List<InventoryVo> getInventoryDataByRequestId(Integer requestId) {
         return this.pihInventoryMapper.getInventoryData(requestId);
     }
 
     @Override
     public Lots scanLabel(String lotNo) {
         return this.lotsRepo.findByLotNo(lotNo);
+    }
+
+    @Override
+    public List<InventoryVo> balance(Integer requestId) {
+
+        // TODO
+        /**
+         * Tìm ngày nhập tồn đầu kỳ trước
+         */
+        List<PihInventoryRequest> requests = this.pihInventoryRequestRepo.findAllByOrderByIdDesc();
+
+        Date dateKiTruoc = requests.get(0).getCreatedAt();
+
+        Date dateKiNay = requests.get(1).getCreatedAt();
+
+        return this.pihInventoryMapper.balance(requestId, dateKiTruoc, dateKiNay);
     }
 
 

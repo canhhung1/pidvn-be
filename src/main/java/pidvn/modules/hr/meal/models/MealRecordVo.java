@@ -21,6 +21,8 @@ public class MealRecordVo {
 
     private Integer total;
 
+    private Date date;
+
     public Integer getRowNum() {
         return rowNum;
     }
@@ -123,5 +125,13 @@ public class MealRecordVo {
 
     public void setTotal(Integer total) {
         this.total = total;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

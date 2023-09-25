@@ -16,4 +16,6 @@ public interface UsersRepo extends JpaRepository<Users, Integer> {
     List<Users> findByUsernameContains(@Param("username") String username);
 
     Users findByEmail(String email);
+
+    List<Users> findAllByOrderByIdDesc();
 }

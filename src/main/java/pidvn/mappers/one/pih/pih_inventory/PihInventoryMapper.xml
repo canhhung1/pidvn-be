@@ -3,7 +3,7 @@
 <mapper namespace="pidvn.mappers.one.pih.pih_inventory.PihInventoryMapper">
 
     <resultMap id="getInventoryData-result"
-               type="pidvn.entities.one.PihInventoryData">
+               type="pidvn.modules.pih.pih_inventory.models.InventoryVo">
         <result column="request_id" property="requestId" javaType="Integer"/>
         <result column="lot_no" property="lotNo" javaType="String"/>
         <result column="created_at" property="createdAt" javaType="Date"/>
@@ -11,17 +11,81 @@
         <result column="part_no" property="partNo" javaType="String"/>
     </resultMap>
     <select id="getInventoryData" resultMap="getInventoryData-result">
-        SELECT D.id, D.request_id, D.lot_no, D.qty, D.created_at, D.updated_at, L.model as part_no
-        FROM pih_inventory_data D
-        left join lots L on D.lot_no = L.lot_no
-        where 1 = 1
-        and D.request_id = #{requestId}
-        order by D.id desc
+        <![CDATA[
+            with
+            T01 as (
+                SELECT
+                    D.id, D.request_id, D.lot_no, ifnull(L.model, D.part_no) part_no,
+                    D.qty, D.created_at, D.updated_at
+                FROM pih_inventory_data D
+                left join lots L on D.lot_no = L.lot_no
+                where 1 = 1
+                and request_id = #{requestId}
+            ),
+            T02 as (
+                select T01.* , M.classified from T01
+                left join model M on T01.part_no = M.name
+            )
+            select * from T02 order by T02.lot_no asc
+        ]]>
+
     </select>
 
 
+    <resultMap id="balance-result"
+               type="pidvn.modules.pih.pih_inventory.models.InventoryVo">
+        <result column="lot_no" property="lotNo" javaType="String"/>
+        <result column="sys_qty" property="sysQty" javaType="Float"/>
+        <result column="ivt_qty" property="ivtQty" javaType="Float"/>
+    </resultMap>
+    <select id="balance" resultMap="balance-result">
+        <![CDATA[
+            with
+            T01 as (
+                SELECT
+                    R.lot_no, R.record_type, R.created_at,
+                    CASE
+                        WHEN R.record_type = 'PN' THEN R.qty*(-1)       -- PIH trả WH
+                        WHEN R.record_type = 'XP' THEN R.qty*(-1)		-- PIH nhận WH
+                        WHEN R.record_type = 'RT' THEN R.qty*(-1)		-- PIH nhận WH
+                        WHEN R.record_type = 'LRT' THEN R.qty*(-1)		-- PIH trả WH
+                    END qty
+                FROM pur_wh_records R
+                WHERE 1 = 1
+                and R.record_type in ('PN', 'XP', 'RT','LRT')
+                and (
+                        DATE_FORMAT(R.created_at, "%Y-%m-%d") >= DATE_FORMAT(#{fromDate}, "%Y-%m-%d")
+                        and
+                        DATE_FORMAT(R.created_at, "%Y-%m-%d") <= DATE_FORMAT(#{toDate}, "%Y-%m-%d")
+                    )
 
+                UNION
 
+                -- Process recording
+                SELECT
+                    M.clotno, M.record_type, M.created_at, (M.qty*-1) qty
+                FROM material_controls M
+                WHERE 1 = 1
+                and (M.record_type = 'PIC' or M.record_type is null)
+                and (
+                        DATE_FORMAT(M.created_at, "%Y-%m-%d") >= DATE_FORMAT(#{fromDate}, "%Y-%m-%d")
+                        and
+                        DATE_FORMAT(M.created_at, "%Y-%m-%d") <= DATE_FORMAT(#{toDate}, "%Y-%m-%d")
+                    )
 
+            ),
+            -- Data ly thuyet
+            T02 as (
+                select T01.lot_no, round(sum(T01.qty), 2) sys_qty from T01
+                group by T01.lot_no
+            ),
+            -- Data thuc te
+            T03 as (
+                select I.lot_no, I.qty ivt_qty from pih_inventory_data I where I.request_id = #{requestId}
+            )
+            select T02.lot_no, T02.sys_qty, T03.ivt_qty from T02
+            left join T03 on T02.lot_no = T03.lot_no
+        ]]>
+    </select>
 
 </mapper>

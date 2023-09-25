@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.spare_part.SparePartMapper">
+
+    <resultMap id="getSparePartRecords-result"
+               type="pidvn.modules.spare_part.models.SparePartRecordVo">
+
+        <result column="part_number" property="partNumber" javaType="String"/>
+        <result column="galileo_name" property="galileoName" javaType="String"/>
+        <result column="wh_user_code" property="whUserCode" javaType="String"/>
+        <result column="receive_user_code" property="receiveUserCode" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="updated_at" property="updatedAt" javaType="Date"/>
+
+
+    </resultMap>
+    <select id="getSparePartRecords" resultMap="getSparePartRecords-result">
+        SELECT
+            R.part_number, S.galileo_name, R.date, R.qty, R.wh_user_code,
+            R.receive_user_code, R.remark, R.created_at, R.updated_at,
+            case
+                when type = 'XK' then 'Xuất kho'
+                when type = 'NK' then 'Nhập kho'
+            end as type
+        FROM spare_part_records R
+        LEFT JOIN spare_parts S on R.part_number = S.part_number
+        where 1 = 1
+        order by R.id desc
+    </select>
+
+
+</mapper>

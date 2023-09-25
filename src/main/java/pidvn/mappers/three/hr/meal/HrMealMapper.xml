@@ -8,6 +8,7 @@
         <result column="CodeEmp" property="codeEmp" javaType="String"/>
         <result column="ProfileName" property="profileName" javaType="String"/>
         <result column="TimeLog" property="timeLog" javaType="Date"/>
+        <result column="Date" property="date" javaType="Date"/>
         <result column="MachineCode" property="machineCode" javaType="String"/>
         <result column="CanteenCode" property="canteenCode" javaType="String"/>
         <result column="CanteenName" property="canteenName" javaType="String"/>
@@ -17,7 +18,11 @@
     </resultMap>
     <select id="getMealRecords" resultMap="getMealRecords-result">
         SELECT
-            ROW_NUMBER() OVER (ORDER BY TimeLog DESC) as RowNum, A.*
+            ROW_NUMBER() OVER (ORDER BY TimeLog DESC) as RowNum, A.*,
+            CASE
+                WHEN FORMAT(A.TimeLog,'HH:mm') <![CDATA[<=]]> '07:30' THEN CAST(FORMAT(DATEADD(DAY, -1, A.TimeLog), 'yyyy-MM-dd') as date )
+                ELSE CAST(FORMAT(A.TimeLog,'yyyy-MM-dd') as date)
+            END as Date
         FROM PIDVN_MealRecord A
         WHERE 1 = 1
         <if test="timeLogRange != null and timeLogRange.size != 0">

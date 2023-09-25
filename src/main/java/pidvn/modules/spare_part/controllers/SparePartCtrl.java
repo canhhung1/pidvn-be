@@ -1,0 +1,59 @@
+package pidvn.modules.spare_part.controllers;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import pidvn.entities.one.SparePartInventoryData;
+import pidvn.entities.one.SparePartInventoryRequest;
+import pidvn.entities.one.SparePartRecord;
+import pidvn.modules.spare_part.services.SparePartSvc;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("SparePart")
+public class SparePartCtrl {
+
+    @Autowired
+    private SparePartSvc sparePartSvc;
+
+    @GetMapping("Users")
+    public ResponseEntity<?> getUsers() {
+        return new ResponseEntity<>(this.sparePartSvc.getUsers(), HttpStatus.OK);
+    }
+
+    @GetMapping("SpareParts")
+    public ResponseEntity<?> getSparePart() {
+        return new ResponseEntity<>(this.sparePartSvc.getSpareParts(), HttpStatus.OK);
+    }
+
+    @GetMapping("SparePartRecords")
+    public ResponseEntity<?> getSparePartRecords() {
+        return new ResponseEntity<>(this.sparePartSvc.getSparePartRecords(), HttpStatus.OK);
+    }
+
+    /**
+     * Lưu dữ liệu nhập xuất
+     * @return
+     */
+    @PostMapping("SparePartRecord")
+    public ResponseEntity<?> saveSparePartRecord(@RequestBody SparePartRecord sparePartRecord) {
+        return new ResponseEntity<>(this.sparePartSvc.saveSparePartRecord(sparePartRecord), HttpStatus.OK);
+    }
+
+    @GetMapping("SparePartInventoryRequests")
+    public ResponseEntity<?> getSparePartInventoryRequests() {
+        return new ResponseEntity<>(this.sparePartSvc.getSparePartInventoryRequests(), HttpStatus.OK);
+    }
+
+    @PostMapping("SparePartInventoryRequest")
+    public ResponseEntity<?> saveSparePartInventoryRequest(@RequestBody SparePartInventoryRequest request) throws Exception {
+        return new ResponseEntity<>(this.sparePartSvc.saveSparePartInventoryRequest(request), HttpStatus.OK);
+    }
+
+    @PostMapping("SparePartInventoryData")
+    public ResponseEntity<?> saveInventoryData(@RequestBody List<SparePartInventoryData> sparePartInventoryDataList) {
+        return new ResponseEntity<>(this.sparePartSvc.saveInventoryData(sparePartInventoryDataList), HttpStatus.OK);
+    }
+}

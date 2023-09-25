@@ -3,6 +3,7 @@ package pidvn.modules.pih.pih_inventory.services;
 import pidvn.entities.one.Lots;
 import pidvn.entities.one.PihInventoryData;
 import pidvn.entities.one.PihInventoryRequest;
+import pidvn.modules.pih.pih_inventory.models.InventoryVo;
 
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,9 @@ public interface IPihInventorySvc {
 
     PihInventoryData saveInventoryData(PihInventoryData inventoryData);
 
-    List<PihInventoryData> getInventoryDataByRequestId(Integer requestId);
+    List<InventoryVo> getInventoryDataByRequestId(Integer requestId);
 
     Lots scanLabel(String lotNo);
+
+    List<InventoryVo> balance(Integer requestId);
 }

@@ -47,5 +47,15 @@ public class PihInventoryCtrl {
         return new ResponseEntity<>(this.pihInventorySvc.scanLabel(lotNo), HttpStatus.OK);
     }
 
+    /**
+     * TODO
+     * Chênh lệch thực tế lý thuyết
+     * @return
+     */
+    @GetMapping("Balance")
+    public ResponseEntity<?> balance(@RequestParam Integer requestId) {
+        return new ResponseEntity<>(this.pihInventorySvc.balance(requestId), HttpStatus.OK);
+    }
+
 
 }

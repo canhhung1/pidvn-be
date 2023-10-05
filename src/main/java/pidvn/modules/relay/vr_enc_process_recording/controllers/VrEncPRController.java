@@ -85,7 +85,7 @@ public class VrEncPRController {
     }
 
     @PostMapping("UpdateMaterial")
-    public ResponseEntity<?> updateMaterial(@RequestBody MaterialVo materialVo) {
+    public ResponseEntity<?> updateMaterial(@RequestBody MaterialVo materialVo) throws Exception {
         return new ResponseEntity<>(this.vrEncPRSvc.updateMaterial(materialVo), HttpStatus.OK);
     }
 

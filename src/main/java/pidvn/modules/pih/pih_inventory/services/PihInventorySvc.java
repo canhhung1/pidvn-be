@@ -100,9 +100,9 @@ public class PihInventorySvc implements IPihInventorySvc {
          */
         List<PihInventoryRequest> requests = this.pihInventoryRequestRepo.findAllByOrderByIdDesc();
 
-        Date dateKiTruoc = requests.get(0).getCreatedAt();
+        Date dateKiTruoc = requests.get(1).getCreatedAt();
 
-        Date dateKiNay = requests.get(1).getCreatedAt();
+        Date dateKiNay = requests.get(0).getCreatedAt();
 
         return this.pihInventoryMapper.balance(requestId, dateKiTruoc, dateKiNay);
     }

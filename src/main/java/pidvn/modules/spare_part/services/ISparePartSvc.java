@@ -11,6 +11,9 @@ public interface ISparePartSvc {
     List<Users> getUsers();
 
     List<SparePart> getSpareParts();
+
+    SparePart saveSparePart(SparePart sparePart) throws Exception;
+
     List<SparePartRecordVo> getSparePartRecords();
 
     SparePartRecord saveSparePartRecord(SparePartRecord sparePartRecord);

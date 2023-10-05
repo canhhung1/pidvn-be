@@ -17,7 +17,7 @@ public interface IVrEncPRService {
     List<ProcessVo> getProcessesVer2(String line);
     Map scanLabel(ScannerVo scannerVo) throws Exception;
     List<MaterialControls> insertMaterials(List<MaterialVo> materialVos);
-    MaterialControls updateMaterial(MaterialVo materialVo);
+    MaterialControls updateMaterial(MaterialVo materialVo) throws Exception;
     List<MaterialVo> getMaterials(SearchVo searchVo);
     List<PartVo> getPartsByModel(String model);
     List<Shifts> getShifts();

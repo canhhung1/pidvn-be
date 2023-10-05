@@ -3,8 +3,11 @@ package pidvn.modules.spare_part.services;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import pidvn.entities.one.*;
+import pidvn.exceptions.ConflictException;
 import pidvn.mappers.one.spare_part.SparePartMapper;
 import pidvn.modules.spare_part.models.SparePartRecordVo;
 import pidvn.repositories.one.*;
@@ -43,7 +46,21 @@ public class SparePartSvc implements ISparePartSvc {
 
     @Override
     public List<SparePart> getSpareParts() {
-        return this.sparePartRepo.findAll();
+        return this.sparePartRepo.findAllByOrderByIdDesc();
+    }
+
+    @Override
+    public SparePart saveSparePart(SparePart sparePart) throws Exception {
+
+        if (this.sparePartRepo.findByPartNumber(sparePart.getPartNumber()) != null) {
+            throw new Exception("Part Number đã tồn tại");
+        }
+
+        if (this.sparePartRepo.findByGalileoName(sparePart.getGalileoName()) != null) {
+            throw new Exception("Galileo Name đã tồn tại");
+        }
+
+        return this.sparePartRepo.save(sparePart);
     }
 
     @Override
@@ -57,7 +74,7 @@ public class SparePartSvc implements ISparePartSvc {
     }
 
     @Override
-    public SparePartInventoryRequest saveSparePartInventoryRequest(SparePartInventoryRequest request) throws Exception {
+    public SparePartInventoryRequest saveSparePartInventoryRequest(SparePartInventoryRequest request) throws ResponseStatusException, ConflictException {
 
         /**
          * Nếu đã có phiếu kiểm kê trong tháng rồi thì ko tạo nữa
@@ -65,7 +82,8 @@ public class SparePartSvc implements ISparePartSvc {
         List<SparePartInventoryRequest> requests = this.sparePartInventoryRequestRepo.findByCurrentMonth();
 
         if (requests.size() > 0) {
-            throw new Exception("Đã có phiếu kiểm kê tháng này");
+            // throw new ResponseStatusException(HttpStatus.CONFLICT, "Đã có phiếu kiểm kê tháng này");
+            throw new ConflictException("Đã có phiếu kiểm kê tháng này");
         }
 
         return this.sparePartInventoryRequestRepo.save(request);

@@ -139,7 +139,7 @@ public class VrEncPRService implements IVrEncPRService {
     }
 
     @Override
-    public MaterialControls updateMaterial(MaterialVo materialVo) {
+    public MaterialControls updateMaterial(MaterialVo materialVo) throws Exception {
         /**
          * Logic mới: update Qty trong bảng lot
          *
@@ -157,12 +157,22 @@ public class VrEncPRService implements IVrEncPRService {
         if (chenhLech < 0) {
             float lotQty = lot.getQty();
             lotQty+=(chenhLech*-1);
+
+            if (lotQty < 0) {
+                throw new Exception("Không thể Update Qty được vì chênh lệch < 0");
+            }
+
             lot.setQty(lotQty);
             this.lotsRepo.save(lot);
         } else if (chenhLech > 0) {
             float lotQty = lot.getQty();
             lotQty-=chenhLech;
             lot.setQty(lotQty);
+
+            if (lotQty < 0) {
+                throw new Exception("Không thể Update Qty được vì chênh lệch < 0");
+            }
+
             this.lotsRepo.save(lot);
         }
 

@@ -4,9 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import pidvn.entities.one.SparePart;
 import pidvn.entities.one.SparePartInventoryData;
 import pidvn.entities.one.SparePartInventoryRequest;
 import pidvn.entities.one.SparePartRecord;
+import pidvn.exceptions.ConflictException;
 import pidvn.modules.spare_part.services.SparePartSvc;
 
 import java.util.List;
@@ -26,6 +29,11 @@ public class SparePartCtrl {
     @GetMapping("SpareParts")
     public ResponseEntity<?> getSparePart() {
         return new ResponseEntity<>(this.sparePartSvc.getSpareParts(), HttpStatus.OK);
+    }
+
+    @PostMapping("SparePart")
+    public ResponseEntity<?> saveSparePart(@RequestBody SparePart sparePart) throws Exception {
+        return new ResponseEntity<>(this.sparePartSvc.saveSparePart(sparePart), HttpStatus.OK);
     }
 
     @GetMapping("SparePartRecords")
@@ -48,7 +56,7 @@ public class SparePartCtrl {
     }
 
     @PostMapping("SparePartInventoryRequest")
-    public ResponseEntity<?> saveSparePartInventoryRequest(@RequestBody SparePartInventoryRequest request) throws Exception {
+    public ResponseEntity<?> saveSparePartInventoryRequest(@RequestBody SparePartInventoryRequest request) throws ResponseStatusException, ConflictException {
         return new ResponseEntity<>(this.sparePartSvc.saveSparePartInventoryRequest(request), HttpStatus.OK);
     }
 

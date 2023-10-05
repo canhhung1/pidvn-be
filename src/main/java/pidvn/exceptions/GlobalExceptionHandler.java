@@ -23,4 +23,11 @@ public class GlobalExceptionHandler {
         ErrorResponse errorDetails = new ErrorResponse(new Date(), exception.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<?> handleConflictException(ConflictException exception) {
+        ErrorResponse errorDetails = new ErrorResponse(new Date(), exception.getMessage(), "");
+        return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
+    }
 }

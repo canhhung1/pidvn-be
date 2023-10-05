@@ -1,6 +1,7 @@
 package pidvn.security;
 
 import io.jsonwebtoken.ExpiredJwtException;
+
 import io.jsonwebtoken.SignatureException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -48,7 +49,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 //throw new JwtException(e.toString());
             } catch (ExpiredJwtException e) {
                 logger.error(e.toString());
-                //throw new JwtException(e.toString());
+                // throw new JwtException(e.toString());
             } catch (SignatureException e) {
                 logger.error(e.toString());
                 //throw new JwtException(e.toString());
@@ -72,6 +73,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 // that the current user is authenticated. So it passes the
                 // Spring Security Configurations successfully.
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+            } else {
+                throw new JwtException("Token Expired !");
             }
         }
         chain.doFilter(request, response);

@@ -130,7 +130,7 @@ public class OqcCheckSvc implements IOqcCheckSvc {
      */
     private String getFinalJudgment(MultipartFile file) throws IOException {
         XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
-        String result = workbook.getSheetAt(0).getRow(37).getCell(20).getStringCellValue();
+        String result = workbook.getSheetAt(0).getRow(38).getCell(17).getStringCellValue();
         return result;
     }
 

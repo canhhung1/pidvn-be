@@ -6,8 +6,10 @@ public class QaCardVo {
 
     private String model;
     private String line;
+    private String lineCode;
     private Date date;
     private String shift;
+    private String shiftCode;
     private String lotNo;
     private String userCode;
     private String remark;
@@ -28,6 +30,14 @@ public class QaCardVo {
         this.line = line;
     }
 
+    public String getLineCode() {
+        return lineCode;
+    }
+
+    public void setLineCode(String lineCode) {
+        this.lineCode = lineCode;
+    }
+
     public Date getDate() {
         return date;
     }
@@ -42,6 +52,14 @@ public class QaCardVo {
 
     public void setShift(String shift) {
         this.shift = shift;
+    }
+
+    public String getShiftCode() {
+        return shiftCode;
+    }
+
+    public void setShiftCode(String shiftCode) {
+        this.shiftCode = shiftCode;
     }
 
     public String getLotNo() {

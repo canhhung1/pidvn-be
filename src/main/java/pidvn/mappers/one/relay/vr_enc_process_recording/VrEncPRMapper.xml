@@ -69,9 +69,14 @@
     <resultMap id="getQaCards-result"
                type="pidvn.modules.relay.vr_enc_process_recording.models.QaCardVo">
         <result column="lot_no" property="lotNo" javaType="String"/>
+        <result column="shift_code" property="shiftCode" javaType="String"/>
+        <result column="line_code" property="lineCode" javaType="String"/>
     </resultMap>
     <select id="getQaCards" resultMap="getQaCards-result">
-        SELECT A.id, A.model, A.lot_no, A.date, B.name shift, C.description line FROM lots A
+        SELECT
+            A.id, A.model, A.lot_no, A.date, B.name shift,
+            B.code shift_code, C.description line, C.name line_code
+        FROM lots A
         left join shifts B on A.shift = B.code
         left join line C on A.line = C.name
         where 1=1

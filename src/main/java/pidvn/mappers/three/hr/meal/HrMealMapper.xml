@@ -30,9 +30,9 @@
             <if test="empCode != null">
                 and A.CodeEmp = #{empCode}
             </if>
-            <if test="timeLogRange != null and timeLogRange.size != 0">
-                and (convert(date, A.TimeLog) <![CDATA[>=]]> convert(date, #{timeLogRange[0]}) and convert(date, A.TimeLog) <![CDATA[<=]]> convert(date,#{timeLogRange[1]}))
-            </if>
+<!--            <if test="timeLogRange != null and timeLogRange.size != 0">-->
+<!--                and (convert(date, A.TimeLog) <![CDATA[>=]]> convert(date, #{timeLogRange[0]}) and convert(date, A.TimeLog) <![CDATA[<=]]> convert(date,#{timeLogRange[1]}))-->
+<!--            </if>-->
         )
         SELECT * from T01
         WHERE 1 = 1
@@ -57,18 +57,26 @@
                     WHEN A.LineCode = 'PBS2' THEN N'Suất Phụ'
                     WHEN A.LineCode = 'PEOC1' THEN N'Suất Phụ'
                     ELSE N'Suất Chính'
-                END AS TicketType
+                END AS TicketType,
+                CASE
+                    WHEN FORMAT(A.TimeLog,'HH:mm') <![CDATA[<=]]> '07:30' THEN CAST(FORMAT(DATEADD(DAY, -1, A.TimeLog), 'yyyy-MM-dd') as date )
+                    ELSE CAST(FORMAT(A.TimeLog,'yyyy-MM-dd') as date)
+                END as Date
             FROM PIDVN_MealRecord A
             WHERE 1 = 1
-            <if test="timeLogRange != null and timeLogRange.size != 0">
-                AND convert(date, A.TimeLog) between convert(date,#{timeLogRange[0]}) and convert(date,#{timeLogRange[1]})
-            </if>
+<!--            <if test="timeLogRange != null and timeLogRange.size != 0">-->
+<!--                AND convert(date, A.TimeLog) between convert(date,#{timeLogRange[0]}) and convert(date,#{timeLogRange[1]})-->
+<!--            </if>-->
             <if test="empCode != null">
                 and A.CodeEmp = #{empCode}
             </if>
         ),
         T02 as (
-            SELECT T01.*, COUNT(*) as Total FROM T01
+            SELECT T01.CodeEmp, T01.ProfileName, T01.TicketType, COUNT(*) as Total FROM T01
+            where 1 = 1
+            <if test="dateRange != null and dateRange.size != 0">
+                and (convert(date, T01.Date) <![CDATA[>=]]> convert(date, #{dateRange[0]}) and convert(date, T01.Date) <![CDATA[<=]]> convert(date,#{dateRange[1]}))
+            </if>
             GROUP BY T01.CodeEmp, T01.ProfileName, T01.TicketType
         )
         SELECT

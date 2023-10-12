@@ -220,14 +220,17 @@ public class VrEncPRService implements IVrEncPRService {
 
 
         if (productType.equals("11GS")) {
-            sourcePath = "Y:\\Public\\CanhHung\\Project\\VR-EMC-Process-Recording\\11GS.xls";
-            targetPath = "Y:\\Public\\CanhHung\\Project\\VR-EMC-Process-Recording\\" + tempName;
+            sourcePath = "P:\\IS\\CanhHung\\FDCS\\VR-EMC-Process-Recording\\11GS.xls";
+            targetPath = "P:\\IS\\CanhHung\\FDCS\\VR-EMC-Process-Recording\\" + tempName;
         }else if (productType.equals("11G2")) {
-            sourcePath = "Y:\\Public\\CanhHung\\Project\\VR-EMC-Process-Recording\\11G2.xls";
-            targetPath = "Y:\\Public\\CanhHung\\Project\\VR-EMC-Process-Recording\\" + tempName;
+            sourcePath = "P:\\IS\\CanhHung\\FDCS\\VR-EMC-Process-Recording\\11G2.xls";
+            targetPath = "P:\\IS\\CanhHung\\FDCS\\VR-EMC-Process-Recording\\" + tempName;
         } else if (productType.equals("GMT")) {
-            sourcePath = "Y:\\Public\\CanhHung\\Project\\VR-EMC-Process-Recording\\GMT.xls";
-            targetPath = "Y:\\Public\\CanhHung\\Project\\VR-EMC-Process-Recording\\" + tempName;
+            sourcePath = "P:\\IS\\CanhHung\\FDCS\\VR-EMC-Process-Recording\\GMT.xls";
+            targetPath = "P:\\IS\\CanhHung\\FDCS\\VR-EMC-Process-Recording\\" + tempName;
+        } else if(productType.equals("TEMP")) {
+            sourcePath = "P:\\IS\\CanhHung\\FDCS\\VR-EMC-Process-Recording\\Temp.xls";
+            targetPath = "P:\\IS\\CanhHung\\FDCS\\VR-EMC-Process-Recording\\" + tempName;
         }
 
 
@@ -247,6 +250,11 @@ public class VrEncPRService implements IVrEncPRService {
 
         Cell qaCardCell = sheet.getRow(51).getCell(1);
         qaCardCell.setCellValue(qaCard);
+
+        Cell qrCodeCell = sheet.getRow(48).getCell(2);
+        //qrCodeCell.setCellType(CellType.FORMULA);
+        qrCodeCell.setCellFormula("IMAGE ( \"https://api.qrserver.com/v1/create-qr-code/?data=\" & B52 )");
+
 
         Cell dateCell = sheet.getRow(5).getCell(2);
         dateCell.setCellValue(date);

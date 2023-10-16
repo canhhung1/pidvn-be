@@ -30,7 +30,7 @@ public class SparePartRecord {
     private Date date;
 
     @Column(name = "qty")
-    private String qty;
+    private Integer qty;
 
     @Column(name = "wh_user_code")
     private String whUserCode;
@@ -44,6 +44,15 @@ public class SparePartRecord {
     @Column(name = "type")
     private String type;
 
+    @Column(name = "insert_type")
+    private String insertType;
+
+    @Column(name = "line")
+    private String line;
+
+    @Column(name = "machine")
+    private String machine;
+
     @CreatedDate
     @Column(name = "created_at")
     private Date createdAt;
@@ -51,6 +60,7 @@ public class SparePartRecord {
     @LastModifiedDate
     @Column(name = "updated_at")
     private Date updatedAt;
+
 
     public Integer getId() {
         return id;
@@ -92,11 +102,11 @@ public class SparePartRecord {
         this.date = date;
     }
 
-    public String getQty() {
+    public Integer getQty() {
         return qty;
     }
 
-    public void setQty(String qty) {
+    public void setQty(Integer qty) {
         this.qty = qty;
     }
 
@@ -130,6 +140,30 @@ public class SparePartRecord {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getInsertType() {
+        return insertType;
+    }
+
+    public void setInsertType(String insertType) {
+        this.insertType = insertType;
+    }
+
+    public String getLine() {
+        return line;
+    }
+
+    public void setLine(String line) {
+        this.line = line;
+    }
+
+    public String getMachine() {
+        return machine;
+    }
+
+    public void setMachine(String machine) {
+        this.machine = machine;
     }
 
     public Date getCreatedAt() {

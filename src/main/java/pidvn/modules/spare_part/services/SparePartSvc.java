@@ -1,17 +1,23 @@
 package pidvn.modules.spare_part.services;
 
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import pidvn.entities.one.*;
 import pidvn.exceptions.ConflictException;
 import pidvn.mappers.one.spare_part.SparePartMapper;
+import pidvn.modules.spare_part.models.RowExcelErrorVo;
 import pidvn.modules.spare_part.models.SparePartRecordVo;
 import pidvn.repositories.one.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,9 +75,24 @@ public class SparePartSvc implements ISparePartSvc {
     }
 
     @Override
-    public SparePartRecord saveSparePartRecord(SparePartRecord sparePartRecord) {
-        return this.sparePartRecordRepo.save(sparePartRecord);
+    public List<SparePartRecord> saveSparePartRecords(List<SparePartRecord> sparePartRecords) {
+
+        List<SparePartRecord> data = new ArrayList<>();
+
+        for (SparePartRecord item : sparePartRecords) {
+            if (item.getQty() > 0) {
+                data.add(item);
+            }
+        }
+
+        return this.sparePartRecordRepo.saveAll(data);
     }
+
+//    @Override
+//    public SparePartRecord saveSparePartRecord(SparePartRecord sparePartRecord) {
+//        return this.sparePartRecordRepo.save(sparePartRecord);
+//    }
+
 
     @Override
     public SparePartInventoryRequest saveSparePartInventoryRequest(SparePartInventoryRequest request) throws ResponseStatusException, ConflictException {
@@ -100,11 +121,11 @@ public class SparePartSvc implements ISparePartSvc {
         List<SparePartInventoryData> resultOK = new ArrayList<>();
         List<SparePartInventoryData> resultNG = new ArrayList<>();
 
-        for (SparePartInventoryData item: sparePartInventoryDataList) {
+        for (SparePartInventoryData item : sparePartInventoryDataList) {
             try {
                 SparePartInventoryData ivtData = this.sparePartInventoryDataRepo.save(item);
                 resultOK.add(ivtData);
-            }catch (Exception e) {
+            } catch (Exception e) {
                 logger.debug(e.toString());
                 resultNG.add(item);
             }
@@ -113,6 +134,86 @@ public class SparePartSvc implements ISparePartSvc {
         Map result = new HashMap();
         result.put("resultOK", resultOK);
         result.put("resultNG", resultNG);
+
+        return result;
+    }
+
+    @Override
+    public Map uploadExcel(MultipartFile file, String recordType) throws IOException {
+
+        Map result = null;
+
+        if (recordType.equals("XK")) {
+            result = this.readExcelSparePartOutput(file);
+        }
+
+        List<SparePartRecord> data = (List<SparePartRecord>) result.get("data");
+
+        this.sparePartRecordRepo.saveAll(data);
+
+
+        return result;
+    }
+
+
+    /**
+     * Đọ dữ liệu xuất spare part từ excel
+     *
+     * @param file
+     * @return
+     */
+    private Map readExcelSparePartOutput(MultipartFile file) {
+
+
+        XSSFWorkbook workbook = null;
+        try {
+            workbook = new XSSFWorkbook(file.getInputStream());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        XSSFSheet sheet = workbook.getSheetAt(0);
+
+
+        List<SparePartRecord> data = new ArrayList<>();
+        List<RowExcelErrorVo> rowNG = new ArrayList<>();
+
+        int lastRowNum = sheet.getPhysicalNumberOfRows();
+
+        for (int i = 6; i <= lastRowNum; i++) {
+            SparePartRecord obj = new SparePartRecord();
+            try {
+                XSSFRow row = sheet.getRow(i);
+
+                if (row.getCell(2).getStringCellValue().trim().equals("")
+                        || row.getCell(2).getStringCellValue() == null
+                ) {
+                    Integer rowNum = i + 1;
+                    rowNG.add(new RowExcelErrorVo(rowNum,"Không có PartNumber"));
+                }
+
+                obj.setPartNumber(row.getCell(2).getStringCellValue());
+                obj.setWhUserCode(row.getCell(5).getStringCellValue());
+                obj.setReceiveUserCode(row.getCell(7).getStringCellValue());
+                obj.setQty((int) row.getCell(4).getNumericCellValue());
+                obj.setMachine(row.getCell(8).getStringCellValue());
+                obj.setLine(row.getCell(9).getStringCellValue());
+                obj.setDate(row.getCell(0).getDateCellValue());
+                obj.setInsertType("Upload");
+                obj.setType("XK");
+
+                data.add(obj);
+
+            } catch (Exception e) {
+                Integer rowNum = i + 1;
+                RowExcelErrorVo item = new RowExcelErrorVo(rowNum, e.toString());
+                rowNG.add(item);
+            }
+        }
+
+        Map result = new HashMap();
+
+        result.put("data", data);
+        result.put("error", rowNG);
 
         return result;
     }

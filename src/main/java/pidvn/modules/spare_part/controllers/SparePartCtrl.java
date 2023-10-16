@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import pidvn.entities.one.SparePart;
 import pidvn.entities.one.SparePartInventoryData;
@@ -12,6 +13,7 @@ import pidvn.entities.one.SparePartRecord;
 import pidvn.exceptions.ConflictException;
 import pidvn.modules.spare_part.services.SparePartSvc;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -45,9 +47,9 @@ public class SparePartCtrl {
      * Lưu dữ liệu nhập xuất
      * @return
      */
-    @PostMapping("SparePartRecord")
-    public ResponseEntity<?> saveSparePartRecord(@RequestBody SparePartRecord sparePartRecord) {
-        return new ResponseEntity<>(this.sparePartSvc.saveSparePartRecord(sparePartRecord), HttpStatus.OK);
+    @PostMapping("SparePartRecords")
+    public ResponseEntity<?> saveSparePartRecords(@RequestBody List<SparePartRecord> sparePartRecords) {
+        return new ResponseEntity<>(this.sparePartSvc.saveSparePartRecords(sparePartRecords), HttpStatus.OK);
     }
 
     @GetMapping("SparePartInventoryRequests")
@@ -63,5 +65,9 @@ public class SparePartCtrl {
     @PostMapping("SparePartInventoryData")
     public ResponseEntity<?> saveInventoryData(@RequestBody List<SparePartInventoryData> sparePartInventoryDataList) {
         return new ResponseEntity<>(this.sparePartSvc.saveInventoryData(sparePartInventoryDataList), HttpStatus.OK);
+    }
+    @PostMapping("UploadExcel")
+    public ResponseEntity<?> uploadExcel(@RequestBody MultipartFile file, @RequestParam String recordType) throws IOException {
+        return new ResponseEntity<>(this.sparePartSvc.uploadExcel(file, recordType), HttpStatus.OK);
     }
 }

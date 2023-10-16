@@ -1,6 +1,5 @@
 package pidvn.modules.spare_part.services;
 
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -143,7 +142,7 @@ public class SparePartSvc implements ISparePartSvc {
 
         Map result = null;
 
-        if (recordType.equals("XK")) {
+        if (recordType.equals("OUT")) {
             result = this.readExcelSparePartOutput(file);
         }
 
@@ -163,7 +162,6 @@ public class SparePartSvc implements ISparePartSvc {
      * @return
      */
     private Map readExcelSparePartOutput(MultipartFile file) {
-
 
         XSSFWorkbook workbook = null;
         try {
@@ -189,6 +187,13 @@ public class SparePartSvc implements ISparePartSvc {
                 ) {
                     Integer rowNum = i + 1;
                     rowNG.add(new RowExcelErrorVo(rowNum,"Không có PartNumber"));
+                    continue;
+                }
+
+                if ((int) row.getCell(4).getNumericCellValue() < 0) {
+                    Integer rowNum = i + 1;
+                    rowNG.add(new RowExcelErrorVo(rowNum,"Qty < 0"));
+                    continue;
                 }
 
                 obj.setPartNumber(row.getCell(2).getStringCellValue());
@@ -198,8 +203,8 @@ public class SparePartSvc implements ISparePartSvc {
                 obj.setMachine(row.getCell(8).getStringCellValue());
                 obj.setLine(row.getCell(9).getStringCellValue());
                 obj.setDate(row.getCell(0).getDateCellValue());
-                obj.setInsertType("Upload");
-                obj.setType("XK");
+                obj.setInsertType("excel");
+                obj.setType("OUT");
 
                 data.add(obj);
 

@@ -18,8 +18,10 @@
         SELECT
             R.part_number, S.galileo_name, R.date, R.qty, R.wh_user_code,
             R.receive_user_code, R.remark, R.created_at, R.updated_at,
+            R.line, R.machine,
             case
                 when type = 'XK' then 'Xuất kho'
+                when type = 'OUT' then 'Xuất kho'
                 when type = 'NK' then 'Nhập kho'
             end as type
         FROM spare_part_records R

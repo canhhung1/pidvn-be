@@ -13,6 +13,8 @@ public class SparePartRecordVo {
     private String receiveUserCode;
     private String remark;
     private String type;
+    private String line;
+    private String machine;
     private Date createdAt;
     private Date updatedAt;
 
@@ -86,6 +88,22 @@ public class SparePartRecordVo {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getLine() {
+        return line;
+    }
+
+    public void setLine(String line) {
+        this.line = line;
+    }
+
+    public String getMachine() {
+        return machine;
+    }
+
+    public void setMachine(String machine) {
+        this.machine = machine;
     }
 
     public Date getCreatedAt() {

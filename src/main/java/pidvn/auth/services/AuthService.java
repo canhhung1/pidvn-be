@@ -216,7 +216,7 @@ public class AuthService implements IAuthService {
      */
     @Override
     public Map getRoleAndPermissionByUsernameV2(String username) throws Exception {
-        List<AuthVo> authVoList = this.authMapper.getRoleAndPermissionByUsernameV2(username);
+        List<AuthVo> authVoList = this.authMapper.getRoleAndPermissionByUsername(username);
 
         if (authVoList.size() < 0) {
             throw new Exception("Có lỗi về Role & Permission");

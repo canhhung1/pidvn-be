@@ -11,6 +11,7 @@ import pidvn.entities.one.SparePartInventoryData;
 import pidvn.entities.one.SparePartInventoryRequest;
 import pidvn.entities.one.SparePartRecord;
 import pidvn.exceptions.ConflictException;
+import pidvn.modules.spare_part.models.SearchVo;
 import pidvn.modules.spare_part.services.SparePartSvc;
 
 import java.io.IOException;
@@ -38,9 +39,9 @@ public class SparePartCtrl {
         return new ResponseEntity<>(this.sparePartSvc.saveSparePart(sparePart), HttpStatus.OK);
     }
 
-    @GetMapping("SparePartRecords")
-    public ResponseEntity<?> getSparePartRecords() {
-        return new ResponseEntity<>(this.sparePartSvc.getSparePartRecords(), HttpStatus.OK);
+    @PostMapping("GetSparePartRecords")
+    public ResponseEntity<?> getSparePartRecords(@RequestBody SearchVo searchVo) {
+        return new ResponseEntity<>(this.sparePartSvc.getSparePartRecords(searchVo), HttpStatus.OK);
     }
 
     /**
@@ -69,5 +70,16 @@ public class SparePartCtrl {
     @PostMapping("UploadExcel")
     public ResponseEntity<?> uploadExcel(@RequestBody MultipartFile file, @RequestParam String recordType) throws IOException {
         return new ResponseEntity<>(this.sparePartSvc.uploadExcel(file, recordType), HttpStatus.OK);
+    }
+
+
+    @GetMapping("Lines")
+    public ResponseEntity<?> getLineStandard() {
+        return new ResponseEntity<>(this.sparePartSvc.getLineStandard(), HttpStatus.OK);
+    }
+
+    @GetMapping("Machines")
+    public ResponseEntity<?> getMachineStandard() {
+        return new ResponseEntity<>(this.sparePartSvc.getMachineStandard(), HttpStatus.OK);
     }
 }

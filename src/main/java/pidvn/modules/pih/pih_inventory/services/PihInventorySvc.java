@@ -46,7 +46,7 @@ public class PihInventorySvc implements IPihInventorySvc {
 
         List<PihInventoryRequest> requests = this.pihInventoryRequestRepo.findByCurrentMonth();
 
-        if (requests != null || requests.size() > 0) {
+        if (requests.size() > 0) {
             throw new Exception("Đã có phiếu kiểm kê tháng này");
         }
 

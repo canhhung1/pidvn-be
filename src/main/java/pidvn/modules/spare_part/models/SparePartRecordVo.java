@@ -17,6 +17,13 @@ public class SparePartRecordVo {
     private String machine;
     private Date createdAt;
     private Date updatedAt;
+    private Float standardPrice;
+    private String factoryCode;
+
+    private String currencyCode;
+    private String unit;
+
+    private Float totalPrice;
 
     public Integer getId() {
         return id;
@@ -120,5 +127,45 @@ public class SparePartRecordVo {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Float getStandardPrice() {
+        return standardPrice;
+    }
+
+    public void setStandardPrice(Float standardPrice) {
+        this.standardPrice = standardPrice;
+    }
+
+    public String getFactoryCode() {
+        return factoryCode;
+    }
+
+    public void setFactoryCode(String factoryCode) {
+        this.factoryCode = factoryCode;
+    }
+
+    public String getCurrencyCode() {
+        return currencyCode;
+    }
+
+    public void setCurrencyCode(String currencyCode) {
+        this.currencyCode = currencyCode;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public Float getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(Float totalPrice) {
+        this.totalPrice = totalPrice;
     }
 }

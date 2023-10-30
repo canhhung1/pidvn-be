@@ -2,6 +2,7 @@ package pidvn.modules.spare_part.services;
 
 import org.springframework.web.multipart.MultipartFile;
 import pidvn.entities.one.*;
+import pidvn.modules.spare_part.models.SearchVo;
 import pidvn.modules.spare_part.models.SparePartRecordVo;
 
 import java.io.IOException;
@@ -16,7 +17,7 @@ public interface ISparePartSvc {
 
     SparePart saveSparePart(SparePart sparePart) throws Exception;
 
-    List<SparePartRecordVo> getSparePartRecords();
+    List<SparePartRecordVo> getSparePartRecords(SearchVo searchVo);
 
 //    SparePartRecord saveSparePartRecord(SparePartRecord sparePartRecord);
 
@@ -29,4 +30,8 @@ public interface ISparePartSvc {
     Map saveInventoryData(List<SparePartInventoryData> sparePartInventoryDataList);
 
     Map uploadExcel(MultipartFile file, String recordType) throws IOException;
+
+
+    List<SparePartLineStandard> getLineStandard();
+    List<SparePartMachineStandard> getMachineStandard();
 }

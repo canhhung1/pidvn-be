@@ -13,6 +13,7 @@ import pidvn.entities.one.*;
 import pidvn.exceptions.ConflictException;
 import pidvn.mappers.one.spare_part.SparePartMapper;
 import pidvn.modules.spare_part.models.RowExcelErrorVo;
+import pidvn.modules.spare_part.models.SearchVo;
 import pidvn.modules.spare_part.models.SparePartRecordVo;
 import pidvn.repositories.one.*;
 
@@ -44,6 +45,12 @@ public class SparePartSvc implements ISparePartSvc {
     @Autowired
     private SparePartMapper sparePartMapper;
 
+    @Autowired
+    private SparePartLineStandardRepo sparePartLineStandardRepo;
+
+    @Autowired
+    private SparePartMachineStandardRepo sparePartMachineStandardRepo;
+
     @Override
     public List<Users> getUsers() {
         return this.usersRepo.findAllByOrderByIdDesc();
@@ -69,8 +76,8 @@ public class SparePartSvc implements ISparePartSvc {
     }
 
     @Override
-    public List<SparePartRecordVo> getSparePartRecords() {
-        return this.sparePartMapper.getSparePartRecords();
+    public List<SparePartRecordVo> getSparePartRecords(SearchVo searchVo) {
+        return this.sparePartMapper.getSparePartRecords(searchVo);
     }
 
     @Override
@@ -154,6 +161,16 @@ public class SparePartSvc implements ISparePartSvc {
         return result;
     }
 
+    @Override
+    public List<SparePartLineStandard> getLineStandard() {
+        return this.sparePartLineStandardRepo.findAll();
+    }
+
+    @Override
+    public List<SparePartMachineStandard> getMachineStandard() {
+        return this.sparePartMachineStandardRepo.findAll();
+    }
+
 
     /**
      * Đọ dữ liệu xuất spare part từ excel
@@ -190,9 +207,9 @@ public class SparePartSvc implements ISparePartSvc {
                     continue;
                 }
 
-                if ((int) row.getCell(4).getNumericCellValue() < 0) {
+                if ((int) row.getCell(4).getNumericCellValue() <= 0) {
                     Integer rowNum = i + 1;
-                    rowNG.add(new RowExcelErrorVo(rowNum,"Qty < 0"));
+                    rowNG.add(new RowExcelErrorVo(rowNum,"Qty <= 0"));
                     continue;
                 }
 

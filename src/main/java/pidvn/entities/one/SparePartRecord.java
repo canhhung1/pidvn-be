@@ -53,6 +53,9 @@ public class SparePartRecord {
     @Column(name = "machine")
     private String machine;
 
+    @Column(name = "factory_code")
+    private String factoryCode;
+
     @CreatedDate
     @Column(name = "created_at")
     private Date createdAt;
@@ -164,6 +167,14 @@ public class SparePartRecord {
 
     public void setMachine(String machine) {
         this.machine = machine;
+    }
+
+    public String getFactoryCode() {
+        return factoryCode;
+    }
+
+    public void setFactoryCode(String factoryCode) {
+        this.factoryCode = factoryCode;
     }
 
     public Date getCreatedAt() {

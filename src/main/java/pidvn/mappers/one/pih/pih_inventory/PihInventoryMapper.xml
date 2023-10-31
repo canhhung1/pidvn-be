@@ -73,6 +73,18 @@
                         DATE_FORMAT(M.created_at, "%Y-%m-%d") <= DATE_FORMAT(#{toDate}, "%Y-%m-%d")
                     )
 
+                UNION
+
+                -- Machine OK
+                SELECT
+                    D.lot_no, "Machine OK" record_type, D.created_at, D.qty
+                FROM pidvn.defect_records D where D.defect_code in ('PR00','RC000','MD000','EPR000','EMD000','EDC000','IMD000','EMDEB000')
+                and (
+                        DATE_FORMAT(D.created_at, "%Y-%m-%d") >= DATE_FORMAT(#{fromDate}, "%Y-%m-%d")
+                        and
+                        DATE_FORMAT(D.created_at, "%Y-%m-%d") <= DATE_FORMAT(#{toDate}, "%Y-%m-%d")
+                    )
+
             ),
             -- Data ly thuyet
             T02 as (

@@ -53,34 +53,24 @@
 
 
     <resultMap id="getRoleAndPermissionByUsernameV2-result"
-               type="pidvn.auth.models.AuthVo">
+               type="pidvn.auth.models.RolePermissionVo">
 
-        <result column="role_id" property="roleId" javaType="Integer"/>
-        <result column="user_id" property="userId" javaType="Integer"/>
-        <result column="role_name" property="roleName" javaType="String"/>
+        <result column="role" property="role" javaType="String"/>
         <result column="permission" property="permission" javaType="String"/>
-        <result column="username" property="username" javaType="String"/>
 
     </resultMap>
     <select id="getRoleAndPermissionByUsernameV2"
             resultMap="getRoleAndPermissionByUsernameV2-result">
 
-        select ifnull(roles,'') roles, ifnull(group_concat(case when CNT = 0 then roles else name end),'') permissions, username  from (
-               select * from (
-                      select tbl,roles,permissions,username,name, CNT,SUM(CNT) over(partition by '')TOTAL from (
-                             select A.*, B.name, instr(case when A.permissions = 'super_admin' then B.name else A.permissions end ,B.name) CNT  from (
-                                   select 'A' tbl,
-                                          R.name as roles,
-                                   ifnull(group_concat(REGEXP_REPLACE(ifnull(R.permission,'["super_admin"]'),'(")|(\\[)|(\\])','')),'')  permissions, U.username
-                                          from role_user RU
-                                          inner join (SELECT * FROM pidvn.roles where 1=1 and nvl(permission,'') like '%') R on RU.role_id = R.id
-                                          inner join users U on RU.user_id = U.id
-                                          where U.username = #{username}
-                                   )A, (select *,'A' tbl from permissions p where name like 'e-%') B
-                             where A.tbl = B.tbl -- and instr(case when A.permissions = 'super_admin' then B.name else A.permissions end ,B.name) > 0
-                      )A
-               )A where (CNT = 0 and TOTAL = 0) or (CNT != 0)
-        )A
+        select
+        R.name as role,
+        (REGEXP_REPLACE(R.permission,'(")|(\\[)|(\\])','')) permission
+        , U.username
+        from role_user RU
+        inner join (select  distinct A.name, A.permission, A.id FROM pidvn.roles A left join permissions B
+        on A.permission like concat('%',B.name,'%') where A.name like 'ROLE_%' or A.name ='super_admin' ) R on RU.role_id = R.id
+        right join users U on RU.user_id = U.id
+        where U.username = #{username}
 
     </select>
 

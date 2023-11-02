@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pidvn.auth.models.AccountVo;
 import pidvn.auth.models.AuthVo;
 import pidvn.auth.models.PasswordVo;
+import pidvn.auth.models.RolePermissionVo;
 import pidvn.auth.utils.EmailUtil;
 import pidvn.auth.utils.RandomUtil;
 import pidvn.entities.one.Account;
@@ -196,8 +197,7 @@ public class AuthService implements IAuthService {
         claims.put("SubSectionCode", user.getSubsectionCode());
         claims.put("Position", user.getPosition());
         claims.put("PositionId", user.getPositionId());
-        claims.put("Roles", rolesPermissions.get("roles"));
-        claims.put("Permissions", rolesPermissions.get("permissions"));
+        claims.put("rolesPermissions", rolesPermissions.get("rolesPermissions"));
 
         String token = Jwts.builder().setClaims(claims).setSubject(username).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
@@ -216,20 +216,20 @@ public class AuthService implements IAuthService {
      */
     @Override
     public Map getRoleAndPermissionByUsernameV2(String username) throws Exception {
-        List<AuthVo> authVoList = this.authMapper.getRoleAndPermissionByUsername(username);
+        List<RolePermissionVo> rolesPermissions = this.authMapper.getRoleAndPermissionByUsernameV2(username);
 
-        if (authVoList.size() < 0) {
+        if (rolesPermissions.size() < 0) {
             throw new Exception("Có lỗi về Role & Permission");
         }
 
-        AuthVo result = authVoList.get(0);
-
-        Set setRoles = Sets.newHashSet(result.getRoles().split(","));
-        Set setPermissions = Sets.newHashSet(result.getPermissions().split(","));
+//        AuthVo result = authVoList.get(0);
+//
+//        Set setRoles = Sets.newHashSet(result.getRoles().split(","));
+//        Set setPermissions = Sets.newHashSet(result.getPermissions().split(","));
 
         Map map = new HashMap();
-        map.put("roles", setRoles);
-        map.put("permissions", setPermissions);
+//        map.put("roles", setRoles);
+        map.put("rolesPermissions", rolesPermissions);
 
         return map;
     }

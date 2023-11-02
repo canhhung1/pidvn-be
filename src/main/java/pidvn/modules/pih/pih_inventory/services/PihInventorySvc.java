@@ -98,13 +98,15 @@ public class PihInventorySvc implements IPihInventorySvc {
         /**
          * Tìm ngày nhập tồn đầu kỳ trước
          */
-        List<PihInventoryRequest> requests = this.pihInventoryRequestRepo.findAllByOrderByIdDesc();
+        List<PihInventoryRequest> requests = this.pihInventoryRequestRepo.findAllByOrderByIdDesc(requestId);
 
         Date dateKiTruoc = requests.get(1).getCreatedAt();
 
         Date dateKiNay = requests.get(0).getCreatedAt();
 
-        return this.pihInventoryMapper.balance(requestId, dateKiTruoc, dateKiNay);
+        Integer requestIdKyTruoc = requests.get(1).getId();
+
+        return this.pihInventoryMapper.balance(requestId, dateKiTruoc, dateKiNay, requestIdKyTruoc);
     }
 
 

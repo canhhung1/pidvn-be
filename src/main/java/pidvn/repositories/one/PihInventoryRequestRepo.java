@@ -12,6 +12,9 @@ public interface PihInventoryRequestRepo extends JpaRepository<PihInventoryReque
 
     List<PihInventoryRequest> findAllByOrderByIdDesc();
 
+    @Query(value = "SELECT * FROM pih_inventory_request where id <= :id order by id desc", nativeQuery = true)
+    List<PihInventoryRequest> findAllByOrderByIdDesc(Integer id);
+
     PihInventoryRequest findByReqNo(String reqNo);
 
     @Query(value = "SELECT * FROM pih_inventory_request where DATE_FORMAT(created_at, \"%Y-%m\") = DATE_FORMAT(SYSDATE(), \"%Y-%m\");", nativeQuery = true)

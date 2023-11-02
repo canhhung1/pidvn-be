@@ -85,6 +85,12 @@
                         DATE_FORMAT(D.created_at, "%Y-%m-%d") <= DATE_FORMAT(#{toDate}, "%Y-%m-%d")
                     )
 
+                UNION
+
+                -- Ton dau ky truoc
+                SELECT D.lot_no, "Inventory" record_type, D.created_at, D.qty FROM pih_inventory_data D
+                where 1 = 1 and D.request_id = #{requestIdKyTruoc}
+
             ),
             -- Data ly thuyet
             T02 as (

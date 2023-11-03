@@ -63,8 +63,8 @@
             resultMap="getRoleAndPermissionByUsernameV2-result">
 
         select
-        R.name as roles,
-        nvl(REGEXP_REPLACE(R.permission,'(")|(\\[)|(\\])',''),'') permissions
+        R.name as role,
+        nvl(REGEXP_REPLACE(R.permission,'(")|(\\[)|(\\])',''),'') permission
         , U.username
         from role_user RU
         inner join (select  distinct A.name, A.permission, A.id FROM pidvn.roles A left join permissions B

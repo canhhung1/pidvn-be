@@ -63,7 +63,7 @@
             resultMap="getRoleAndPermissionByUsernameV2-result">
 
         select
-        R.name as role,
+        nvl(R.name,'') as role,
         nvl(REGEXP_REPLACE(R.permission,'(")|(\\[)|(\\])',''),'') permission
         , U.username
         from role_user RU

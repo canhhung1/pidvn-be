@@ -40,7 +40,6 @@
         <result column="inventory_area" property="inventoryArea" javaType="String"/>
     </resultMap>
     <select id="balance" resultMap="balance-result">
-        <![CDATA[
             with
             T01 as (
                 SELECT
@@ -55,9 +54,9 @@
                 WHERE 1 = 1
                 and R.record_type in ('PN', 'XP', 'RT','LRT')
                 and (
-                        DATE_FORMAT(R.created_at, "%Y-%m-%d") >= DATE_FORMAT(#{fromDate}, "%Y-%m-%d")
+                        DATE_FORMAT(R.created_at, "%Y-%m-%d") <![CDATA[>=]]> DATE_FORMAT(#{fromDate}, "%Y-%m-%d")
                         and
-                        DATE_FORMAT(R.created_at, "%Y-%m-%d") <= DATE_FORMAT(#{toDate}, "%Y-%m-%d")
+                        DATE_FORMAT(R.created_at, "%Y-%m-%d") <![CDATA[<=]]> DATE_FORMAT(#{toDate}, "%Y-%m-%d")
                     )
 
                 UNION
@@ -69,9 +68,9 @@
                 WHERE 1 = 1
                 and (M.record_type = 'PIC' or M.record_type is null)
                 and (
-                        DATE_FORMAT(M.created_at, "%Y-%m-%d") >= DATE_FORMAT(#{fromDate}, "%Y-%m-%d")
+                        DATE_FORMAT(M.created_at, "%Y-%m-%d") <![CDATA[>=]]> DATE_FORMAT(#{fromDate}, "%Y-%m-%d")
                         and
-                        DATE_FORMAT(M.created_at, "%Y-%m-%d") <= DATE_FORMAT(#{toDate}, "%Y-%m-%d")
+                        DATE_FORMAT(M.created_at, "%Y-%m-%d") <![CDATA[<=]]>  DATE_FORMAT(#{toDate}, "%Y-%m-%d")
                     )
 
                 UNION
@@ -81,9 +80,9 @@
                     D.lot_no, "Machine OK" record_type, D.created_at, D.qty
                 FROM pidvn.defect_records D where D.defect_code in ('PR00','RC000','MD000','EPR000','EMD000','EDC000','IMD000','EMDEB000')
                 and (
-                        DATE_FORMAT(D.created_at, "%Y-%m-%d") >= DATE_FORMAT(#{fromDate}, "%Y-%m-%d")
+                        DATE_FORMAT(D.created_at, "%Y-%m-%d") <![CDATA[>=]]> DATE_FORMAT(#{fromDate}, "%Y-%m-%d")
                         and
-                        DATE_FORMAT(D.created_at, "%Y-%m-%d") <= DATE_FORMAT(#{toDate}, "%Y-%m-%d")
+                        DATE_FORMAT(D.created_at, "%Y-%m-%d") <![CDATA[<=]]> DATE_FORMAT(#{toDate}, "%Y-%m-%d")
                     )
 
                 UNION
@@ -108,7 +107,14 @@
             )
             select T04.*, (T04.sys_qty - T04.ivt_qty) balance from T04
             where 1 = 1
-        ]]>
+
+            <if test="inventoryArea != null and inventoryArea.size != 0">
+                and T04.inventory_area in
+                <foreach item="item" index="index" collection="inventoryArea" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
     </select>
 
 </mapper>

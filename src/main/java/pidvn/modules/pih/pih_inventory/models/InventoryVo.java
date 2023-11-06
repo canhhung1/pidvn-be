@@ -14,8 +14,8 @@ public class InventoryVo {
     private String partNo;
     private Date createdAt;
     private Date updatedAt;
-
     private String inventoryArea;
+    private Float balance;
 
     public Integer getId() {
         return id;
@@ -103,5 +103,13 @@ public class InventoryVo {
 
     public void setInventoryArea(String inventoryArea) {
         this.inventoryArea = inventoryArea;
+    }
+
+    public Float getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Float balance) {
+        this.balance = balance;
     }
 }

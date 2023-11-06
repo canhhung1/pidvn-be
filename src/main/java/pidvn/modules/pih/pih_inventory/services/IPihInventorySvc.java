@@ -25,5 +25,5 @@ public interface IPihInventorySvc {
 
     Lots scanLabel(String lotNo);
 
-    List<InventoryVo> balance(Integer requestId);
+    List<InventoryVo> balance(Integer requestId, List<Integer> inventoryArea);
 }

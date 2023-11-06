@@ -62,8 +62,8 @@ public class PihInventoryCtrl {
      * @return
      */
     @GetMapping("Balance")
-    public ResponseEntity<?> balance(@RequestParam Integer requestId) {
-        return new ResponseEntity<>(this.pihInventorySvc.balance(requestId), HttpStatus.OK);
+    public ResponseEntity<?> balance(@RequestParam Integer requestId, @RequestParam List<Integer> inventoryArea) {
+        return new ResponseEntity<>(this.pihInventorySvc.balance(requestId, inventoryArea), HttpStatus.OK);
     }
 
 

@@ -103,9 +103,8 @@ public class PihInventorySvc implements IPihInventorySvc {
     }
 
     @Override
-    public List<InventoryVo> balance(Integer requestId) {
+    public List<InventoryVo> balance(Integer requestId, List<Integer> inventoryArea) {
 
-        // TODO
         /**
          * Tìm ngày nhập tồn đầu kỳ trước
          */
@@ -117,7 +116,7 @@ public class PihInventorySvc implements IPihInventorySvc {
 
         Integer requestIdKyTruoc = requests.get(1).getId();
 
-        return this.pihInventoryMapper.balance(requestId, dateKiTruoc, dateKiNay, requestIdKyTruoc);
+        return this.pihInventoryMapper.balance(requestId, dateKiTruoc, dateKiNay, requestIdKyTruoc, inventoryArea);
     }
 
 

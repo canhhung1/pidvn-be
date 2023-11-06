@@ -15,6 +15,8 @@ public class InventoryVo {
     private Date createdAt;
     private Date updatedAt;
 
+    private String inventoryArea;
+
     public Integer getId() {
         return id;
     }
@@ -93,5 +95,13 @@ public class InventoryVo {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getInventoryArea() {
+        return inventoryArea;
+    }
+
+    public void setInventoryArea(String inventoryArea) {
+        this.inventoryArea = inventoryArea;
     }
 }

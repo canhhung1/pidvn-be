@@ -7,11 +7,13 @@ import org.springframework.stereotype.Service;
 import pidvn.entities.one.Lots;
 import pidvn.entities.one.PihInventoryData;
 import pidvn.entities.one.PihInventoryRequest;
+import pidvn.entities.one.ProductType;
 import pidvn.mappers.one.pih.pih_inventory.PihInventoryMapper;
 import pidvn.modules.pih.pih_inventory.models.InventoryVo;
 import pidvn.repositories.one.LotsRepo;
 import pidvn.repositories.one.PihInventoryDataRepo;
 import pidvn.repositories.one.PihInventoryRequestRepo;
+import pidvn.repositories.one.ProductTypeRepo;
 
 import java.util.*;
 
@@ -30,7 +32,16 @@ public class PihInventorySvc implements IPihInventorySvc {
     private LotsRepo lotsRepo;
 
     @Autowired
+    private ProductTypeRepo productTypeRepo;
+
+    @Autowired
     private PihInventoryMapper pihInventoryMapper;
+
+    @Override
+    public List<ProductType> getInventoryArea() {
+        List<Integer> productIds = Arrays.asList(4,6);
+        return this.productTypeRepo.findByProductIdIn(productIds);
+    }
 
     @Override
     public List<PihInventoryRequest> getInventoryRequests() {

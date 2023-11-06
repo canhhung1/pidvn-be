@@ -37,6 +37,7 @@
         <result column="lot_no" property="lotNo" javaType="String"/>
         <result column="sys_qty" property="sysQty" javaType="Float"/>
         <result column="ivt_qty" property="ivtQty" javaType="Float"/>
+        <result column="inventory_area" property="inventoryArea" javaType="String"/>
     </resultMap>
     <select id="balance" resultMap="balance-result">
         <![CDATA[
@@ -99,10 +100,14 @@
             ),
             -- Data thuc te
             T03 as (
-                select I.lot_no, I.qty ivt_qty from pih_inventory_data I where I.request_id = #{requestId}
+                select I.lot_no, I.qty ivt_qty, I.inventory_area from pih_inventory_data I where I.request_id = 9
+            ),
+            T04 as (
+                select T02.lot_no, T02.sys_qty, nvl(T03.ivt_qty, 0) ivt_qty, T03.inventory_area from T02
+                left join T03 on T02.lot_no = T03.lot_no
             )
-            select T02.lot_no, T02.sys_qty, T03.ivt_qty from T02
-            left join T03 on T02.lot_no = T03.lot_no
+            select T04.*, (T04.sys_qty - T04.ivt_qty) balance from T04
+            where 1 = 1
         ]]>
     </select>
 

@@ -17,6 +17,15 @@ public class PihInventoryCtrl {
     @Autowired
     private PihInventorySvc pihInventorySvc;
 
+    /**
+     * Lấy các khu vực kiểm kê PIH
+     * @return
+     */
+    @GetMapping("InventoryArea")
+    private ResponseEntity<?> getInventoryArea() {
+        return new ResponseEntity<>(this.pihInventorySvc.getInventoryArea(), HttpStatus.OK);
+    }
+
     @GetMapping("Requests")
     public ResponseEntity<?> getInventoryRequests() {
         return new ResponseEntity<>(this.pihInventorySvc.getInventoryRequests(), HttpStatus.OK);

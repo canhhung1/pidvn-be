@@ -29,6 +29,9 @@ public class PihInventoryData {
     @Column(name = "qty")
     private Float qty;
 
+    @Column(name = "inventory_area")
+    private String inventoryArea;
+
     @CreatedDate
     @Column(name = "created_at")
     private Date createdAt;
@@ -75,6 +78,14 @@ public class PihInventoryData {
 
     public void setQty(Float qty) {
         this.qty = qty;
+    }
+
+    public String getInventoryArea() {
+        return inventoryArea;
+    }
+
+    public void setInventoryArea(String inventoryArea) {
+        this.inventoryArea = inventoryArea;
     }
 
     public Date getCreatedAt() {

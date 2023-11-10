@@ -218,21 +218,21 @@ public class VrEncPRService implements IVrEncPRService {
 
         String tempName = "temp-" + new Random().nextInt(1000) + "xls" ;
 
+        String rootFolder = "P:\\IS\\(C) Save File FDCS\\FDCS-Server-2\\VR-EMC-Process-Recording\\";
 
         if (productType.equals("11GS")) {
-            sourcePath = "P:\\IS\\CanhHung\\FDCS\\VR-EMC-Process-Recording\\11GS.xls";
-            targetPath = "P:\\IS\\CanhHung\\FDCS\\VR-EMC-Process-Recording\\" + tempName;
+            sourcePath = rootFolder + "11GS.xls";
+            targetPath = rootFolder + tempName;
         }else if (productType.equals("11G2")) {
-            sourcePath = "P:\\IS\\CanhHung\\FDCS\\VR-EMC-Process-Recording\\11G2.xls";
-            targetPath = "P:\\IS\\CanhHung\\FDCS\\VR-EMC-Process-Recording\\" + tempName;
+            sourcePath = rootFolder + "11G2.xls";
+            targetPath = rootFolder + tempName;
         } else if (productType.equals("GMT")) {
-            sourcePath = "P:\\IS\\CanhHung\\FDCS\\VR-EMC-Process-Recording\\GMT.xls";
-            targetPath = "P:\\IS\\CanhHung\\FDCS\\VR-EMC-Process-Recording\\" + tempName;
+            sourcePath = rootFolder + "GMT.xls";
+            targetPath = rootFolder + tempName;
         } else if(productType.equals("TEMP")) {
-            sourcePath = "P:\\IS\\CanhHung\\FDCS\\VR-EMC-Process-Recording\\Temp.xls";
-            targetPath = "P:\\IS\\CanhHung\\FDCS\\VR-EMC-Process-Recording\\" + tempName;
+            sourcePath = rootFolder + "Temp.xls";
+            targetPath = rootFolder + tempName;
         }
-
 
 
         String pathFile = MaterialExportUtils.createTempFile(sourcePath, targetPath);

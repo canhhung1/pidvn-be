@@ -9,6 +9,7 @@
         <result column="created_at" property="createdAt" javaType="Date"/>
         <result column="updated_at" property="updatedAt" javaType="Date"/>
         <result column="part_no" property="partNo" javaType="String"/>
+        <result column="inventory_area" property="inventoryArea" javaType="String"/>
     </resultMap>
     <select id="getInventoryData" resultMap="getInventoryData-result">
         <![CDATA[
@@ -16,9 +17,10 @@
             T01 as (
                 SELECT
                     D.id, D.request_id, D.lot_no, ifnull(L.model, D.part_no) part_no,
-                    D.qty, D.created_at, D.updated_at
+                    D.qty, D.created_at, D.updated_at, P.name inventory_area
                 FROM pih_inventory_data D
                 left join lots L on D.lot_no = L.lot_no
+                left join product_type P on D.inventory_area = P.id
                 where 1 = 1
                 and request_id = #{requestId}
             ),

@@ -18,10 +18,7 @@ import pidvn.modules.spare_part.models.SparePartRecordVo;
 import pidvn.repositories.one.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class SparePartSvc implements ISparePartSvc {
@@ -222,6 +219,9 @@ public class SparePartSvc implements ISparePartSvc {
                 obj.setDate(row.getCell(0).getDateCellValue());
                 obj.setInsertType("excel");
                 obj.setType("OUT");
+                obj.setFactoryCode("RE");
+                obj.setCreatedAt(new Date());
+                obj.setUpdatedAt(new Date());
 
                 data.add(obj);
 

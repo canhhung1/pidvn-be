@@ -14,6 +14,8 @@
         <result column="standard_price" property="standardPrice" javaType="Float"/>
         <result column="currency_code" property="currencyCode" javaType="String"/>
         <result column="total_price" property="totalPrice" javaType="Float"/>
+        <result column="factory_code" property="factoryCode" javaType="String"/>
+
     </resultMap>
     <select id="getSparePartRecords" resultMap="getSparePartRecords-result">
 

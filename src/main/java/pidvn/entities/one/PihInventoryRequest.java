@@ -34,6 +34,12 @@ public class PihInventoryRequest {
     @Column(name = "updated_at")
     private Date updatedAt;
 
+    @Column(name = "calculate_theory_data_date")
+    private Date calculateTheoryDataDate;
+
+    @Column(name = "inventory_close_date")
+    private Date inventoryCloseDate;
+
     public Integer getId() {
         return id;
     }
@@ -80,5 +86,21 @@ public class PihInventoryRequest {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Date getCalculateTheoryDataDate() {
+        return calculateTheoryDataDate;
+    }
+
+    public void setCalculateTheoryDataDate(Date calculateTheoryDataDate) {
+        this.calculateTheoryDataDate = calculateTheoryDataDate;
+    }
+
+    public Date getInventoryCloseDate() {
+        return inventoryCloseDate;
+    }
+
+    public void setInventoryCloseDate(Date inventoryCloseDate) {
+        this.inventoryCloseDate = inventoryCloseDate;
     }
 }

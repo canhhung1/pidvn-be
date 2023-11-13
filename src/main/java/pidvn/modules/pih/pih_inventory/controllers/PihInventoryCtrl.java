@@ -8,6 +8,7 @@ import pidvn.entities.one.PihInventoryData;
 import pidvn.entities.one.PihInventoryRequest;
 import pidvn.modules.pih.pih_inventory.services.PihInventorySvc;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -29,6 +30,11 @@ public class PihInventoryCtrl {
     @GetMapping("Requests")
     public ResponseEntity<?> getInventoryRequests() {
         return new ResponseEntity<>(this.pihInventorySvc.getInventoryRequests(), HttpStatus.OK);
+    }
+
+    @GetMapping("Request/{requestId}")
+    public ResponseEntity<?> getInventoryRequest(@PathVariable Integer requestId) {
+        return new ResponseEntity<>(this.pihInventorySvc.getInventoryRequest(requestId), HttpStatus.OK);
     }
 
     @PostMapping("Request")
@@ -62,7 +68,9 @@ public class PihInventoryCtrl {
      * @return
      */
     @GetMapping("Balance")
-    public ResponseEntity<?> balance(@RequestParam Integer requestId, @RequestParam List<Integer> inventoryArea) {
+    public ResponseEntity<?> balance(
+            @RequestParam Integer requestId, @RequestParam List<Integer> inventoryArea
+    ) {
         return new ResponseEntity<>(this.pihInventorySvc.balance(requestId, inventoryArea), HttpStatus.OK);
     }
 

@@ -53,13 +53,13 @@ public class PihInventorySvc implements IPihInventorySvc {
 
         // TODO: nếu đã tồn tại request thì ko tạo mới
 
-        PihInventoryRequest request = this.pihInventoryRequestRepo.findByReqNo(ivtReq.getReqNo());
-
-        List<PihInventoryRequest> requests = this.pihInventoryRequestRepo.findByCurrentMonth();
-
-        if (requests.size() > 0) {
-            throw new Exception("Đã có phiếu kiểm kê tháng này");
-        }
+//        PihInventoryRequest request = this.pihInventoryRequestRepo.findByReqNo(ivtReq.getReqNo());
+//
+//        List<PihInventoryRequest> requests = this.pihInventoryRequestRepo.findByCurrentMonth();
+//
+//        if (requests.size() > 0) {
+//            throw new Exception("Đã có phiếu kiểm kê tháng này");
+//        }
 
         return this.pihInventoryRequestRepo.save(ivtReq);
     }
@@ -102,21 +102,70 @@ public class PihInventorySvc implements IPihInventorySvc {
         return this.lotsRepo.findByLotNo(lotNo);
     }
 
+    /**
+     *
+     * @param requestId
+     * @param inventoryArea
+     * @return
+     */
     @Override
     public List<InventoryVo> balance(Integer requestId, List<Integer> inventoryArea) {
 
+//        List<PihInventoryRequest> requests = this.pihInventoryRequestRepo.findAllByOrderByIdDesc(requestId);
+//
+//        Date dateKiTruoc = requests.get(1).getCreatedAt();
+//
+//        Date dateKiNay = requests.get(0).getCreatedAt();
+//
+//        Integer requestIdKyTruoc = requests.get(1).getId();
+
+        List<InventoryVo> result = this.getBalance(requestId, inventoryArea);
+
+        return result;
+    }
+
+    private List<InventoryVo> getBalance(Integer requestId, List<Integer> inventoryArea) {
+
         /**
-         * Tìm ngày nhập tồn đầu kỳ trước
+         * Tính lượng data theo lý thuyết
+         * Data lý thuyết = tồn lý thuyết tháng trước + data in/out (từ ngày theoryDate -> ngày ivtDate)
          */
-        List<PihInventoryRequest> requests = this.pihInventoryRequestRepo.findAllByOrderByIdDesc(requestId);
+        // B1: lấy thông tin request hiện tại
+        PihInventoryRequest request = this.pihInventoryRequestRepo.findById(requestId).get();
 
-        Date dateKiTruoc = requests.get(1).getCreatedAt();
+        // Ngày kiểm kê
+        Date ivtDate = request.getCreatedAt();
 
-        Date dateKiNay = requests.get(0).getCreatedAt();
+        // Ngày tính toán dữ liệu theo lý thuyết
+        Date theoryDate = request.getCalculateTheoryDataDate();
 
-        Integer requestIdKyTruoc = requests.get(1).getId();
+        // Ngày chốt kiểm kê
+        Date ivtCloseDate = request.getInventoryCloseDate();
 
-        return this.pihInventoryMapper.balance(requestId, dateKiTruoc, dateKiNay, requestIdKyTruoc, inventoryArea);
+
+        /**
+         * Tìm tồn theo lý thuyết
+         */
+        List<PihInventoryRequest> listRequest = this.pihInventoryRequestRepo.findDataBeforeMonth(ivtDate, 1);
+        PihInventoryRequest req = listRequest.get(0);
+        int requestIdKyTruoc = req.getId();
+
+
+        List<InventoryVo> result = this.pihInventoryMapper.balance(requestId,theoryDate,ivtDate, requestIdKyTruoc, inventoryArea);
+
+
+        return result;
+    }
+
+
+
+
+
+
+    @Override
+    public Optional<PihInventoryRequest> getInventoryRequest(Integer requestId) {
+
+        return this.pihInventoryRequestRepo.findById(requestId);
     }
 
 

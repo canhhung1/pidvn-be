@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import pidvn.entities.one.PihInventoryRequest;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -17,6 +18,15 @@ public interface PihInventoryRequestRepo extends JpaRepository<PihInventoryReque
 
     PihInventoryRequest findByReqNo(String reqNo);
 
-    @Query(value = "SELECT * FROM pih_inventory_request where DATE_FORMAT(created_at, \"%Y-%m\") = DATE_FORMAT(SYSDATE(), \"%Y-%m\");", nativeQuery = true)
-    List<PihInventoryRequest> findByCurrentMonth();
+
+    /**
+     * Tìm các request tính từ ngày :date, trong vòng :month tháng (số tháng)
+     * @param date
+     * @param month
+     * @return
+     */
+    @Query(value = "select * from pih_inventory_request A \n" +
+            "where date_format(A.created_at, '%Y-%m') = date_format(DATE_SUB(:date, INTERVAL :month MONTH), '%Y-%m') \n" +
+            "order by A.id desc", nativeQuery = true)
+    List<PihInventoryRequest> findDataBeforeMonth(Date date, int month);
 }

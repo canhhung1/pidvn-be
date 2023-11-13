@@ -101,7 +101,7 @@
             ),
             -- Data thuc te
             T03 as (
-                select I.lot_no, I.qty ivt_qty, I.inventory_area from pih_inventory_data I where I.request_id = 9
+                select I.lot_no, I.qty ivt_qty, I.inventory_area from pih_inventory_data I where I.request_id = #{requestId}
             ),
             T04 as (
                 select T02.lot_no, T02.sys_qty, nvl(T03.ivt_qty, 0) ivt_qty, T03.inventory_area from T02

@@ -10,6 +10,16 @@ import java.util.List;
 @Mapper
 public interface PihInventoryMapper {
     List<InventoryVo> getInventoryData(Integer requestId);
+
+    /**
+     *
+     * @param requestId
+     * @param fromDate ngày tính data theo lý thuyết
+     * @param toDate ngày kiểm kê
+     * @param requestIdKyTruoc
+     * @param inventoryArea khu vực kiểm kê
+     * @return
+     */
     List<InventoryVo> balance(Integer requestId, Date fromDate, Date toDate, Integer requestIdKyTruoc, List<Integer> inventoryArea);
 
 

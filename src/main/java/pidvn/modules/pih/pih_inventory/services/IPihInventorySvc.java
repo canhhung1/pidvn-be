@@ -8,6 +8,7 @@ import pidvn.modules.pih.pih_inventory.models.InventoryVo;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface IPihInventorySvc {
 
@@ -26,4 +27,6 @@ public interface IPihInventorySvc {
     Lots scanLabel(String lotNo);
 
     List<InventoryVo> balance(Integer requestId, List<Integer> inventoryArea);
+
+    Optional<PihInventoryRequest> getInventoryRequest(Integer requestId);
 }

@@ -39,7 +39,7 @@ public class PihInventorySvc implements IPihInventorySvc {
 
     @Override
     public List<ProductType> getInventoryArea() {
-        List<Integer> productIds = Arrays.asList(4,6);
+        List<Integer> productIds = Arrays.asList(4, 6);
         return this.productTypeRepo.findByProductIdIn(productIds);
     }
 
@@ -103,7 +103,6 @@ public class PihInventorySvc implements IPihInventorySvc {
     }
 
     /**
-     *
      * @param requestId
      * @param inventoryArea
      * @return
@@ -151,15 +150,11 @@ public class PihInventorySvc implements IPihInventorySvc {
         int requestIdKyTruoc = req.getId();
 
 
-        List<InventoryVo> result = this.pihInventoryMapper.balance(requestId,theoryDate,ivtDate, requestIdKyTruoc, inventoryArea);
+        List<InventoryVo> result = this.pihInventoryMapper.balance(requestId, theoryDate, ivtDate, requestIdKyTruoc, inventoryArea);
 
 
         return result;
     }
-
-
-
-
 
 
     @Override

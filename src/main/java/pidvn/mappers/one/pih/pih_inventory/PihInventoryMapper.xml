@@ -101,7 +101,15 @@
             ),
             -- Data thuc te
             T03 as (
-                select I.lot_no, I.qty ivt_qty, I.inventory_area from pih_inventory_data I where I.request_id = #{requestId}
+                select I.lot_no, I.qty ivt_qty, I.inventory_area from pih_inventory_data I
+                where 1 = 1
+                and I.request_id = #{requestId}
+                <if test="inventoryArea != null and inventoryArea.size != 0">
+                    and I.inventory_area in
+                    <foreach item="item" index="index" collection="inventoryArea" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
             ),
             T04 as (
                 select T02.lot_no, T02.sys_qty, nvl(T03.ivt_qty, 0) ivt_qty, T03.inventory_area from T02
@@ -110,12 +118,7 @@
             select T04.*, (T04.sys_qty - T04.ivt_qty) balance from T04
             where 1 = 1
 
-            <if test="inventoryArea != null and inventoryArea.size != 0">
-                and T04.inventory_area in
-                <foreach item="item" index="index" collection="inventoryArea" open="(" separator="," close=")">
-                    #{item}
-                </foreach>
-            </if>
+
 
     </select>
 

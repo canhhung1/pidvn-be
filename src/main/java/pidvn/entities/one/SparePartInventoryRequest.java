@@ -26,6 +26,12 @@ public class SparePartInventoryRequest {
     @Column(name = "remark")
     private String remark;
 
+    @Column(name = "inventory_date")
+    private Date inventoryDate;
+
+    @Column(name = "inventory_close_date")
+    private Date inventoryCloseDate;
+
     @CreatedDate
     @Column(name = "created_at")
     private Date createdAt;
@@ -64,6 +70,22 @@ public class SparePartInventoryRequest {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Date getInventoryDate() {
+        return inventoryDate;
+    }
+
+    public void setInventoryDate(Date inventoryDate) {
+        this.inventoryDate = inventoryDate;
+    }
+
+    public Date getInventoryCloseDate() {
+        return inventoryCloseDate;
+    }
+
+    public void setInventoryCloseDate(Date inventoryCloseDate) {
+        this.inventoryCloseDate = inventoryCloseDate;
     }
 
     public Date getCreatedAt() {

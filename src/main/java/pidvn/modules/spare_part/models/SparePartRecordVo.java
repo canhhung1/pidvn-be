@@ -19,10 +19,9 @@ public class SparePartRecordVo {
     private Date updatedAt;
     private Float standardPrice;
     private String factoryCode;
-
+    private String position;
     private String currencyCode;
     private String unit;
-
     private Float totalPrice;
 
     public Integer getId() {
@@ -143,6 +142,14 @@ public class SparePartRecordVo {
 
     public void setFactoryCode(String factoryCode) {
         this.factoryCode = factoryCode;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     public String getCurrencyCode() {

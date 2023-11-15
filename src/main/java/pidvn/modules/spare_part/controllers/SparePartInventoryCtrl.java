@@ -1,9 +1,11 @@
 package pidvn.modules.spare_part.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import pidvn.modules.spare_part.services.SparePartInventorySvc;
 
 import java.io.IOException;
 
@@ -11,10 +13,17 @@ import java.io.IOException;
 @RequestMapping("SparePart/Inventory")
 public class SparePartInventoryCtrl {
 
+    @Autowired
+    private SparePartInventorySvc sparePartInventorySvc;
 
-    @PostMapping("uploadExcelInventoryData")
-    public ResponseEntity<?> uploadExcelInventoryData(@RequestBody MultipartFile file) throws IOException {
-        return new ResponseEntity<>(null, HttpStatus.OK);
+    @GetMapping("Data")
+    public ResponseEntity<?> getInventoryData(@RequestParam Integer requestId) {
+        return new ResponseEntity<>(this.sparePartInventorySvc.getInventoryData(requestId), HttpStatus.OK);
+    }
+
+    @PostMapping("UploadExcel")
+    public ResponseEntity<?> uploadExcelInventoryData(@RequestBody MultipartFile file, @RequestParam Integer requestId) throws IOException {
+        return new ResponseEntity<>(this.sparePartInventorySvc.uploadExcelInventoryData(file, requestId), HttpStatus.OK);
     }
 
 

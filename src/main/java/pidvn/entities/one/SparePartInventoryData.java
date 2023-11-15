@@ -23,6 +23,9 @@ public class SparePartInventoryData {
     @Column(name = "part_number")
     private String partNumber;
 
+    @Column(name = "position")
+    private String position;
+
     @Column(name = "qty")
     private Integer qty;
 
@@ -56,6 +59,14 @@ public class SparePartInventoryData {
 
     public void setPartNumber(String partNumber) {
         this.partNumber = partNumber;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     public Integer getQty() {

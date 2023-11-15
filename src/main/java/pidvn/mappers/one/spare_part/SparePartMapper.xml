@@ -19,29 +19,68 @@
     </resultMap>
     <select id="getSparePartRecords" resultMap="getSparePartRecords-result">
 
+        with
+        T01 as (
+        select
+        A.part_number, B.galileo_name, A.date, A.qty, A.wh_user_code, A.receive_user_code, A.created_at,
+        A.line, A.machine, A.remark,
+        case
+        when A.type = 'XK' then 'Xuất kho'
+        when A.type = 'OUT' then 'Xuất kho'
+        when A.type = 'NK' then 'Nhập kho'
+        end as type
+        from spare_part_records A
+        left join spare_parts B on A.part_number = B.part_number
+        where 1 = 1
+        <if test="dateRange != null and dateRange.size != 0">
+            and (A.date <![CDATA[>=]]> DATE_FORMAT(#{dateRange[0]},'%Y-%m-%d') and A.date <![CDATA[<=]]>
+            DATE_FORMAT(#{dateRange[1]},'%Y-%m-%d'))
+        </if>
+        ),
+        T02 as (
+        SELECT
+        A.pnsucsm galileo_name, A.cdfc factory_code, DATE_FORMAT(A.ymd8ent, '%Y-%m-%d') input_date,
+        DATE_FORMAT(A.ymd8st, '%Y-%m-%d') effective_date,
+        DATE_FORMAT(A.ymd8ed, '%Y-%m-%d') expiry_date, A.ucstdi standard_price, A.cdcur currency_code, A.umstduc unit
+        FROM pidvn.tnmu007_standard_unit_cost A
+        where 1 = 1
+        order by A.ymd8ent desc
+        )
+        select
+        T01.*, T02.factory_code, T02.standard_price, T02.currency_code, T02.unit, ROUND((T02.standard_price*T01.qty), 4)
+        total_price
+        from T01
+        left join T02 on (T01.galileo_name = T02.galileo_name and (T01.date between T02.effective_date and
+        T02.expiry_date))
+
+    </select>
+
+
+    <resultMap id="getSparePartInventory-result"
+               type="pidvn.modules.spare_part.models.SparePartRecordVo">
+        <result column="part_number" property="partNumber" javaType="String"/>
+        <result column="galileo_name" property="galileoName" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="standard_price" property="standardPrice" javaType="Float"/>
+        <result column="currency_code" property="currencyCode" javaType="String"/>
+        <result column="total_price" property="totalPrice" javaType="Float"/>
+        <result column="factory_code" property="factoryCode" javaType="String"/>
+    </resultMap>
+    <select id="getSparePartInventory" resultMap="getSparePartInventory-result">
+        <![CDATA[
+
             with
             T01 as (
-                select
-                    A.part_number, B.galileo_name, A.date, A.qty, A.wh_user_code, A.receive_user_code, A.created_at,
-                    A.line, A.machine, A.remark,
-                    case
-                        when A.type = 'XK' then 'Xuất kho'
-                        when A.type = 'OUT' then 'Xuất kho'
-                        when A.type = 'NK' then 'Nhập kho'
-                    end as type
-                from spare_part_records A
-                left join spare_parts B on A.part_number = B.part_number
-                where 1 = 1
-                <if test="dateRange != null and dateRange.size != 0">
-                    and (A.date <![CDATA[>=]]> DATE_FORMAT(#{dateRange[0]},'%Y-%m-%d') and A.date <![CDATA[<=]]> DATE_FORMAT(#{dateRange[1]},'%Y-%m-%d'))
-                </if>
+                SELECT I.part_number, I.position, I.qty, S.galileo_name, DATE_FORMAT(I.created_at,'%Y-%m-%d') date, I.created_at FROM spare_part_inventory_data I
+                left join spare_parts S on I.part_number = S.part_number
+                where 1 = 1 and I.request_id = #{requestId}
             ),
             T02 as (
                 SELECT
                     A.pnsucsm galileo_name, A.cdfc factory_code, DATE_FORMAT(A.ymd8ent, '%Y-%m-%d') input_date, DATE_FORMAT(A.ymd8st, '%Y-%m-%d') effective_date,
                     DATE_FORMAT(A.ymd8ed, '%Y-%m-%d') expiry_date, A.ucstdi standard_price, A.cdcur currency_code, A.umstduc unit
                 FROM pidvn.tnmu007_standard_unit_cost A
-                where 1 = 1
+                where 1 = 1 and A.cdfc = 'RE'
                 order by A.ymd8ent desc
             )
             select
@@ -49,7 +88,8 @@
             from T01
             left join T02 on (T01.galileo_name = T02.galileo_name and (T01.date between T02.effective_date and T02.expiry_date))
 
-    </select>
 
+        ]]>
+    </select>
 
 </mapper>

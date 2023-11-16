@@ -1,6 +1,7 @@
 package pidvn.modules.relay.vr_enc_process_recording.models;
 
 import java.util.Date;
+import java.util.List;
 
 public class QaCardVo {
 
@@ -13,6 +14,8 @@ public class QaCardVo {
     private String lotNo;
     private String userCode;
     private String remark;
+    private List<String> customers;
+    private String customerCode;
 
     public String getModel() {
         return model;
@@ -86,14 +89,35 @@ public class QaCardVo {
         this.remark = remark;
     }
 
+    public List<String> getCustomers() {
+        return customers;
+    }
+
+    public void setCustomers(List<String> customers) {
+        this.customers = customers;
+    }
+
+    public String getCustomerCode() {
+        return customerCode;
+    }
+
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
+    }
+
     @Override
     public String toString() {
         return "QaCardVo{" +
                 "model='" + model + '\'' +
                 ", line='" + line + '\'' +
+                ", lineCode='" + lineCode + '\'' +
                 ", date=" + date +
                 ", shift='" + shift + '\'' +
+                ", shiftCode='" + shiftCode + '\'' +
                 ", lotNo='" + lotNo + '\'' +
+                ", userCode='" + userCode + '\'' +
+                ", remark='" + remark + '\'' +
+                ", customers=" + customers +
                 '}';
     }
 }

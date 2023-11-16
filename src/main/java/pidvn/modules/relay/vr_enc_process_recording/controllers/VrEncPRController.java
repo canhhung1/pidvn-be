@@ -44,6 +44,11 @@ public class VrEncPRController {
         return new ResponseEntity<>(this.vrEncPRSvc.getShifts(), HttpStatus.OK);
     }
 
+    @GetMapping("Customers")
+    public ResponseEntity<?> getCustomers() {
+        return new ResponseEntity<>(this.vrEncPRSvc.getCustomers(2), HttpStatus.OK);
+    }
+
     @PostMapping("QaCards")
     public ResponseEntity<?> getQaCards(@RequestBody SearchVo searchVo) {
         return new ResponseEntity<>(this.vrEncPRSvc.getQaCards(searchVo), HttpStatus.OK);

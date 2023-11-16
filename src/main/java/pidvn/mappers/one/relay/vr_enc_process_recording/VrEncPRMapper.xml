@@ -71,10 +71,11 @@
         <result column="lot_no" property="lotNo" javaType="String"/>
         <result column="shift_code" property="shiftCode" javaType="String"/>
         <result column="line_code" property="lineCode" javaType="String"/>
+        <result column="customer_code" property="customerCode" javaType="String"/>
     </resultMap>
     <select id="getQaCards" resultMap="getQaCards-result">
         SELECT
-            A.id, A.model, A.lot_no, A.date, B.name shift,
+            A.id, A.model, A.lot_no, A.date, B.name shift, A.customer_code,
             B.code shift_code, C.description line, C.name line_code
         FROM lots A
         left join shifts B on A.shift = B.code

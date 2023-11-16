@@ -33,6 +33,9 @@ public class VrEncPRService implements IVrEncPRService {
     private ShiftsRepo shiftsRepo;
 
     @Autowired
+    private CustomerRepo customerRepo;
+
+    @Autowired
     private VrEncPRMapper vrEncPRMapper;
 
     @Autowired
@@ -44,6 +47,11 @@ public class VrEncPRService implements IVrEncPRService {
     @Override
     public List<Line> getLines(Integer productId) {
         return this.lineRepo.findByProductIdOrderByName(productId);
+    }
+
+    @Override
+    public List<Customer> getCustomers(Integer productId) {
+        return this.customerRepo.findAllByProductId(productId);
     }
 
     @Override
@@ -322,11 +330,12 @@ public class VrEncPRService implements IVrEncPRService {
         lot.setQty(0F);
         lot.setType("Q");
         lot.setLabelType("QA");
+        lot.setCustomerCode(String.join(";", qaCardVo.getCustomers()));
 
         Lots qa = this.lotsRepo.save(lot);
 
         result.put("result","OK");
-        result.put("message",qa);
+        result.put("message", qa);
 
         return result;
     }

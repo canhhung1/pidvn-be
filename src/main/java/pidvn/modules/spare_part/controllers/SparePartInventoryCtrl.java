@@ -16,6 +16,11 @@ public class SparePartInventoryCtrl {
     @Autowired
     private SparePartInventorySvc sparePartInventorySvc;
 
+    @GetMapping("Request/{requestId}")
+    public ResponseEntity<?> getInventoryRequest(@PathVariable Integer requestId) {
+        return new ResponseEntity<>(this.sparePartInventorySvc.getInventoryRequest(requestId), HttpStatus.OK);
+    }
+
     @GetMapping("Data")
     public ResponseEntity<?> getInventoryData(@RequestParam Integer requestId) {
         return new ResponseEntity<>(this.sparePartInventorySvc.getInventoryData(requestId), HttpStatus.OK);

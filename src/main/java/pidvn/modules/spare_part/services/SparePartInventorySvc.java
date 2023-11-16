@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pidvn.entities.one.SparePartInventoryData;
+import pidvn.entities.one.SparePartInventoryRequest;
 import pidvn.mappers.one.spare_part.SparePartMapper;
 import pidvn.modules.spare_part.models.RowExcelErrorVo;
 import pidvn.modules.spare_part.models.SparePartRecordVo;
 import pidvn.repositories.one.SparePartInventoryDataRepo;
+import pidvn.repositories.one.SparePartInventoryRequestRepo;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,8 +27,16 @@ public class SparePartInventorySvc implements ISparePartInventorySvc {
     private SparePartInventoryDataRepo sparePartInventoryDataRepo;
 
     @Autowired
+    private SparePartInventoryRequestRepo sparePartInventoryRequestRepo;
+
+    @Autowired
     private SparePartMapper sparePartMapper;
 
+
+    @Override
+    public SparePartInventoryRequest getInventoryRequest(Integer requestId) {
+        return this.sparePartInventoryRequestRepo.findById(requestId).get();
+    }
 
     @Override
     public List<SparePartRecordVo> getInventoryData(Integer requestId) {

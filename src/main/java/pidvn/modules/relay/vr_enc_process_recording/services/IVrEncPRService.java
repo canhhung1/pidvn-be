@@ -1,5 +1,6 @@
 package pidvn.modules.relay.vr_enc_process_recording.services;
 
+import pidvn.entities.one.Customer;
 import pidvn.entities.one.Line;
 import pidvn.entities.one.MaterialControls;
 import pidvn.entities.one.Shifts;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 public interface IVrEncPRService {
     List<Line> getLines(Integer productId);
+    List<Customer> getCustomers(Integer productId);
     List<ProcessVo> getProcesses(String productTypeName);
     List<ProcessVo> getProcessesVer2(String line);
     Map scanLabel(ScannerVo scannerVo) throws Exception;

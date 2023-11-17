@@ -52,6 +52,9 @@ public class RelayDateCode {
     @Column(name = "updated_at")
     private Date updatedAt;
 
+    @Column(name = "record_type")
+    private String recordType;
+
     public Integer getId() {
         return id;
     }
@@ -146,5 +149,13 @@ public class RelayDateCode {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getRecordType() {
+        return recordType;
+    }
+
+    public void setRecordType(String recordType) {
+        this.recordType = recordType;
     }
 }

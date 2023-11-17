@@ -51,7 +51,7 @@ public class VrEncPRService implements IVrEncPRService {
 
     @Override
     public List<Customer> getCustomers(Integer productId) {
-        return this.customerRepo.findAllByProductId(productId);
+        return this.customerRepo.findAll();
     }
 
     @Override

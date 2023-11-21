@@ -51,7 +51,7 @@ public class VrEncPRService implements IVrEncPRService {
 
     @Override
     public List<Customer> getCustomers(Integer productId) {
-        return this.customerRepo.findAll();
+        return this.customerRepo.findAllByCodeIsNotNull();
     }
 
     @Override
@@ -301,29 +301,33 @@ public class VrEncPRService implements IVrEncPRService {
     @Override
     public Map createQaCard(QaCardVo qaCardVo) {
 
+        String qaCard = "";
+        Map result = new HashMap();
+
         Date date = qaCardVo.getDate();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String strDate = dateFormat.format(date);
 
-        String qaCard = qaCardVo.getModel() + "*" + qaCardVo.getLine() + "*" + strDate + "*" +  qaCardVo.getShift() + "*001";
+        qaCard = qaCardVo.getModel() + "*" + qaCardVo.getLineCode() + "*" + strDate + "*" +  qaCardVo.getShiftCode() + "*001";
 
-        // Kiểm tra qaCard đã tồn tại chưa
+        if (qaCardVo.getId() == null) {
 
-        Lots data = this.lotsRepo.findByLotNo(qaCard);
+            Lots data = this.lotsRepo.findByLotNo(qaCard);
 
-        Map result = new HashMap();
-
-        if (data != null) {
-            result.put("result","ERROR");
-            result.put("message","QA card đã tồn tại");
-            return result;
+            if (data != null) {
+                result.put("result","ERROR");
+                result.put("message","QA card đã tồn tại");
+                return result;
+            }
         }
 
+
         Lots lot = new Lots();
+        lot.setId(qaCardVo.getId());
         lot.setLotNo(qaCard);
         lot.setModel(qaCardVo.getModel());
-        lot.setLine(qaCardVo.getLine());
-        lot.setShift(qaCardVo.getShift());
+        lot.setLine(qaCardVo.getLineCode());
+        lot.setShift(qaCardVo.getShiftCode());
         lot.setDate(qaCardVo.getDate());
         lot.setPicCode(qaCardVo.getUserCode());
         lot.setUserCode(qaCardVo.getUserCode());

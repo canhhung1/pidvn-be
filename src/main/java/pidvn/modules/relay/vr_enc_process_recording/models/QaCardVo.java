@@ -5,6 +5,7 @@ import java.util.List;
 
 public class QaCardVo {
 
+    private Integer id;
     private String model;
     private String line;
     private String lineCode;
@@ -16,6 +17,14 @@ public class QaCardVo {
     private String remark;
     private List<String> customers;
     private String customerCode;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getModel() {
         return model;

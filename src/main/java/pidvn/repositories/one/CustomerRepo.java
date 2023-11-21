@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface CustomerRepo extends JpaRepository<Customer, Integer> {
-    List<Customer> findAllByProductId(Integer productId);
+    List<Customer> findAllByCodeIsNotNull();
 }

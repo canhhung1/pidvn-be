@@ -39,6 +39,8 @@ public class PihInventoryRequest {
 
     @Column(name = "inventory_close_date")
     private Date inventoryCloseDate;
+    @Column(name = "inventory_type")
+    private String inventoryType;
 
     public Integer getId() {
         return id;
@@ -102,5 +104,13 @@ public class PihInventoryRequest {
 
     public void setInventoryCloseDate(Date inventoryCloseDate) {
         this.inventoryCloseDate = inventoryCloseDate;
+    }
+
+    public String getInventoryType() {
+        return inventoryType;
+    }
+
+    public void setInventoryType(String inventoryType) {
+        this.inventoryType = inventoryType;
     }
 }

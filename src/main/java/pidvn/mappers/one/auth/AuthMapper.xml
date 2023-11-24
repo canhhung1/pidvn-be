@@ -73,7 +73,7 @@
         on RU.role_id = R.id
         right join users U on RU.user_id = U.id
         )A
-        where 1=1 and roles is not null and username = #{username}
+        where 1=1 and role is not null and username = #{username}
 
     </select>
 

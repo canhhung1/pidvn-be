@@ -28,4 +28,9 @@ public class HrMealSvc implements IHrMealSvc {
 
         return result;
     }
+
+    @Override
+    public List<MealRecordVo> getBalance() {
+        return this.hrMealMapper.getBalance();
+    }
 }

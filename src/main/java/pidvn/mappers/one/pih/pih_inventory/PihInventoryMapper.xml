@@ -14,21 +14,36 @@
     <select id="getInventoryData" resultMap="getInventoryData-result">
         <![CDATA[
             with
-            T01 as (
+             T01 as (
                 SELECT
                     D.id, D.request_id, D.lot_no, ifnull(L.model, D.part_no) part_no,
-                    D.qty, D.created_at, D.updated_at, P.name inventory_area
+                    D.qty, D.created_at, D.updated_at, P.name inventory_area, M.classified
                 FROM pih_inventory_data D
                 left join lots L on D.lot_no = L.lot_no
                 left join product_type P on D.inventory_area = P.id
+                left join model M on D.part_no = M.name
                 where 1 = 1
                 and request_id = #{requestId}
             ),
             T02 as (
-                select T01.* , M.classified from T01
-                left join model M on T01.part_no = M.name
+                SELECT
+                    D.id, null as request_id, null as lot_no, D.model part_no, sum(D.qty) qty,
+                    D.created_at, D.updated_at, null as inventory_area, M.classified
+                FROM pidvn.defect_records D
+                left join model M on D.model = M.name
+                where 1 = 1
+                and D.defect_code in ('2821', '2901', '3017', 'PR00','RC000','MD000','EPR000', 'EMD000','EDC000','IMD000','EMDEB000')
+                and (
+                    DATE_FORMAT(D.date, "%Y-%m-%d") >= DATE_FORMAT(#{fromDate}, "%Y-%m-%d")
+                    and
+                    DATE_FORMAT(D.date, "%Y-%m-%d") <= DATE_FORMAT(#{toDate}, "%Y-%m-%d")
+                )
+                group by D.model
             )
-            select * from T02 order by T02.lot_no asc
+
+            select * from T01
+            union
+            select * from T02
         ]]>
 
     </select>

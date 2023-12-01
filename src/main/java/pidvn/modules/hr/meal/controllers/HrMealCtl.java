@@ -19,4 +19,9 @@ public class HrMealCtl {
         return new ResponseEntity<>(this.hrMealSvc.getMealRecords(searchVo), HttpStatus.OK);
     }
 
+    @GetMapping("Balance")
+    public ResponseEntity<?> getBalance() {
+        return new ResponseEntity<>(this.hrMealSvc.getBalance(), HttpStatus.OK);
+    }
+
 }

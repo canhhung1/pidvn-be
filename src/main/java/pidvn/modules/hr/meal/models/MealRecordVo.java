@@ -23,6 +23,10 @@ public class MealRecordVo {
 
     private Date date;
 
+    private Integer ticketTimeSheet;
+    private Integer ticketActual;
+
+
     public Integer getRowNum() {
         return rowNum;
     }
@@ -133,5 +137,21 @@ public class MealRecordVo {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public Integer getTicketTimeSheet() {
+        return ticketTimeSheet;
+    }
+
+    public void setTicketTimeSheet(Integer ticketTimeSheet) {
+        this.ticketTimeSheet = ticketTimeSheet;
+    }
+
+    public Integer getTicketActual() {
+        return ticketActual;
+    }
+
+    public void setTicketActual(Integer ticketActual) {
+        this.ticketActual = ticketActual;
     }
 }

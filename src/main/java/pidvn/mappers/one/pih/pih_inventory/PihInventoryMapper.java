@@ -9,7 +9,7 @@ import java.util.List;
 
 @Mapper
 public interface PihInventoryMapper {
-    List<InventoryVo> getInventoryData(Integer requestId);
+    List<InventoryVo> getInventoryData(Integer requestId, Date fromDate, Date toDate);
 
     /**
      *

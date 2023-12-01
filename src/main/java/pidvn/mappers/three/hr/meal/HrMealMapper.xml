@@ -85,4 +85,209 @@
         FROM T02 ORDER BY CodeEmp DESC
 
     </select>
+
+
+
+    <resultMap id="getBalance-result"
+               type="pidvn.modules.hr.meal.models.MealRecordVo">
+        <result column="CodeEmp" property="codeEmp" javaType="String"/>
+        <result column="ProfileName" property="profileName" javaType="String"/>
+        <result column="TicketTimeSheet" property="ticketTimeSheet" javaType="Integer"/>
+        <result column="TicketActual" property="ticketActual" javaType="Integer"/>
+    </resultMap>
+    <select id="getBalance" resultMap="getBalance-result">
+        <![CDATA[
+            WITH
+            T01 as (
+                -- Dữ liệu ngày công
+                SELECT
+                [CodeEmp], [ProfileName], [NgayCong]
+                , CASE
+                    WHEN CaLamViec = '3HCA' THEN 9.5
+                    WHEN CaLamViec = '3HCA1' THEN 9.5
+                    WHEN CaLamViec = '310A' THEN 10
+                    WHEN CaLamViec = '310B' THEN 10
+                    WHEN CaLamViec = '310S' THEN 10
+                    WHEN CaLamViec = '312A' THEN 12
+                    WHEN CaLamViec = '312B' THEN 12
+                    WHEN CaLamViec = '312S' THEN 12
+                    WHEN CaLamViec = '31242A' THEN 12
+                    WHEN CaLamViec = '31242B' THEN 12
+                    WHEN CaLamViec IS NULL THEN 0
+                    ELSE 8
+                  END WorkingTime
+                , [CaLamViec]
+
+                FROM [PVG].[dbo].[View_PIDVN_AttendanceDetail]
+                WHERE 1 = 1
+                -- AND CodeEmp = '3013755'
+                AND FORMAT(NgayCong, 'yyyy-MM') = '2023-11'
+
+                UNION ALL
+
+                -- Dữ liệu OT
+                SELECT  [CodeEmp]
+                    , [ProfileName]
+                    , [WorkDateRoot]
+                    , SUM([ConfirmHours]) WorkingTime
+                    , null as CaLamViec
+                FROM [PVG].[dbo].[View_ThongTinOT_PIDVN]
+                WHERE 1 = 1
+                AND FORMAT(WorkDateRoot, 'yyyy-MM') = '2023-11'
+                -- AND CodeEmp = '3013755'
+                GROUP BY WorkDateRoot, CodeEmp, ProfileName
+
+            ),
+            T02 as (
+                SELECT T01.CodeEmp,
+                T01.ProfileName,
+                WorkingTime,
+                CASE
+                    WHEN T01.WorkingTime > 11.5 THEN 2
+                    WHEN (T01.WorkingTime >= 8 AND T01.WorkingTime <= 11.5) THEN 1
+                    WHEN T01.WorkingTime = 0 THEN 0
+                    ELSE 0
+                END AS Ticket
+                FROM T01
+            ),
+            T03 as (
+                -- Tổng hợp theo timesheet
+                SELECT
+                    T02.CodeEmp,
+                    T02.ProfileName,
+                    sum(T02.Ticket) Ticket,
+                    'TimeSheet' Type
+                FROM T02
+                WHERE 1 = 1
+                -- AND T02.CodeEmp = '3012982'
+                GROUP BY T02.CodeEmp, T02.ProfileName
+            ),
+            T04 AS (
+                -- Tổng hợp theo Actual
+                SELECT CodeEmp, ProfileName, COUNT(*) Ticket, 'Actual' Type FROM (
+                    SELECT
+                        [CodeEmp], [ProfileName],
+                        CASE
+                            WHEN FORMAT(TimeLog,'HH:mm') <= '07:30' THEN CAST(FORMAT(DATEADD(DAY, -1, TimeLog), 'yyyy-MM-dd') as date )
+                            ELSE CAST(FORMAT(TimeLog,'yyyy-MM-dd') as date)
+                        END as Date
+                    FROM [PVG].[dbo].[PIDVN_MealRecord]
+                    WHERE 1 = 1
+                    AND FORMAT(TimeLog, 'yyyy-MM') = '2023-11'
+                    -- AND CodeEmp = '3012982'
+                    -- AND (convert(date, TimeLog) >= convert(date, '2023-10-16') and convert(date, TimeLog) <= convert(date, '2023-10-31'))
+
+                ) A
+                WHERE 1 = 1
+                -- AND T01.CodeEmp = '3013755'
+                GROUP BY CodeEmp, ProfileName
+            )
+            SELECT T03.CodeEmp, T03.ProfileName, T03.Ticket AS TicketTimeSheet, T04.Ticket AS TicketActual
+            FROM T03
+            LEFT JOIN T04 ON T03.CodeEmp = T04.CodeEmp
+
+        ]]>
+
+    </select>
+
+
+
+    <resultMap id="getAmountTicketByTimeSheetAndActualUserScan-result"
+               type="pidvn.modules.hr.meal.models.MealRecordVo">
+
+        <result column="CodeEmp" property="codeEmp" javaType="String"/>
+        <result column="ProfileName" property="profileName" javaType="String"/>
+        <result column="TicketAmount" property="ticketAmount" javaType="Integer"/>
+        <result column="RecordType" property="recordType" javaType="String"/>
+
+    </resultMap>
+    <select id="getAmountTicketByTimeSheetAndActualUserScan"
+            resultMap="getAmountTicketByTimeSheetAndActualUserScan-result">
+        <![CDATA[
+            WITH
+            T01 as (
+                -- Dữ liệu ngày công
+                SELECT
+                [CodeEmp], [ProfileName], [NgayCong]
+                , CASE
+                    WHEN CaLamViec = '3HCA' THEN 9.5
+                    WHEN CaLamViec = '3HCA1' THEN 9.5
+                    WHEN CaLamViec = '310A' THEN 10
+                    WHEN CaLamViec = '310B' THEN 10
+                    WHEN CaLamViec = '310S' THEN 10
+                    WHEN CaLamViec = '312A' THEN 12
+                    WHEN CaLamViec = '312B' THEN 12
+                    WHEN CaLamViec = '312S' THEN 12
+                    WHEN CaLamViec = '31242A' THEN 12
+                    WHEN CaLamViec = '31242B' THEN 12
+                    WHEN CaLamViec IS NULL THEN 0
+                    ELSE 8
+                  END WorkingTime
+                , [CaLamViec]
+
+                FROM [PVG].[dbo].[View_PIDVN_AttendanceDetail]
+                WHERE 1 = 1
+                AND FORMAT(NgayCong, 'yyyy-MM') = #{month}
+
+                UNION ALL
+
+                -- Dữ liệu OT
+                SELECT  [CodeEmp]
+                    , [ProfileName]
+                    , [WorkDateRoot]
+                    , SUM([ConfirmHours]) WorkingTime
+                    , null as CaLamViec
+                FROM [PVG].[dbo].[View_ThongTinOT_PIDVN]
+                WHERE 1 = 1
+                AND FORMAT(WorkDateRoot, 'yyyy-MM') = #{month}
+                GROUP BY WorkDateRoot, CodeEmp, ProfileName
+
+            ),
+            T02 as (
+                SELECT T01.CodeEmp,
+                T01.ProfileName,
+                WorkingTime,
+                CASE
+                    WHEN T01.WorkingTime > 11.5 THEN 2
+                    WHEN (T01.WorkingTime >= 8 AND T01.WorkingTime <= 11.5) THEN 1
+                    WHEN T01.WorkingTime = 0 THEN 0
+                    ELSE 0
+                END AS TicketAmount
+                FROM T01
+            ),
+            T03 as (
+                -- Tổng hợp theo timesheet
+                SELECT
+                    T02.CodeEmp,
+                    T02.ProfileName,
+                    sum(T02.TicketAmount) TicketAmount,
+                    'TimeSheet' RecordType
+                FROM T02
+                WHERE 1 = 1
+                GROUP BY T02.CodeEmp, T02.ProfileName
+            ),
+            T04 AS (
+                -- Tổng hợp theo Actual
+                SELECT CodeEmp, ProfileName, COUNT(*) TicketAmount, 'Actual' RecordType FROM (
+                    SELECT
+                        [CodeEmp], [ProfileName],
+                        CASE
+                            WHEN FORMAT(TimeLog,'HH:mm') <= '07:30' THEN CAST(FORMAT(DATEADD(DAY, -1, TimeLog), 'yyyy-MM-dd') as date )
+                            ELSE CAST(FORMAT(TimeLog,'yyyy-MM-dd') as date)
+                        END as Date
+                    FROM [PVG].[dbo].[PIDVN_MealRecord]
+                    WHERE 1 = 1
+                    AND FORMAT(TimeLog, 'yyyy-MM') = #{month}
+                ) A
+                WHERE 1 = 1
+                GROUP BY CodeEmp, ProfileName
+            )
+            SELECT T03.*, FORMAT(#{month} , 'yyyy-MM') as Month FROM T03
+            UNION ALL
+            SELECT T04.*, FORMAT(#{month} , 'yyyy-MM') as Month FROM T04
+
+
+
+        ]]>
+    </select>
 </mapper>

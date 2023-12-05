@@ -24,4 +24,8 @@ public interface PihInventoryMapper {
 
 
 
+
+
+    List<InventoryVo> getInventoryRawMaterialData(Integer requestId, Date fromDate, Date toDate);
+
 }

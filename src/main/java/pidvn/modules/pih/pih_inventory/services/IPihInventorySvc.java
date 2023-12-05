@@ -1,5 +1,6 @@
 package pidvn.modules.pih.pih_inventory.services;
 
+import org.springframework.web.multipart.MultipartFile;
 import pidvn.entities.one.Lots;
 import pidvn.entities.one.PihInventoryData;
 import pidvn.entities.one.PihInventoryRequest;
@@ -29,4 +30,14 @@ public interface IPihInventorySvc {
     List<InventoryVo> balance(Integer requestId, List<Integer> inventoryArea);
 
     Optional<PihInventoryRequest> getInventoryRequest(Integer requestId);
+
+
+    /**
+     * Kiểm kê NVL thô
+     */
+
+    Map uploadRawMaterialInventoryData(MultipartFile file, Integer requestId );
+
+
+    List<InventoryVo> getInventoryRawMaterialData(Integer requestId);
 }

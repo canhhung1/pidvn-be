@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import pidvn.entities.one.PihInventoryData;
 import pidvn.entities.one.PihInventoryRequest;
 import pidvn.modules.pih.pih_inventory.services.PihInventorySvc;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -72,6 +74,24 @@ public class PihInventoryCtrl {
             @RequestParam Integer requestId, @RequestParam List<Integer> inventoryArea
     ) {
         return new ResponseEntity<>(this.pihInventorySvc.balance(requestId, inventoryArea), HttpStatus.OK);
+    }
+
+
+    /**
+     * Kiêm kê NVL thô
+     */
+
+    @GetMapping("RawMaterialInventoryData")
+    public ResponseEntity<?> getInventoryRawMaterialData(@RequestParam Integer requestId) {
+        return new ResponseEntity<>(this.pihInventorySvc.getInventoryRawMaterialData(requestId), HttpStatus.OK);
+    }
+
+    @PostMapping("UploadRawMaterialInventoryData")
+    public ResponseEntity<?> uploadRawMaterialInventoryData(
+            @RequestBody MultipartFile file,
+            @RequestParam Integer requestId
+    ) throws IOException {
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
 

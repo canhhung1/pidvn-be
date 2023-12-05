@@ -59,7 +59,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // don't authenticate this particular request
         httpSecurity.authorizeRequests().antMatchers(
                 "/", "/Auth/**", "/SiteMapRelay/**", "/FileRepository/**",
-                "/images/**", "/subscribe", "/Personal/Images/**", "/Practice/ReadExcel/**" ).permitAll().
+                "/images/**", "/subscribe", "/Personal/Images/**", "/Practice/ReadExcel/**",
+                "/SparePartCron/**").permitAll().
 
                 // all other requests need to be authenticated
                         anyRequest().authenticated().and().

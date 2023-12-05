@@ -1,9 +1,12 @@
 package pidvn.modules.pih.pih_inventory.services;
 
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import pidvn.entities.one.Lots;
 import pidvn.entities.one.PihInventoryData;
 import pidvn.entities.one.PihInventoryRequest;
@@ -15,6 +18,7 @@ import pidvn.repositories.one.PihInventoryDataRepo;
 import pidvn.repositories.one.PihInventoryRequestRepo;
 import pidvn.repositories.one.ProductTypeRepo;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -165,6 +169,38 @@ public class PihInventorySvc implements IPihInventorySvc {
 
         return this.pihInventoryRequestRepo.findById(requestId);
     }
+
+    @Override
+    public Map uploadRawMaterialInventoryData(MultipartFile file, Integer requestId) {
+        return null;
+    }
+
+    @Override
+    public List<InventoryVo> getInventoryRawMaterialData(Integer requestId) {
+
+        PihInventoryRequest req = this.pihInventoryRequestRepo.findById(requestId).get();
+
+        Date fromDate = req.getCalculateTheoryDataDate();
+        Date toDate = req.getInventoryCloseDate();
+
+        List<InventoryVo> data = this.pihInventoryMapper.getInventoryRawMaterialData(requestId, fromDate, toDate);
+        return data;
+    }
+
+    private Map readExcelRawMaterialInventory(MultipartFile file, Integer requestId) {
+        XSSFWorkbook workbook = null;
+        try {
+            workbook = new XSSFWorkbook(file.getInputStream());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        XSSFSheet sheet = workbook.getSheet("InventoryData");
+
+        return null;
+    }
+
+
+
 
 
 }

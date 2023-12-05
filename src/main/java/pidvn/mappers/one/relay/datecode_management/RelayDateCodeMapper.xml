@@ -45,7 +45,7 @@
     <select id="getQaCards" resultMap="getQaCards-result">
         select L.lot_no, L.created_at from lots L
         where L.label_type = 'QA'
-        and L.created_at >  date(now()) - interval 250 day
-        order by L.created_at desc
+        and L.date >  date(now()) - interval 250 day
+        order by L.date desc
     </select>
 </mapper>

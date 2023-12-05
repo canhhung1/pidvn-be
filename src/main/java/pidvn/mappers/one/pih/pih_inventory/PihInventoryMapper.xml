@@ -137,4 +137,50 @@
 
     </select>
 
+
+    <resultMap id="getInventoryRawMaterialData-result"
+               type="pidvn.modules.pih.pih_inventory.models.InventoryVo">
+        <result column="part_no" property="partNo" javaType="String"/>
+    </resultMap>
+    <select id="getInventoryRawMaterialData" resultMap="getInventoryRawMaterialData-result">
+        <![CDATA[
+            with
+            T01 as (
+                -- Số lượng kitting
+                SELECT R.model, sum(R.qty*(-1)) qty FROM pidvn.pur_wh_records R
+                where 1= 1
+                and record_type = 'XP'
+                and R.model in (select C.child from consumption C )
+                and date between #{fromDate} and #{toDate}
+                group by model
+
+                union all
+
+                -- Số lượng machine OK
+                select
+                    B.child model,
+                    case
+                      when B.unit = 'g/pcs' THEN (B.qty / 1000)*B.consumption
+                      else B.qty
+                    end qty
+                from (
+                    select C.child, C.consumption, C.unit, A.qty from consumption C
+                    left join (
+                        SELECT D.model, sum(D.qty) qty FROM pidvn.defect_records D where 1 = 1
+                        and D.defect_code in (select D.code from defects D where defect_group in ('R','S','MC','MCT','OK'))
+                        and D.model in (select C.parent from consumption C )
+                        and D.date between #{fromDate} and #{toDate}
+                        group by D.model
+                    ) A on C.parent = A.model
+                ) B
+                where 1 =1
+                and B.qty is not null
+            )
+            select T01.model part_no, sum(qty) qty from T01 group by model;
+
+
+        ]]>
+    </select>
+
+
 </mapper>

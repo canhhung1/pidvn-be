@@ -17,6 +17,9 @@ public class SparePartRecord {
     @Column(name = "id")
     private Integer id;
 
+    @Column(name = "request_no")
+    private String requestNo;
+
     @Column(name = "part_number")
     private String partNumber;
 
@@ -30,7 +33,7 @@ public class SparePartRecord {
     private Date date;
 
     @Column(name = "qty")
-    private Integer qty;
+    private Float qty;
 
     @Column(name = "wh_user_code")
     private String whUserCode;
@@ -53,6 +56,9 @@ public class SparePartRecord {
     @Column(name = "machine")
     private String machine;
 
+    @Column(name = "warehouse")
+    private String warehouse;
+
     @Column(name = "factory_code")
     private String factoryCode;
 
@@ -63,6 +69,8 @@ public class SparePartRecord {
     @LastModifiedDate
     @Column(name = "updated_at")
     private Date updatedAt;
+
+
 
 
     public Integer getId() {
@@ -105,11 +113,11 @@ public class SparePartRecord {
         this.date = date;
     }
 
-    public Integer getQty() {
+    public Float getQty() {
         return qty;
     }
 
-    public void setQty(Integer qty) {
+    public void setQty(Float qty) {
         this.qty = qty;
     }
 
@@ -169,6 +177,14 @@ public class SparePartRecord {
         this.machine = machine;
     }
 
+    public String getWarehouse() {
+        return warehouse;
+    }
+
+    public void setWarehouse(String warehouse) {
+        this.warehouse = warehouse;
+    }
+
     public String getFactoryCode() {
         return factoryCode;
     }
@@ -191,5 +207,13 @@ public class SparePartRecord {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getRequestNo() {
+        return requestNo;
+    }
+
+    public void setRequestNo(String requestNo) {
+        this.requestNo = requestNo;
     }
 }

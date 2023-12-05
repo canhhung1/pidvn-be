@@ -82,4 +82,7 @@ public class SparePartCtrl {
     public ResponseEntity<?> getMachineStandard() {
         return new ResponseEntity<>(this.sparePartSvc.getMachineStandard(), HttpStatus.OK);
     }
+
+
+
 }

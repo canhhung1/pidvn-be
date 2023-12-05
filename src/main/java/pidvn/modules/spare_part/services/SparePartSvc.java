@@ -213,7 +213,7 @@ public class SparePartSvc implements ISparePartSvc {
                 obj.setPartNumber(row.getCell(2).getStringCellValue());
                 obj.setWhUserCode(row.getCell(5).getStringCellValue());
                 obj.setReceiveUserCode(row.getCell(7).getStringCellValue());
-                obj.setQty((int) row.getCell(4).getNumericCellValue());
+                obj.setQty((float) row.getCell(4).getNumericCellValue());
                 obj.setMachine(row.getCell(8).getStringCellValue());
                 obj.setLine(row.getCell(9).getStringCellValue());
                 obj.setDate(row.getCell(0).getDateCellValue());

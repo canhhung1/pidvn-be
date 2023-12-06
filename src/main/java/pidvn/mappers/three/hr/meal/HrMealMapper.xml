@@ -206,7 +206,7 @@
         <![CDATA[
             WITH
             T01 as (
-                -- Dữ liệu ngày công
+                -- Dữ liệu ngày công attendance
                 SELECT
                 [CodeEmp], [ProfileName], [NgayCong]
                 , CASE
@@ -267,7 +267,7 @@
                 GROUP BY T02.CodeEmp, T02.ProfileName
             ),
             T04 AS (
-                -- Tổng hợp theo Actual
+                -- Tổng hợp theo Actual (quẹt thẻ)
                 SELECT CodeEmp, ProfileName, COUNT(*) TicketAmount, 'Actual' RecordType FROM (
                     SELECT
                         [CodeEmp], [ProfileName],
@@ -282,6 +282,7 @@
                 WHERE 1 = 1
                 GROUP BY CodeEmp, ProfileName
             )
+            -- Kết quả
             SELECT T03.*, FORMAT(#{month} , 'yyyy-MM') as Month FROM T03
             UNION ALL
             SELECT T04.*, FORMAT(#{month} , 'yyyy-MM') as Month FROM T04

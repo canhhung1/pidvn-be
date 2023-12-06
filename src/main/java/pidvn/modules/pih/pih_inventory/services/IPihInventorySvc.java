@@ -36,7 +36,7 @@ public interface IPihInventorySvc {
      * Kiểm kê NVL thô
      */
 
-    Map uploadRawMaterialInventoryData(MultipartFile file, Integer requestId );
+    Map uploadRawMaterialInventoryData(MultipartFile file, Integer requestId);
 
 
     List<InventoryVo> getInventoryRawMaterialData(Integer requestId);

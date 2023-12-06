@@ -1,5 +1,6 @@
 package pidvn.modules.pih.pih_inventory.controllers;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import pidvn.entities.one.PihInventoryData;
 import pidvn.entities.one.PihInventoryRequest;
 import pidvn.modules.pih.pih_inventory.services.PihInventorySvc;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -91,8 +93,25 @@ public class PihInventoryCtrl {
             @RequestBody MultipartFile file,
             @RequestParam Integer requestId
     ) throws IOException {
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        return new ResponseEntity<>(this.pihInventorySvc.uploadRawMaterialInventoryData(file, requestId), HttpStatus.OK);
     }
+
+
+    @PostMapping("DownloadTemplateUploadRawMaterialInventory")
+    public ResponseEntity<byte[]> downloadTemplateUploadRawMaterialInventory() {
+        byte[] file = new byte[0];
+        String url = "P:\\IS\\(C) Save File FDCS\\FDCS-Server-2\\PIH\\PIH-Inventory\\Template_Upload_Raw_Material_Inventory_Data.xlsx";
+        try {
+            file = FileUtils.readFileToByteArray(new File(url));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(file);
+    }
+
+
+
+
 
 
 }

@@ -32,6 +32,10 @@ public class PihInventoryData {
     @Column(name = "inventory_area")
     private String inventoryArea;
 
+    @Column(name = "date")
+    @Temporal(TemporalType.DATE)
+    private Date date;
+
     @CreatedDate
     @Column(name = "created_at")
     private Date createdAt;
@@ -39,6 +43,9 @@ public class PihInventoryData {
     @LastModifiedDate
     @Column(name = "updated_at")
     private Date updatedAt;
+
+    @Column(name = "record_type")
+    private String recordType;
 
     public Integer getId() {
         return id;
@@ -88,6 +95,14 @@ public class PihInventoryData {
         this.inventoryArea = inventoryArea;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -102,5 +117,13 @@ public class PihInventoryData {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getRecordType() {
+        return recordType;
+    }
+
+    public void setRecordType(String recordType) {
+        this.recordType = recordType;
     }
 }

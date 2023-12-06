@@ -1,5 +1,6 @@
 package pidvn.modules.pih.pih_inventory.services;
 
+import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import pidvn.entities.one.PihInventoryRequest;
 import pidvn.entities.one.ProductType;
 import pidvn.mappers.one.pih.pih_inventory.PihInventoryMapper;
 import pidvn.modules.pih.pih_inventory.models.InventoryVo;
+import pidvn.modules.spare_part.models.RowExcelErrorVo;
 import pidvn.repositories.one.LotsRepo;
 import pidvn.repositories.one.PihInventoryDataRepo;
 import pidvn.repositories.one.PihInventoryRequestRepo;
@@ -172,7 +174,75 @@ public class PihInventorySvc implements IPihInventorySvc {
 
     @Override
     public Map uploadRawMaterialInventoryData(MultipartFile file, Integer requestId) {
-        return null;
+
+        // Xóa tất cả các record cũ trong ngày với type = "RawMaterial"
+        List<PihInventoryData> ivtData = this.pihInventoryDataRepo.findAllByRequestIdAndRecordTypeAndDate(requestId, "RawMaterial", new Date());
+
+        this.pihInventoryDataRepo.deleteAll(ivtData);
+
+
+        // Đọc dữ liệu từ excel và insert vào database
+        Map result = this.readRawMaterialInventoryExcel(file, requestId);
+
+        List<PihInventoryData> data = (List<PihInventoryData>) result.get("data");
+
+        this.pihInventoryDataRepo.saveAll(data);
+
+        return result;
+    }
+
+
+
+    private Map readRawMaterialInventoryExcel(MultipartFile file, Integer requestId) {
+
+
+
+        XSSFWorkbook workbook = null;
+
+        try {
+            workbook = new XSSFWorkbook(file.getInputStream());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        XSSFSheet sheet = workbook.getSheetAt(0);
+
+        int lastRowNum = sheet.getLastRowNum();
+
+        int START = 6;
+        int PART_NO = 1;
+        int QTY = 2;
+
+        List<PihInventoryData> data = new ArrayList<>();
+        List<RowExcelErrorVo> rowNG = new ArrayList<>();
+
+        for (int i = START; i <= lastRowNum; i++) {
+            PihInventoryData obj = new PihInventoryData();
+
+            try {
+                XSSFRow row = sheet.getRow(i);
+
+                obj.setRequestId(requestId);
+                obj.setPartNo(row.getCell(PART_NO).getStringCellValue());
+                obj.setQty((float) row.getCell(QTY).getNumericCellValue());
+                obj.setDate(new Date());
+                obj.setRecordType("RawMaterial");
+                data.add(obj);
+
+            }catch (Exception e) {
+                Integer rowNum = i + 1;
+                RowExcelErrorVo item = new RowExcelErrorVo(rowNum, e.toString());
+                rowNG.add(item);
+            }
+        }
+
+
+        Map result = new HashMap();
+
+        result.put("data", data);
+        result.put("error", rowNG);
+
+        return result;
     }
 
     @Override
@@ -185,18 +255,6 @@ public class PihInventorySvc implements IPihInventorySvc {
 
         List<InventoryVo> data = this.pihInventoryMapper.getInventoryRawMaterialData(requestId, fromDate, toDate);
         return data;
-    }
-
-    private Map readExcelRawMaterialInventory(MultipartFile file, Integer requestId) {
-        XSSFWorkbook workbook = null;
-        try {
-            workbook = new XSSFWorkbook(file.getInputStream());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        XSSFSheet sheet = workbook.getSheet("InventoryData");
-
-        return null;
     }
 
 

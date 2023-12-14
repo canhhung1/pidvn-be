@@ -6,6 +6,7 @@ import pidvn.mappers.three.hr.meal.HrMealMapper;
 import pidvn.modules.hr.meal.models.MealRecordVo;
 import pidvn.modules.hr.meal.models.SearchVo;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,7 @@ public class HrMealSvc implements IHrMealSvc {
     }
 
     @Override
-    public List<MealRecordVo> getBalance() {
-        return this.hrMealMapper.getBalance();
+    public List<MealRecordVo> getBalance(Date month) {
+        return this.hrMealMapper.getAmountTicketByTimeSheetAndActualUserScan(month);
     }
 }

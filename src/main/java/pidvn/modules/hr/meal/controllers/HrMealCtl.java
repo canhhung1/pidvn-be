@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import pidvn.modules.hr.meal.models.SearchVo;
 import pidvn.modules.hr.meal.services.HrMealSvc;
 
+import java.util.Date;
+
 @RestController
 @RequestMapping("HR/Meal")
 public class HrMealCtl {
@@ -19,9 +21,9 @@ public class HrMealCtl {
         return new ResponseEntity<>(this.hrMealSvc.getMealRecords(searchVo), HttpStatus.OK);
     }
 
-    @GetMapping("Balance")
-    public ResponseEntity<?> getBalance() {
-        return new ResponseEntity<>(this.hrMealSvc.getBalance(), HttpStatus.OK);
+    @PostMapping("Balance")
+    public ResponseEntity<?> getBalance(@RequestBody Date month) {
+        return new ResponseEntity<>(this.hrMealSvc.getBalance(month), HttpStatus.OK);
     }
 
 }

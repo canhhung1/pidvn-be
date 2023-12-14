@@ -197,97 +197,155 @@
 
         <result column="CodeEmp" property="codeEmp" javaType="String"/>
         <result column="ProfileName" property="profileName" javaType="String"/>
-        <result column="TicketAmount" property="ticketAmount" javaType="Integer"/>
-        <result column="RecordType" property="recordType" javaType="String"/>
+        <result column="VeChinhTheory" property="veChinhTheory" javaType="Integer"/>
+        <result column="VePhuTheory" property="vePhuTheory" javaType="Integer"/>
+        <result column="VeChinhActual" property="veChinhActual" javaType="Integer"/>
+        <result column="VePhuActual" property="vePhuActual" javaType="Integer"/>
+        <result column="VeChinhBalance" property="veChinhBalance" javaType="Integer"/>
+        <result column="VePhuBalance" property="vePhuBalance" javaType="Integer"/>
 
     </resultMap>
     <select id="getAmountTicketByTimeSheetAndActualUserScan"
             resultMap="getAmountTicketByTimeSheetAndActualUserScan-result">
         <![CDATA[
             WITH
-            T01 as (
-                -- Dữ liệu ngày công attendance
+            T01 AS (
+                -- Dữ liệu theo time sheet
                 SELECT
-                [CodeEmp], [ProfileName], [NgayCong]
-                , CASE
-                    WHEN CaLamViec = '3HCA' THEN 9.5
-                    WHEN CaLamViec = '3HCA1' THEN 9.5
-                    WHEN CaLamViec = '310A' THEN 10
-                    WHEN CaLamViec = '310B' THEN 10
-                    WHEN CaLamViec = '310S' THEN 10
-                    WHEN CaLamViec = '312A' THEN 12
-                    WHEN CaLamViec = '312B' THEN 12
-                    WHEN CaLamViec = '312S' THEN 12
-                    WHEN CaLamViec = '31242A' THEN 12
-                    WHEN CaLamViec = '31242B' THEN 12
-                    WHEN CaLamViec IS NULL THEN 0
-                    ELSE 8
-                  END WorkingTime
-                , [CaLamViec]
-
-                FROM [PVG].[dbo].[View_PIDVN_AttendanceDetail]
-                WHERE 1 = 1
-                AND FORMAT(NgayCong, 'yyyy-MM') = #{month}
-
-                UNION ALL
-
-                -- Dữ liệu OT
-                SELECT  [CodeEmp]
-                    , [ProfileName]
-                    , [WorkDateRoot]
-                    , SUM([ConfirmHours]) WorkingTime
-                    , null as CaLamViec
-                FROM [PVG].[dbo].[View_ThongTinOT_PIDVN]
-                WHERE 1 = 1
-                AND FORMAT(WorkDateRoot, 'yyyy-MM') = #{month}
-                GROUP BY WorkDateRoot, CodeEmp, ProfileName
-
+                    A.*,
+                    CASE
+                        WHEN LeaveCode LIKE '0.25%' THEN (A.ShiftTime*0.75)
+                        WHEN LeaveCode LIKE '0.5%' THEN (A.ShiftTime*0.5)
+                        WHEN LeaveCode LIKE '0.75%' THEN (A.ShiftTime*0.25)
+                        WHEN LeaveCode = '0' THEN A.ShiftTime
+                        ELSE 0
+                    END WorkingTime
+                FROM (
+                    SELECT [CodeEmp], [ProfileName], [NgayCong]
+                    , [CaLamViec]
+                    , CASE
+                        WHEN CaLamViec = '3HCA' THEN 9.5
+                        WHEN CaLamViec = '3HCA1' THEN 9.5
+                        WHEN CaLamViec = '310A' THEN 10
+                        WHEN CaLamViec = '310B' THEN 10
+                        WHEN CaLamViec = '310S' THEN 10
+                        WHEN CaLamViec = '312A' THEN 12
+                        WHEN CaLamViec = '312B' THEN 12
+                        WHEN CaLamViec = '312S' THEN 12
+                        WHEN CaLamViec = '31242A' THEN 12
+                        WHEN CaLamViec = '31242B' THEN 12
+                        WHEN CaLamViec IS NULL THEN 0
+                        ELSE 8
+                    END ShiftTime
+                    , [LeaveCode]
+                    FROM [PVG].[dbo].[View_PIDVN_AttendanceDetail]
+                    WHERE 1 = 1
+                    -- AND CodeEmp = '3000230'
+                    AND FORMAT(NgayCong, 'yyyy-MM') = FORMAT(#{month}, 'yyyy-MM')
+                ) A
             ),
-            T02 as (
-                SELECT T01.CodeEmp,
-                T01.ProfileName,
-                WorkingTime,
-                CASE
-                    WHEN T01.WorkingTime > 11.5 THEN 2
-                    WHEN (T01.WorkingTime >= 8 AND T01.WorkingTime <= 11.5) THEN 1
-                    WHEN T01.WorkingTime = 0 THEN 0
-                    ELSE 0
-                END AS TicketAmount
-                FROM T01
+            -- Tính vé theo TimeSheet
+            T02 AS (
+                -- Tính ra Total Time
+                SELECT B.CodeEmp, B.ProfileName, B.NgayCong, B.LeaveCode, B.CaLamViec, B.WorkingTime WorkingTime, round(B.ConfirmHours, 2) OTTime,
+                        (B.WorkingTime +  ISNULL(round(B.ConfirmHours, 2), 0) ) TotalWorkingTime FROM (
+                    SELECT T01.*, A.ConfirmHours FROM T01
+                    LEFT JOIN (
+                        -- Dữ liệu OT
+                        SELECT CodeEmp
+                            , [WorkDateRoot] NgayCong
+                            , SUM([ConfirmHours]) ConfirmHours
+                        FROM [PVG].[dbo].[View_ThongTinOT_PIDVN]
+                        WHERE 1 = 1
+                        AND FORMAT(WorkDateRoot, 'yyyy-MM') = FORMAT(#{month} , 'yyyy-MM')
+                        -- AND CodeEmp = '3000230'
+                        GROUP BY WorkDateRoot, CodeEmp, ProfileName
+                    ) A ON T01.CodeEmp = A.CodeEmp AND T01.NgayCong = A.NgayCong
+                ) B
             ),
-            T03 as (
-                -- Tổng hợp theo timesheet
-                SELECT
-                    T02.CodeEmp,
-                    T02.ProfileName,
-                    sum(T02.TicketAmount) TicketAmount,
-                    'TimeSheet' RecordType
-                FROM T02
-                WHERE 1 = 1
-                GROUP BY T02.CodeEmp, T02.ProfileName
+            T03 AS (
+
+                SELECT A.*, (A.VeChinhTimeSheet + A.VeChinhOverTime) VeChinh FROM (
+                    SELECT
+                        T02.*,
+                        CASE
+                            -- Các trường hợp nghỉ
+                            WHEN T02.WorkingTime = 0 THEN 0
+                            -- Ca 12 tiếng: số giờ làm thực tế > 6 => được 2 vé chính
+                            WHEN (T02.WorkingTime = 12 AND T02.WorkingTime > 6) THEN 2
+                            -- Ca 12 tiếng: số giờ làm thực tế < 6 => được 1 vé chính
+                            WHEN (T02.WorkingTime = 12 AND T02.WorkingTime <= 6) THEN 1
+                            ELSE 1
+                        END VeChinhTimeSheet,
+                        CASE
+
+                            -- OT ngày nghỉ: tổng thời gian < 10.5 => có 1 vé chính
+                            WHEN (T02.CaLamViec IS NULL AND T02.TotalWorkingTime < 10.5) THEN 1
+                            -- OT ngày nghỉ: 10.5 <= TotalWorkingTime < 11.5 => có 1 vé chính
+                            WHEN (T02.CaLamViec IS NULL AND T02.TotalWorkingTime >= 10.5 AND T02.TotalWorkingTime < 11.5) THEN 1
+                            -- OT ngày nghỉ: tổng thời gian >= 11.5 => có 2 vé chính
+                            WHEN (T02.CaLamViec IS NULL AND T02.TotalWorkingTime >= 11.5) THEN 2
+
+                            -- OT ngày thường: tổng thời gian >= 11.5 => có 1 vé chính
+                            WHEN (T02.CaLamViec IS NOT NULL AND T02.OTTime IS NOT NULL AND T02.TotalWorkingTime >= 11.5) THEN 1
+                            ELSE 0
+                        END VeChinhOverTime,
+                        CASE
+                            -- OT ngày nghỉ: 10.5 <= TotalWorkingTime < 11.5 => có 1 vé phụ
+                            WHEN (T02.CaLamViec IS NULL AND T02.TotalWorkingTime >= 10.5 AND T02.TotalWorkingTime < 11.5) THEN 1
+
+                            -- OT ngày thường:  10.5 <= TotalWorkingTime < 11.5 => có 1 vé phụ
+                            WHEN (T02.CaLamViec IS NOT NULL AND T02.OTTime IS NOT NULL AND T02.TotalWorkingTime >= 10.5 AND T02.TotalWorkingTime < 11.5) THEN 1
+                            ELSE 0
+                        END VePhu
+
+                    FROM T02
+                ) A
             ),
             T04 AS (
-                -- Tổng hợp theo Actual (quẹt thẻ)
-                SELECT CodeEmp, ProfileName, COUNT(*) TicketAmount, 'Actual' RecordType FROM (
-                    SELECT
-                        [CodeEmp], [ProfileName],
+                -- Kết quả theo lý thuyết
+                SELECT T03.CodeEmp, T03.ProfileName, SUM(T03.VeChinh) VeChinhTheory, SUM(T03.VePhu) VePhuTheory FROM T03
+                GROUP BY T03.CodeEmp, T03.ProfileName
+            ),
+
+            T05 AS (
+                -- Tổng hợp theo Actual
+                SELECT A.CodeEmp, SUM(A.VeChinh) VeChinhActual, SUM(A.VePhu) VePhuActual FROM (
+                    SELECT [CodeEmp],
+                        CASE
+                            WHEN LineCode = 'PEOC1' THEN 0
+                            WHEN LineCode = 'PBS2' THEN 0
+                            ELSE 1
+                        END VeChinh,
+                        CASE
+                            WHEN LineCode = 'PEOC1' THEN 1
+                            WHEN LineCode = 'PBS2' THEN 1
+                            ELSE 0
+                        END VePhu,
+
                         CASE
                             WHEN FORMAT(TimeLog,'HH:mm') <= '07:30' THEN CAST(FORMAT(DATEADD(DAY, -1, TimeLog), 'yyyy-MM-dd') as date )
                             ELSE CAST(FORMAT(TimeLog,'yyyy-MM-dd') as date)
                         END as Date
                     FROM [PVG].[dbo].[PIDVN_MealRecord]
                     WHERE 1 = 1
-                    AND FORMAT(TimeLog, 'yyyy-MM') = #{month}
+                    AND (
+                        FORMAT(TimeLog, 'yyyy-MM') = FORMAT(#{month} , 'yyyy-MM')
+                        OR
+                        FORMAT(TimeLog, 'yyyy-MM') = FORMAT(DATEADD(month, 1, #{month}) , 'yyyy-MM')
+                    )
+                    -- AND CodeEmp = '3000230'
                 ) A
                 WHERE 1 = 1
-                GROUP BY CodeEmp, ProfileName
+                AND FORMAT(A.[Date], 'yyyy-MM') = FORMAT(#{month} , 'yyyy-MM')
+                GROUP BY A.CodeEmp
+            ),
+            T06 AS (
+                SELECT T04.*, T05.VeChinhActual, T05.VePhuActual, (T04.VeChinhTheory - T05.VeChinhActual) VeChinhBalance, (T04.VePhuTheory - T05.VePhuActual) VePhuBalance
+                FROM T04
+                LEFT JOIN T05 ON T04.CodeEmp = T05.CodeEmp
             )
-            -- Kết quả
-            SELECT T03.*, FORMAT(#{month} , 'yyyy-MM') as Month FROM T03
-            UNION ALL
-            SELECT T04.*, FORMAT(#{month} , 'yyyy-MM') as Month FROM T04
-
-
+            SELECT * FROM T06;
 
         ]]>
     </select>

@@ -17,6 +17,8 @@ public class InventoryVo {
     private String inventoryArea;
     private Float balance;
 
+    private String recordType;
+
     public Integer getId() {
         return id;
     }
@@ -111,5 +113,13 @@ public class InventoryVo {
 
     public void setBalance(Float balance) {
         this.balance = balance;
+    }
+
+    public String getRecordType() {
+        return recordType;
+    }
+
+    public void setRecordType(String recordType) {
+        this.recordType = recordType;
     }
 }

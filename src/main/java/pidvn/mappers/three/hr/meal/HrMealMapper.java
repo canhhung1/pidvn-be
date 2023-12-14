@@ -12,7 +12,7 @@ public interface HrMealMapper {
     List<MealRecordVo> getMealRecords(SearchVo searchVo);
     List<MealRecordVo> getMealRecordsSummary(SearchVo searchVo);
 
-    List<MealRecordVo> getBalance();
+    // List<MealRecordVo> getBalance();
 
 
     /**

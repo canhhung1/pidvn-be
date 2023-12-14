@@ -23,8 +23,16 @@ public class MealRecordVo {
 
     private Date date;
 
-    private Integer ticketTimeSheet;
-    private Integer ticketActual;
+    private Integer veChinhTheory;
+    private Integer vePhuTheory;
+
+    private Integer veChinhActual;
+
+    private Integer vePhuActual;
+
+    private Integer veChinhBalance;
+
+    private Integer vePhuBalance;
 
 
     public Integer getRowNum() {
@@ -139,19 +147,51 @@ public class MealRecordVo {
         this.date = date;
     }
 
-    public Integer getTicketTimeSheet() {
-        return ticketTimeSheet;
+    public Integer getVeChinhTheory() {
+        return veChinhTheory;
     }
 
-    public void setTicketTimeSheet(Integer ticketTimeSheet) {
-        this.ticketTimeSheet = ticketTimeSheet;
+    public void setVeChinhTheory(Integer veChinhTheory) {
+        this.veChinhTheory = veChinhTheory;
     }
 
-    public Integer getTicketActual() {
-        return ticketActual;
+    public Integer getVePhuTheory() {
+        return vePhuTheory;
     }
 
-    public void setTicketActual(Integer ticketActual) {
-        this.ticketActual = ticketActual;
+    public void setVePhuTheory(Integer vePhuTheory) {
+        this.vePhuTheory = vePhuTheory;
+    }
+
+    public Integer getVeChinhActual() {
+        return veChinhActual;
+    }
+
+    public void setVeChinhActual(Integer veChinhActual) {
+        this.veChinhActual = veChinhActual;
+    }
+
+    public Integer getVePhuActual() {
+        return vePhuActual;
+    }
+
+    public void setVePhuActual(Integer vePhuActual) {
+        this.vePhuActual = vePhuActual;
+    }
+
+    public Integer getVeChinhBalance() {
+        return veChinhBalance;
+    }
+
+    public void setVeChinhBalance(Integer veChinhBalance) {
+        this.veChinhBalance = veChinhBalance;
+    }
+
+    public Integer getVePhuBalance() {
+        return vePhuBalance;
+    }
+
+    public void setVePhuBalance(Integer vePhuBalance) {
+        this.vePhuBalance = vePhuBalance;
     }
 }

@@ -16,6 +16,11 @@ public class HrMealCtl {
     @Autowired
     private HrMealSvc hrMealSvc;
 
+    @PostMapping("TimesheetConfirm")
+    public ResponseEntity<?> timesheetConfirm() {
+        return new ResponseEntity<>(this.hrMealSvc.timesheetConfirm(), HttpStatus.OK);
+    }
+
     @PostMapping("MealRecords")
     public ResponseEntity<?> getMealRecords(@RequestBody SearchVo searchVo) {
         return new ResponseEntity<>(this.hrMealSvc.getMealRecords(searchVo), HttpStatus.OK);

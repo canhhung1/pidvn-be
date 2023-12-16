@@ -193,16 +193,15 @@
 
 
     <resultMap id="getAmountTicketByTimeSheetAndActualUserScan-result"
-               type="pidvn.modules.hr.meal.models.MealRecordVo">
+               type="pidvn.entities.one.EMealData">
 
-        <result column="CodeEmp" property="codeEmp" javaType="String"/>
-        <result column="ProfileName" property="profileName" javaType="String"/>
-        <result column="VeChinhTheory" property="veChinhTheory" javaType="Integer"/>
-        <result column="VePhuTheory" property="vePhuTheory" javaType="Integer"/>
-        <result column="VeChinhActual" property="veChinhActual" javaType="Integer"/>
-        <result column="VePhuActual" property="vePhuActual" javaType="Integer"/>
-        <result column="VeChinhBalance" property="veChinhBalance" javaType="Integer"/>
-        <result column="VePhuBalance" property="vePhuBalance" javaType="Integer"/>
+        <result column="username" property="username" javaType="String"/>
+        <result column="full_name" property="fullName" javaType="String"/>
+        <result column="ve_chinh_timesheet" property="veChinhTimesheet" javaType="Integer"/>
+        <result column="ve_phu_timesheet" property="vePhuTimesheet" javaType="Integer"/>
+        <result column="ve_chinh_actual" property="veChinhActual" javaType="Integer"/>
+        <result column="ve_phu_actual" property="vePhuActual" javaType="Integer"/>
+        <result column="ve_phu_tro_cap" property="vePhuTroCap" javaType="Integer"/>
 
     </resultMap>
     <select id="getAmountTicketByTimeSheetAndActualUserScan"
@@ -297,14 +296,23 @@
                             -- OT ngày thường:  10.5 <= TotalWorkingTime < 11.5 => có 1 vé phụ
                             WHEN (T02.CaLamViec IS NOT NULL AND T02.OTTime IS NOT NULL AND T02.TotalWorkingTime >= 10.5 AND T02.TotalWorkingTime < 11.5) THEN 1
                             ELSE 0
-                        END VePhu
+                        END VePhu,
+
+                        CASE
+                            -- Các trường hợp nghỉ
+                            WHEN T02.WorkingTime = 0 THEN 0
+
+                            -- OT ngày thường: tổng thời gian > 11.5 => có 1 vé phụ (cộng 1 vé phụ theo timesheet)
+                            WHEN (T02.CaLamViec IS NOT NULL AND T02.OTTime IS NOT NULL AND T02.TotalWorkingTime > 10.5 AND T02.TotalWorkingTime <= 11.5) THEN 2
+                            ELSE 1
+                        END VePhuTroCap
 
                     FROM T02
                 ) A
             ),
             T04 AS (
                 -- Kết quả theo lý thuyết
-                SELECT T03.CodeEmp, T03.ProfileName, SUM(T03.VeChinh) VeChinhTheory, SUM(T03.VePhu) VePhuTheory FROM T03
+                SELECT T03.CodeEmp, T03.ProfileName, SUM(T03.VeChinh) VeChinhTheory, SUM(T03.VePhu) VePhuTheory, SUM(T03.VePhuTroCap) VePhuTroCap FROM T03
                 GROUP BY T03.CodeEmp, T03.ProfileName
             ),
 
@@ -341,11 +349,15 @@
                 GROUP BY A.CodeEmp
             ),
             T06 AS (
-                SELECT T04.*, T05.VeChinhActual, T05.VePhuActual, (T04.VeChinhTheory - T05.VeChinhActual) VeChinhBalance, (T04.VePhuTheory - T05.VePhuActual) VePhuBalance
+                SELECT T04.*, T05.VeChinhActual, T05.VePhuActual
                 FROM T04
                 LEFT JOIN T05 ON T04.CodeEmp = T05.CodeEmp
             )
-            SELECT * FROM T06;
+            SELECT
+                T06.CodeEmp username, T06.ProfileName full_name, #{month} as date, T06.VeChinhTheory ve_chinh_timesheet,
+                T06.VePhuTheory ve_phu_timesheet, T06.VeChinhActual ve_chinh_actual, T06.VePhuActual ve_phu_actual,
+                T06.VePhuTroCap ve_phu_tro_cap
+            FROM T06;
 
         ]]>
     </select>

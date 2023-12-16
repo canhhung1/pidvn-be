@@ -1,6 +1,7 @@
 package pidvn.mappers.three.hr.meal;
 
 import org.apache.ibatis.annotations.Mapper;
+import pidvn.entities.one.EMealData;
 import pidvn.modules.hr.meal.models.MealRecordVo;
 import pidvn.modules.hr.meal.models.SearchVo;
 
@@ -21,5 +22,5 @@ public interface HrMealMapper {
      * @param month tháng cần lấy dữ liệu
      * @return
      */
-    List<MealRecordVo> getAmountTicketByTimeSheetAndActualUserScan(Date month);
+    List<EMealData> getAmountTicketByTimeSheetAndActualUserScan(Date month);
 }

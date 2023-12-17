@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.pih.pih_daily_report.PihDailyReportMapper">
+
+    <resultMap id="getDailyReportData-result"
+               type="pidvn.modules.pih.pih_daily_report.models.DailyReportDataVo">
+        <result column="report_date" property="reportDate" javaType="Date"/>
+        <result column="qty_shift_a" property="qtyShiftA" javaType="Integer"/>
+        <result column="qty_shift_b" property="qtyShiftB" javaType="Integer"/>
+        <result column="target_qty" property="targetQty" javaType="Integer"/>
+        <result column="actual_qty" property="actualQty" javaType="Integer"/>
+        <result column="die_a_qty" property="dieAQty" javaType="Integer"/>
+        <result column="die_b_qty" property="dieBQty" javaType="Integer"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="updated_at" property="updatedAt" javaType="Date"/>
+    </resultMap>
+    <select id="getDailyReportData" resultMap="getDailyReportData-result">
+            with
+            T01 as (
+                select R.line, R.model, R.shift, sum(R.qty) qty, R.date from defect_records R
+                where 1 = 1
+                <if test="date != null">
+                    and DATE_FORMAT(R.date, '%Y-%m-%d') = DATE_FORMAT(#{date}, '%Y-%m-%d')
+                </if>
+                and R.line in (SELECT L.name FROM line L where 1 = 1 and L.product_id = 4 and L.process_id = 21)
+                and R.defect_code in (select D.code from defects D where d.defect_group = "OK")
+                group by R.line, R.model, R.shift, R.date
+            ),
+            T02 as (
+                select
+                    T01.line, T01.model,
+                    sum(case when T01.shift = 'A' then T01.qty end) qty_shift_a,
+                    sum(case when T01.shift = 'B' then T01.qty end) qty_shift_b,
+                    T01.date
+                from T01
+                group by T01.line, T01.model, T01.date
+            ),
+            T03 as (
+                select
+                    T02.*, D.id, D.report_date, D.target_qty, D.actual_qty, D.die_a_qty,
+                    D.die_b_qty, D.remark, D.created_at
+                from T02
+                left join pih_daily_meeting_report D on (
+                    T02.line = D.line
+                    <if test="date != null">
+                        and DATE_FORMAT(D.date, '%Y-%m-%d') = DATE_FORMAT(#{date}, '%Y-%m-%d')
+                    </if>
+                )
+            )
+            select * from T03 order by line asc
+
+    </select>
+
+
+
+
+
+</mapper>

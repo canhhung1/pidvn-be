@@ -29,11 +29,21 @@ public class SparePartCtrl {
         return new ResponseEntity<>(this.sparePartSvc.getUsers(), HttpStatus.OK);
     }
 
+    /**
+     * Lấy danh sách các Spare Part trong hệ thống
+     * @return
+     */
     @GetMapping("SpareParts")
     public ResponseEntity<?> getSparePart() {
         return new ResponseEntity<>(this.sparePartSvc.getSpareParts(), HttpStatus.OK);
     }
 
+    /**
+     * Thêm mới các mã Spare Part
+     * @param sparePart
+     * @return
+     * @throws Exception
+     */
     @PostMapping("SparePart")
     public ResponseEntity<?> saveSparePart(@RequestBody SparePart sparePart) throws Exception {
         return new ResponseEntity<>(this.sparePartSvc.saveSparePart(sparePart), HttpStatus.OK);
@@ -53,31 +63,40 @@ public class SparePartCtrl {
         return new ResponseEntity<>(this.sparePartSvc.saveSparePartRecords(sparePartRecords), HttpStatus.OK);
     }
 
-    @GetMapping("SparePartInventoryRequests")
-    public ResponseEntity<?> getSparePartInventoryRequests() {
-        return new ResponseEntity<>(this.sparePartSvc.getSparePartInventoryRequests(), HttpStatus.OK);
-    }
+//    @GetMapping("SparePartInventoryRequests")
+//    public ResponseEntity<?> getSparePartInventoryRequests() {
+//        return new ResponseEntity<>(this.sparePartSvc.getSparePartInventoryRequests(), HttpStatus.OK);
+//    }
 
-    @PostMapping("SparePartInventoryRequest")
-    public ResponseEntity<?> saveSparePartInventoryRequest(@RequestBody SparePartInventoryRequest request) throws ResponseStatusException, ConflictException {
-        return new ResponseEntity<>(this.sparePartSvc.saveSparePartInventoryRequest(request), HttpStatus.OK);
-    }
+//    @PostMapping("SparePartInventoryRequest")
+//    public ResponseEntity<?> saveSparePartInventoryRequest(@RequestBody SparePartInventoryRequest request) throws ResponseStatusException, ConflictException {
+//        return new ResponseEntity<>(this.sparePartSvc.saveSparePartInventoryRequest(request), HttpStatus.OK);
+//    }
 
-    @PostMapping("SparePartInventoryData")
-    public ResponseEntity<?> saveInventoryData(@RequestBody List<SparePartInventoryData> sparePartInventoryDataList) {
-        return new ResponseEntity<>(this.sparePartSvc.saveInventoryData(sparePartInventoryDataList), HttpStatus.OK);
-    }
-    @PostMapping("UploadExcel")
-    public ResponseEntity<?> uploadExcel(@RequestBody MultipartFile file, @RequestParam String recordType) throws IOException {
-        return new ResponseEntity<>(this.sparePartSvc.uploadExcel(file, recordType), HttpStatus.OK);
-    }
+//    @PostMapping("SparePartInventoryData")
+//    public ResponseEntity<?> saveInventoryData(@RequestBody List<SparePartInventoryData> sparePartInventoryDataList) {
+//        return new ResponseEntity<>(this.sparePartSvc.saveInventoryData(sparePartInventoryDataList), HttpStatus.OK);
+//    }
+
+//    @PostMapping("UploadExcel")
+//    public ResponseEntity<?> uploadExcel(@RequestBody MultipartFile file, @RequestParam String recordType) throws IOException {
+//        return new ResponseEntity<>(this.sparePartSvc.uploadExcel(file, recordType), HttpStatus.OK);
+//    }
 
 
+    /**
+     * Danh sách các line
+     * @return
+     */
     @GetMapping("Lines")
     public ResponseEntity<?> getLineStandard() {
         return new ResponseEntity<>(this.sparePartSvc.getLineStandard(), HttpStatus.OK);
     }
 
+    /**
+     * Danh sách các máy
+     * @return
+     */
     @GetMapping("Machines")
     public ResponseEntity<?> getMachineStandard() {
         return new ResponseEntity<>(this.sparePartSvc.getMachineStandard(), HttpStatus.OK);

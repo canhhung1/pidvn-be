@@ -7,6 +7,8 @@ public class SparePartRecordVo {
     private Integer id;
     private String partNumber;
     private String galileoName;
+
+    private String requestNo;
     private Date date;
     private String qty;
     private String whUserCode;
@@ -46,6 +48,14 @@ public class SparePartRecordVo {
 
     public void setGalileoName(String galileoName) {
         this.galileoName = galileoName;
+    }
+
+    public String getRequestNo() {
+        return requestNo;
+    }
+
+    public void setRequestNo(String requestNo) {
+        this.requestNo = requestNo;
     }
 
     public Date getDate() {

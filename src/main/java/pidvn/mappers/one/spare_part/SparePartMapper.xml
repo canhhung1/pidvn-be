@@ -4,7 +4,7 @@
 
     <resultMap id="getSparePartRecords-result"
                type="pidvn.modules.spare_part.models.SparePartRecordVo">
-
+        <result column="request_no" property="requestNo" javaType="String"/>
         <result column="part_number" property="partNumber" javaType="String"/>
         <result column="galileo_name" property="galileoName" javaType="String"/>
         <result column="wh_user_code" property="whUserCode" javaType="String"/>
@@ -23,7 +23,7 @@
         T01 as (
         select
         A.part_number, B.galileo_name, A.date, A.qty, A.wh_user_code, A.receive_user_code, A.created_at,
-        A.line, A.machine, A.remark,
+        A.line, A.machine, A.remark,  A.factory_code, A.request_no,
         case
         when A.type = 'XK' then 'Xuất kho'
         when A.type = 'OUT' then 'Xuất kho'
@@ -51,7 +51,9 @@
         total_price
         from T01
         left join T02 on (T01.galileo_name = T02.galileo_name and (T01.date between T02.effective_date and
-        T02.expiry_date))
+        T02.expiry_date and T01.factory_code = T02.factory_code))
+        where 1 = 1
+        order by T01.date desc
 
     </select>
 

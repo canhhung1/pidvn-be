@@ -6,6 +6,42 @@
                type="pidvn.modules.spare_part.models.SparePartRecordVo">
         <result column="request_no" property="requestNo" javaType="String"/>
         <result column="part_number" property="partNumber" javaType="String"/>
+        <result column="wh_user_code" property="whUserCode" javaType="String"/>
+        <result column="receive_user_code" property="receiveUserCode" javaType="String"/>
+        <result column="wh_user" property="whUser" javaType="String"/>
+        <result column="other_user" property="otherUser" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="updated_at" property="updatedAt" javaType="Date"/>
+        <result column="machine_id" property="machineId" javaType="Integer"/>
+    </resultMap>
+    <select id="getSparePartRecords" resultMap="getSparePartRecords-result">
+        select
+            A.id, A.request_no, A.part_number, A.date, A.qty, A.line, A.remark,
+            (select U.name from users U where U.username = A.wh_user_code) wh_user,
+            (select U.name from users U where U.username = A.receive_user_code) other_user,
+            A.machine machine_id, B.vn_name machine, A.created_at, A.updated_at,
+            A.wh_user_code, A.receive_user_code,
+            CASE
+                WHEN A.type = 'INPUT' then 'Nhập kho'
+                WHEN A.type = 'OUTPUT' then 'Xuất kho'
+                WHEN A.type = 'RETURN' then 'Trả về (OK)'
+            END as type
+        from spare_part_records A
+        left join spare_part_machine_standard B on A.machine = B.id
+        where 1 = 1
+        <if test="dateRange != null and dateRange.size != 0">
+            and A.date between #{dateRange[0]} and #{dateRange[1]}
+        </if>
+
+
+    </select>
+
+
+
+    <resultMap id="getSparePartRecordsByStandardPrice-result"
+               type="pidvn.modules.spare_part.models.SparePartRecordVo">
+        <result column="request_no" property="requestNo" javaType="String"/>
+        <result column="part_number" property="partNumber" javaType="String"/>
         <result column="galileo_name" property="galileoName" javaType="String"/>
         <result column="wh_user_code" property="whUserCode" javaType="String"/>
         <result column="receive_user_code" property="receiveUserCode" javaType="String"/>
@@ -17,7 +53,7 @@
         <result column="factory_code" property="factoryCode" javaType="String"/>
 
     </resultMap>
-    <select id="getSparePartRecords" resultMap="getSparePartRecords-result">
+    <select id="getSparePartRecordsByStandardPrice" resultMap="getSparePartRecordsByStandardPrice-result">
 
         with
         T01 as (

@@ -7,16 +7,20 @@ public class SparePartRecordVo {
     private Integer id;
     private String partNumber;
     private String galileoName;
-
     private String requestNo;
     private Date date;
     private String qty;
     private String whUserCode;
     private String receiveUserCode;
+    private String whUser;
+    private String otherUser;
+
     private String remark;
     private String type;
     private String line;
     private String machine;
+
+    private Integer machineId;
     private Date createdAt;
     private Date updatedAt;
     private Float standardPrice;
@@ -90,6 +94,22 @@ public class SparePartRecordVo {
         this.receiveUserCode = receiveUserCode;
     }
 
+    public String getWhUser() {
+        return whUser;
+    }
+
+    public void setWhUser(String whUser) {
+        this.whUser = whUser;
+    }
+
+    public String getOtherUser() {
+        return otherUser;
+    }
+
+    public void setOtherUser(String otherUser) {
+        this.otherUser = otherUser;
+    }
+
     public String getRemark() {
         return remark;
     }
@@ -120,6 +140,14 @@ public class SparePartRecordVo {
 
     public void setMachine(String machine) {
         this.machine = machine;
+    }
+
+    public Integer getMachineId() {
+        return machineId;
+    }
+
+    public void setMachineId(Integer machineId) {
+        this.machineId = machineId;
     }
 
     public Date getCreatedAt() {

@@ -9,6 +9,10 @@ import java.util.List;
 @Mapper
 public interface SparePartMapper {
     List<SparePartRecordVo> getSparePartRecords(SearchVo searchVo);
+
+
+    List<SparePartRecordVo> getSparePartRecordsByStandardPrice(SearchVo searchVo);
+
     List<SparePartRecordVo> getSparePartInventory(Integer requestId);
 
 }

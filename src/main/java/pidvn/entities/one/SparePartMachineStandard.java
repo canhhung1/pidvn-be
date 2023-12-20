@@ -20,6 +20,9 @@ public class SparePartMachineStandard {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "vn_name")
+    private String vnName;
+
     @CreatedDate
     @Column(name = "created_at")
     private Date createdAt;
@@ -42,6 +45,14 @@ public class SparePartMachineStandard {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getVnName() {
+        return vnName;
+    }
+
+    public void setVnName(String vnName) {
+        this.vnName = vnName;
     }
 
     public Date getCreatedAt() {

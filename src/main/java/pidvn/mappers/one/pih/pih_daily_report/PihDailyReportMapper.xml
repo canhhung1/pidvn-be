@@ -37,8 +37,8 @@
             ),
             T03 as (
                 select
-                    T02.*, D.id, D.report_date, D.target_qty, D.actual_qty, D.die_a_qty,
-                    D.die_b_qty, D.remark, D.created_at
+                    T02.*, D.id, D.report_date, D.actual_qty, D.die_a_qty, D.die_b_qty, D.remark, D.created_at,
+                    (select target from spm_target where 1 = 1 and line = T02.line and model = T02.model) target_qty
                 from T02
                 left join pih_daily_meeting_report D on (
                     T02.line = D.line

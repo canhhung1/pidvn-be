@@ -16,6 +16,10 @@ public class HrMealCtl {
     @Autowired
     private HrMealSvc hrMealSvc;
 
+    /**
+     * Lấy dữ lệu tính toán vé ăn từ timesheet từ PV Database
+     * @return
+     */
     @PostMapping("TimesheetConfirm")
     public ResponseEntity<?> timesheetConfirm() {
         return new ResponseEntity<>(this.hrMealSvc.timesheetConfirm(), HttpStatus.OK);

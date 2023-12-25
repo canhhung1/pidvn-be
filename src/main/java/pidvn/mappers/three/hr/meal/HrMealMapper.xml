@@ -278,12 +278,14 @@
                         END VeChinhTimeSheet,
                         CASE
 
-                            -- OT ngày nghỉ: tổng thời gian < 10.5 => có 1 vé chính
-                            WHEN (T02.CaLamViec IS NULL AND T02.TotalWorkingTime < 10.5) THEN 1
-                            -- OT ngày nghỉ: 10.5 <= TotalWorkingTime < 11.5 => có 1 vé chính
-                            WHEN (T02.CaLamViec IS NULL AND T02.TotalWorkingTime >= 10.5 AND T02.TotalWorkingTime < 11.5) THEN 1
                             -- OT ngày nghỉ: tổng thời gian >= 11.5 => có 2 vé chính
                             WHEN (T02.CaLamViec IS NULL AND T02.TotalWorkingTime >= 11.5) THEN 2
+
+                            -- OT ngày nghỉ: 10.5 <= TotalWorkingTime < 11.5 => có 1 vé chính
+                            WHEN (T02.CaLamViec IS NULL AND T02.TotalWorkingTime >= 10.5 AND T02.TotalWorkingTime < 11.5) THEN 1
+
+                            -- OT ngày nghỉ: tổng thời gian < 10.5 => có 1 vé chính
+                            WHEN (T02.CaLamViec IS NULL AND T02.TotalWorkingTime < 10.5) THEN 1
 
                             -- OT ngày thường: tổng thời gian >= 11.5 => có 1 vé chính
                             WHEN (T02.CaLamViec IS NOT NULL AND T02.OTTime IS NOT NULL AND T02.TotalWorkingTime >= 11.5) THEN 1
@@ -304,6 +306,7 @@
 
                             -- OT ngày thường: tổng thời gian > 11.5 => có 1 vé phụ (cộng 1 vé phụ theo timesheet)
                             WHEN (T02.CaLamViec IS NOT NULL AND T02.OTTime IS NOT NULL AND T02.TotalWorkingTime > 10.5 AND T02.TotalWorkingTime <= 11.5) THEN 2
+
                             ELSE 1
                         END VePhuTroCap
 

@@ -168,7 +168,7 @@
                     select C.child, C.consumption, C.unit, A.qty from consumption C
                     left join (
                         SELECT D.model, sum(D.qty) qty FROM pidvn.defect_records D where 1 = 1
-                        and D.defect_code in (select D.code from defects D where defect_group in ('R','S','MC','MCT','OK'))
+                        and D.defect_code in (selec-tt D.code from defects D where defect_group in ('R','S','MC','MCT','OK'))
                         and D.model in (select C.parent from consumption C )
                         and D.date between #{fromDate} and #{toDate}
                         group by D.model

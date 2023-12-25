@@ -30,7 +30,7 @@
             L.id, L.name, L.product_id, L.process_id, L.description, L.product_type_id, L.description
         from line L
         where 1 = 1
-        and L.product_id = 4;
+        and L.product_id in (4,6)
     </select>
 
 

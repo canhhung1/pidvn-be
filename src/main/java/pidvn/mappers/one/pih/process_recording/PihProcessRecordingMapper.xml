@@ -41,5 +41,49 @@
     </select>
 
 
+    <resultMap id="getLots-result"
+               type="pidvn.modules.pih.process_recording.models.LotVo">
+        <result column="lot_group" property="lotGroup" javaType="String"/>
+        <result column="s_no" property="createdAt" javaType="Date"/>
+    </resultMap>
+    <select id="getLots" resultMap="getLots-result">
+
+        select
+            l.id, l.lot_no, l.model, l.line, l.shift, l.`date`, l.qty, l.lot_group, l.s_no
+        from lots l
+        where 1 = 1
+        <if test="lotNo != null">
+            and l.lot_no = #{lotNo}
+        </if>
+        <if test="lotGroup != null">
+            and l.lot_group = #{lotGroup}
+        </if>
+        <if test="sNoList != null and sNoList.size != 0">
+            and l.s_no between #{sNoList[0]} and #{sNoList[1]}
+        </if>
+
+    </select>
+
+
+    <select id="calculateQtyChangeCoil" resultType="Float">
+        with
+        T01 as (
+            select
+                l.id, l.lot_no, l.model, l.line, l.shift, l.`date`, l.qty, l.lot_group, l.s_no
+            from lots l
+            where l.lot_group = #{label}
+            and l.s_no between #{fromBox} and #{toBox}
+        ),
+        T02 as (
+            select T01.*, M.pnpa, M.pncomp, M.qtpern, M.qtperd, #{bobbinAmount} as bobbin_amount from T01
+            left join ps_masters M on (T01.model = M.pnpa and M.pncomp = #{coilCode})
+        )
+        select sum(A.qty) qty from (
+            select T02.model, T02.line, (T02.qty/T02.bobbin_amount*T02.qtpern/T02.qtperd) qty from T02
+        ) A
+        group by A.line, A.model
+    </select>
+
+
 
 </mapper>

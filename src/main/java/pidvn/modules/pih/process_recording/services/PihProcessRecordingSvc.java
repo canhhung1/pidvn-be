@@ -46,10 +46,9 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
     @Transactional(transactionManager = "chainedTransactionManager", rollbackFor = Exception.class)
     public Map insertCoil(ScannerVo scannerVo) throws Exception {
 
-        MaterialControls materialUpdate = this.updateToBoxMaterial(scannerVo);
+        MaterialControls materialUpdate = this.updateToBoxAndQtyMaterial(scannerVo);
 
         MaterialControls materialSave = this.addMaterial(scannerVo, materialUpdate);
-
         Map result = new HashMap();
         result.put("materialUpdate", materialUpdate);
         result.put("materialSave", materialSave);
@@ -287,7 +286,7 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
         return result;
     }
 
-    private MaterialControls updateToBoxMaterial(ScannerVo scannerVo) throws Exception {
+    private MaterialControls updateToBoxAndQtyMaterial(ScannerVo scannerVo) throws Exception {
 
         /**
          * Tìm Coil bị thay ra, cập nhật lại toBox
@@ -305,14 +304,35 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
 
         MaterialVo material = materials.get(0);
 
-        // Update
+        /**
+         * Update toBox và Qty
+         */
+
+        // Lấy record cần update
         MaterialControls materialUpdate = this.materialControlsRepo.findById(material.getId()).get();
 
-        // Tìm số sequence (ToBox)
-        materialUpdate.setToBox(scannerVo.getSequence());
-        // materialUpdate.setQty(scannerVo.getQty().floatValue());
+        // Mã model dây đồng
+        String coilCode = lotsRepo.findByLotNo(materialUpdate.getClotno()).getModel();
 
-        return this.materialControlsRepo.save(materialUpdate);
+        // Tìm fromBox, toBox
+        Integer fromBox = materialUpdate.getFrBox();
+        Integer toBox = scannerVo.getSequence();
+
+        // Tìm số lượng bobbin
+        MaterialSearchVo searchVo = new MaterialSearchVo();
+        String [] label = scannerVo.getLabel().split("\\*");
+        searchVo.setPlotno(label[0] + "*" + label[1] + "*" + label[2] + "*" +label[3]);
+        List<MaterialVo> records = this.pihPRMapper.getMaterial(searchVo);
+        int numberOfBobbin = (int) records.stream().filter(item -> item.getToBox() == null).count();
+
+        // Lấy danh sách tem đã sử dụng
+        Float qty = this.pihPRMapper.calculateQtyChangeCoil(
+            (label[0] + "*" + label[1] + "*" + label[2] + "*" +label[3]), fromBox, toBox, numberOfBobbin, coilCode
+        );
+
+        materialUpdate.setQty(qty);
+        materialUpdate.setToBox(toBox);
+         return this.materialControlsRepo.save(materialUpdate);
     }
 
     private MaterialControls addMaterial(ScannerVo scannerVo, MaterialControls materialControls) {
@@ -324,15 +344,10 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
         MaterialControls material = new MaterialControls();
         material.setRecordType("PIC");
         material.setPpn(label[1]);
-        //material.setCpn(label[0] + "*" + label[1] + "*" + label[2] + "*" +label[3]);
         material.setCpn(lot.getModel());
-
         material.setLine(label[2]);
         material.setDate(new Date());
-        //material.setPlotno(lot.getModel());
         material.setPlotno(label[0] + "*" + label[1] + "*" + label[2] + "*" +label[3]);
-
-
         material.setClotno(scannerVo.getNewCoil());
         material.setQty(lot.getQty());
         material.setFrBox(scannerVo.getSequence());

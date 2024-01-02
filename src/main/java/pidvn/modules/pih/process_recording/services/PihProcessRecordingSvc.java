@@ -332,7 +332,8 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
 
         materialUpdate.setQty(qty);
         materialUpdate.setToBox(toBox);
-         return this.materialControlsRepo.save(materialUpdate);
+        materialUpdate.setRemark("Test: consumption (change coil)");
+        return this.materialControlsRepo.save(materialUpdate);
     }
 
     private MaterialControls addMaterial(ScannerVo scannerVo, MaterialControls materialControls) {

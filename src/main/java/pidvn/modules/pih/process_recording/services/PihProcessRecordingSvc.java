@@ -8,6 +8,7 @@ import pidvn.entities.one.Lots;
 import pidvn.entities.one.MaterialControls;
 import pidvn.entities.one.PsMaster;
 import pidvn.mappers.one.pih.process_recording.PihProcessRecordingMapper;
+import pidvn.modules.pih.process_recording.models.DefectRecordVo;
 import pidvn.modules.pih.process_recording.models.MaterialSearchVo;
 import pidvn.modules.pih.process_recording.models.MaterialVo;
 import pidvn.modules.pih.process_recording.models.ScannerVo;
@@ -156,8 +157,6 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
 
         String [] data = scannerVo.getLabel().split("\\*");
 
-        //List<Lots> lots = this.lotsRepo.findByLotNoIn(scannerVo.getLots());
-
         List<Lots> lots = new ArrayList<>();
         for (String lotNo: scannerVo.getLots()) {
             Lots lot = this.lotsRepo.findByLotNo(lotNo);
@@ -170,15 +169,12 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
         for (Lots lot: lots) {
             MaterialControls material = new MaterialControls();
             material.setPpn(data[1]);
-            //material.setCpn(scannerVo.getLabel());
             material.setCpn(lot.getModel());
             material.setLine(data[2]);
             material.setDate(new Date());
-            //material.setPlotno(lot.getModel());
             material.setPlotno(scannerVo.getLabel());
-
             material.setClotno(lot.getLotNo());
-            material.setQty(lot.getQty());
+            material.setQty((float) 0);
             material.setFrBox(1);
             material.setUser1(scannerVo.getUserId());
             material.setKeyUser(scannerVo.getUserId());
@@ -190,7 +186,72 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
             count++;
         }
 
-        return this.materialControlsRepo.saveAll(materials);
+        // Lưu material_controls
+        List<MaterialControls> result = new ArrayList<>();
+        for (MaterialControls item : materials) {
+            List<MaterialControls> m = materialControlsRepo.findByPlotnoAndClotnoOrderByIdDesc(item.getPlotno(), item.getClotno());
+            if (m.size() == 0) {
+                MaterialControls obj = this.materialControlsRepo.save(item);
+                result.add(obj);
+            }else {
+                m.get(0);
+            }
+        }
+
+        /**
+         * Update Qty and toBox
+         * TODO
+         */
+
+//        this.updateToBoxAndQtyWhenChangeTemp(scannerVo);
+
+        return result;
+    }
+
+    private void updateToBoxAndQtyWhenChangeTemp(ScannerVo scannerVo) {
+
+        String [] data = scannerVo.getLabel().split("\\*"); // VN240103*A-0408A*COIL7*B
+        String line = data[2];
+        DefectRecordVo defectRecord = this.pihPRMapper.getDefectRecords(line,null,1).get(0);
+
+        String shift = defectRecord.getShift();
+        Date date = defectRecord.getDate();
+        Integer toBox = defectRecord.getSeqNo();
+
+        /**
+         * Tìm số bobbin chạy
+         */
+        MaterialSearchVo params1 = new MaterialSearchVo();
+        params1.setLine(line);
+        params1.setRecordType("PIC");
+        params1.setPlotno(defectRecord.getLotGroup());
+        List<MaterialVo> materials =  this.pihPRMapper.getMaterial(params1);
+
+
+//        int bobbinAmount = (int) materials.stream().filter(item -> item.getToBox() == null).count();
+
+
+        // Các record cần update toBox
+        List<Integer> ids = new ArrayList<>();
+        materials.stream().filter(item -> item.getToBox() == null).forEach(a -> {
+            ids.add(a.getId());
+        });
+
+        // Số bobbin chạy
+        int bobbinAmount = ids.size();
+
+
+        System.out.println("AAA: " + ids.size());
+
+
+
+
+
+
+
+
+
+
     }
 
     @Override

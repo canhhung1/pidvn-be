@@ -86,4 +86,31 @@
 
 
 
+    <resultMap id="getDefectRecords-result"
+               type="pidvn.modules.pih.process_recording.models.DefectRecordVo">
+        <result column="lot_no" property="lotNo" javaType="String"/>
+        <result column="lot_group" property="lotGroup" javaType="String"/>
+        <result column="seq_no" property="seqNo" javaType="Integer"/>
+    </resultMap>
+    <select id="getDefectRecords" resultMap="getDefectRecords-result">
+        select
+            A.id, A.model, A.line, A.`date`, A.shift, A.lot_no, A.qty, A.created_at,
+            cast(right(A.lot_no,3) as signed) seq_no, SUBSTRING(A.lot_no, 1, LENGTH(A.lot_no)-4) lot_group from defect_records A
+        where 1 = 1
+        and A.defect_code in (select D.code from defects D where defect_group = 'OK')
+        <if test="lotNo != null">
+            and A.lot_no like '%${lotNo}%'
+        </if>
+        <if test="line != null">
+            and A.line = #{line}
+        </if>
+
+        order by A.id desc
+
+        <if test="limit != null">
+            limit 1
+        </if>
+
+
+    </select>
 </mapper>

@@ -11,5 +11,6 @@ public interface MaterialControlsRepo extends JpaRepository<MaterialControls, In
     List<MaterialControls> findByIdIn(List<Integer> ids);
     List<MaterialControls> findByPlotnoAndRecordTypeOrderByIdDesc(String plotno, String recordType);
     List<MaterialControls> findByClotnoAndRecordType(String clotNo, String recordType);
+    List<MaterialControls> findByPlotnoAndClotnoOrderByIdDesc(String plotno, String clotno);
 
 }

@@ -1,6 +1,7 @@
 package pidvn.mappers.one.pih.process_recording;
 
 import org.apache.ibatis.annotations.Mapper;
+import pidvn.modules.pih.process_recording.models.DefectRecordVo;
 import pidvn.modules.pih.process_recording.models.LotVo;
 import pidvn.modules.pih.process_recording.models.MaterialSearchVo;
 import pidvn.modules.pih.process_recording.models.MaterialVo;
@@ -21,5 +22,9 @@ public interface PihProcessRecordingMapper {
      * @return
      */
     Float calculateQtyChangeCoil(String label, Integer fromBox, Integer toBox, Integer bobbinAmount, String coilCode);
+
+
+
+    List<DefectRecordVo> getDefectRecords(String line, String lotNo, Integer limit);
 
 }

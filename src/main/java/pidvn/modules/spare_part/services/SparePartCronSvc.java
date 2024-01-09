@@ -26,7 +26,7 @@ public class SparePartCronSvc implements ISparePartCronSvc {
      * Cron chạy hàng ngày lúc 11h30 và 14h30
      * @return
      */
-    @Scheduled(cron = "0 30 11,14 * * *")
+    //@Scheduled(cron = "0 30 11,14 * * *")
     @Override
     public List<SparePartRecord> insertDataOutputSparePart() {
         List<SparePartRecord> result = new ArrayList<>();

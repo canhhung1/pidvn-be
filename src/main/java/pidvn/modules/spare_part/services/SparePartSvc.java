@@ -14,6 +14,7 @@ import pidvn.exceptions.ConflictException;
 import pidvn.mappers.one.spare_part.SparePartMapper;
 import pidvn.modules.spare_part.models.RowExcelErrorVo;
 import pidvn.modules.spare_part.models.SearchVo;
+import pidvn.modules.spare_part.models.SparePartDataChartVo;
 import pidvn.modules.spare_part.models.SparePartRecordVo;
 import pidvn.repositories.one.*;
 
@@ -178,6 +179,31 @@ public class SparePartSvc implements ISparePartSvc {
     @Override
     public List<SparePartMachineStandard> getMachineStandard() {
         return this.sparePartMachineStandardRepo.findAll();
+    }
+
+    @Override
+    public Map getSparePartDataChart(SearchVo searchVo) {
+
+
+        Map result = new HashMap();
+
+
+        SearchVo param1 = new SearchVo();
+        param1.setDate(searchVo.getDate());
+        param1.setChartType(1);
+        List<SparePartDataChartVo> data1 = this.sparePartMapper.getSparePartDataChart(param1);
+
+
+        SearchVo param2 = new SearchVo();
+        param1.setDate(searchVo.getDate());
+        param1.setChartType(2);
+//        List<SparePartDataChartVo> data2 = this.sparePartMapper.getSparePartDataChart(param2);
+
+        result.put("data1" , data1);
+//        result.put("data2" , data2);
+
+        return result;
+
     }
 
 

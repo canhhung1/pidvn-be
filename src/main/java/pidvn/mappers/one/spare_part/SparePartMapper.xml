@@ -128,8 +128,68 @@
             from T01
             left join T02 on (T01.galileo_name = T02.galileo_name and (T01.date between T02.effective_date and T02.expiry_date))
 
-
         ]]>
+    </select>
+
+
+    <resultMap id="getSparePartDataChart-result"
+               type="pidvn.modules.spare_part.models.SparePartDataChartVo">
+        <result column="total_amount" property="totalAmount" javaType="Float"/>
+
+    </resultMap>
+    <select id="getSparePartDataChart" resultMap="getSparePartDataChart-result">
+            with
+            T01 as (
+                select A.*, B.galileo_name from spare_part_data_chart A
+                left join spare_parts B on A.part_number = B.part_number
+                where 1 = 1
+                <if test="date != null">
+                    and DATE_FORMAT(A.date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
+                </if>
+            ),
+            T02 as (
+                select
+                    A.pnsucsm galileo_name, A.cdfc factory_code, DATE_FORMAT(A.ymd8ent, '%Y-%m-%d') input_date,
+                    DATE_FORMAT(A.ymd8st, '%Y-%m-%d') effective_date,
+                    DATE_FORMAT(A.ymd8ed, '%Y-%m-%d') expiry_date, A.ucstdi standard_price, A.cdcur currency_code, A.umstduc unit
+                from tnmu007_standard_unit_cost A
+                where 1 = 1
+                and A.cdfc = 'RE'
+                order by A.ymd8ent desc
+            ),
+            T03 as (
+                select
+                    T01.part_number, T02.galileo_name, T01.qty, T01.date, T01.machine, T01.line, ROUND((T02.standard_price*T01.qty), 1) total_amount
+                from T01
+                left join T02 on (
+                        T01.galileo_name = T02.galileo_name
+                    and	(T01.date between T02.effective_date and T02.expiry_date)
+                )
+                where 1 = 1
+            )
+
+            <if test="chartType == 1">
+                select T03.line, sum(T03.total_amount) total_amount from T03
+                where 1 = 1
+                and T03.total_amount > 0
+                group by T03.line
+                order by T03.line asc
+            </if>
+            <if test="chartType == 2">
+                select T03.line, T03.machine, sum(T03.total_amount) total_amount from T03
+                where 1 = 1
+                and T03.total_amount > 0
+                group by T03.line, T03.machine
+                order by T03.line asc
+            </if>
+
+
+
+
+
+
+
+
     </select>
 
 </mapper>

@@ -104,4 +104,13 @@ public class SparePartCtrl {
 
 
 
+
+    @PostMapping("Charts")
+    public ResponseEntity<?> getSparePartDataChart(@RequestBody SearchVo searchVo) {
+        return new ResponseEntity<>(this.sparePartSvc.getSparePartDataChart(searchVo), HttpStatus.OK);
+    }
+
+
+
+
 }

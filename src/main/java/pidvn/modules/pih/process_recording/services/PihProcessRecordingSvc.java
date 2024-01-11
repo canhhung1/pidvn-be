@@ -203,11 +203,15 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
          * TODO
          */
 
-//        this.updateToBoxAndQtyWhenChangeTemp(scannerVo);
+        // this.updateToBoxAndQtyWhenChangeTemp(scannerVo);
 
         return result;
     }
 
+    /**
+     *
+     * @param scannerVo
+     */
     private void updateToBoxAndQtyWhenChangeTemp(ScannerVo scannerVo) {
 
         String [] data = scannerVo.getLabel().split("\\*"); // VN240103*A-0408A*COIL7*B

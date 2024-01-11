@@ -26,7 +26,7 @@
             CASE
                 WHEN A.type = 'INPUT' then 'Nhập kho'
                 WHEN A.type = 'OUTPUT' then 'Xuất kho'
-                WHEN A.type = 'RETURN' then 'Trả về (OK)'
+                WHEN A.type = 'OK_RETURN' then 'Trả về (OK)'
             END as type
         from spare_part_records A
         left join spare_parts B on A.part_number = B.part_number

@@ -17,12 +17,17 @@
     </resultMap>
     <select id="getSparePartRecords" resultMap="getSparePartRecords-result">
         select
-            A.id, A.request_no, A.part_number, A.date, A.qty, A.line, A.remark,
+            A.id, A.request_no, A.part_number, A.date, A.line, A.remark,
             (select U.name from users U where U.username = A.wh_user_code) wh_user,
             (select U.name from users U where U.username = A.receive_user_code) other_user,
             A.machine machine_id, A.created_at, A.updated_at, A.wh_user_code, A.receive_user_code,
             (select B.vn_name from spare_part_machine_standard B where 1 = 1 and B.id = A.machine) machine,
             B.galileo_name,
+            CASE
+                WHEN A.type = 'INPUT' then A.qty
+                WHEN A.type = 'OUTPUT' then A.qty
+                WHEN A.type = 'OK_RETURN' then A.qty*(-1)
+            END as qty,
             CASE
                 WHEN A.type = 'INPUT' then 'Nhập kho'
                 WHEN A.type = 'OUTPUT' then 'Xuất kho'

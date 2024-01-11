@@ -8,10 +8,7 @@ import pidvn.entities.one.Lots;
 import pidvn.entities.one.MaterialControls;
 import pidvn.entities.one.PsMaster;
 import pidvn.mappers.one.pih.process_recording.PihProcessRecordingMapper;
-import pidvn.modules.pih.process_recording.models.DefectRecordVo;
-import pidvn.modules.pih.process_recording.models.MaterialSearchVo;
-import pidvn.modules.pih.process_recording.models.MaterialVo;
-import pidvn.modules.pih.process_recording.models.ScannerVo;
+import pidvn.modules.pih.process_recording.models.*;
 import pidvn.repositories.one.LineRepo;
 import pidvn.repositories.one.LotsRepo;
 import pidvn.repositories.one.MaterialControlsRepo;
@@ -203,7 +200,9 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
          * TODO
          */
 
-        // this.updateToBoxAndQtyWhenChangeTemp(scannerVo);
+         this.updateToBoxAndQtyWhenChangeTemp(scannerVo);
+
+
 
         return result;
     }
@@ -232,30 +231,31 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
         List<MaterialVo> materials =  this.pihPRMapper.getMaterial(params1);
 
 
-//        int bobbinAmount = (int) materials.stream().filter(item -> item.getToBox() == null).count();
-
-
         // Các record cần update toBox
         List<Integer> ids = new ArrayList<>();
         materials.stream().filter(item -> item.getToBox() == null).forEach(a -> {
             ids.add(a.getId());
         });
+        // Thực hiện update toBox
+        for (Integer id : ids) {
+            MaterialControls material = this.materialControlsRepo.findById(id).get();
+            material.setToBox(toBox);
+            this.materialControlsRepo.save(material);
+        }
 
         // Số bobbin chạy
         int bobbinAmount = ids.size();
+        String plotno = defectRecord.getLotGroup();
 
+        List<LotVo> lotsQty = this.pihPRMapper.calculateQtyChangeLabel(bobbinAmount,plotno, ids);
 
-        System.out.println("AAA: " + ids.size());
-
-
-
-
-
-
-
-
-
-
+        // Cập nhật số qty
+        for (LotVo lot: lotsQty) {
+            MaterialControls material = this.materialControlsRepo.findById(lot.getId()).get();
+            material.setQty(lot.getQty());
+            material.setRemark("Test: consumption (change label)");
+            this.materialControlsRepo.save(material);
+        }
     }
 
     @Override

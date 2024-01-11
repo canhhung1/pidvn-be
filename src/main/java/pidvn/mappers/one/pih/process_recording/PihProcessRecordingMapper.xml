@@ -113,4 +113,43 @@
 
 
     </select>
+
+
+
+    <resultMap id="calculateQtyChangeLabel-result"
+               type="pidvn.modules.pih.process_recording.models.LotVo">
+        <result column="lot_no" property="lotGroup" javaType="String"/>
+    </resultMap>
+    <select id="calculateQtyChangeLabel" resultMap="calculateQtyChangeLabel-result">
+        with
+        T01 as (
+            select
+                A.lot_no, A.qty,cast(right(A.lot_no,3) as signed) seq_no
+            from defect_records A
+            where 1 = 1
+            and A.defect_code in (select D.code from defects D where defect_group = 'OK')
+            and A.lot_no like '%${plotno}%'
+        ),
+        T02 as (
+            select
+            M.id, M.ppn, M.cpn, M.plotno, M.clotno, M.fr_box, M.to_box,
+            (M.to_box - M.fr_box + 1) as temp_amount, P.qtpern, P.qtperd
+            from material_controls M
+            left join ps_masters P on (M.ppn = P.pnpa and M.cpn = P.pncomp)
+            where 1 = 1
+            and M.record_type = 'PIC'
+            and M.plotno = #{plotno}
+            and M.id in
+            <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+
+        ),
+        T03 as (
+            select T02.id, T02.clotno, #{bobbinAmount} as bobbin_amount, sum(T01.qty) qty , T02.qtpern, T02.qtperd  from T02
+            left join T01 on (T01.seq_no between T02.fr_box and T02.to_box)
+            group by T02.id
+        )
+        select T03.id, T03.clotno as lot_no, (T03.qty/T03.bobbin_amount*T03.qtpern/T03.qtperd) qty from T03
+    </select>
 </mapper>

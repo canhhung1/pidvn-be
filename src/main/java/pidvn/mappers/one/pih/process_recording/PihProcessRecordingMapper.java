@@ -27,4 +27,6 @@ public interface PihProcessRecordingMapper {
 
     List<DefectRecordVo> getDefectRecords(String line, String lotNo, Integer limit);
 
+    List<LotVo> calculateQtyChangeLabel(int bobbinAmount, String plotno, List<Integer> ids);
+
 }

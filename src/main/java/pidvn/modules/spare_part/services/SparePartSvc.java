@@ -104,6 +104,22 @@ public class SparePartSvc implements ISparePartSvc {
         return this.sparePartRecordRepo.saveAll(data);
     }
 
+    @Override
+    public SparePartRecord updateSparePartRecord(SparePartRecord sparePartRecord) {
+
+        SparePartRecord record = this.sparePartRecordRepo.findById(sparePartRecord.getId()).get();
+        record.setPartNumber(sparePartRecord.getPartNumber());
+        record.setFactoryCode(sparePartRecord.getFactoryCode());
+        record.setLine(sparePartRecord.getLine());
+        record.setMachine(sparePartRecord.getMachine());
+        record.setReceiveUserCode(sparePartRecord.getReceiveUserCode());
+        record.setRemark(sparePartRecord.getRemark());
+        record.setQty(sparePartRecord.getQty());
+        record.setType(sparePartRecord.getQty() < 0 ? "OK_RETURN" : "OUTPUT");
+
+        return this.sparePartRecordRepo.save(record);
+    }
+
 //    @Override
 //    public SparePartRecord saveSparePartRecord(SparePartRecord sparePartRecord) {
 //        return this.sparePartRecordRepo.save(sparePartRecord);
@@ -252,7 +268,7 @@ public class SparePartSvc implements ISparePartSvc {
                 obj.setWhUserCode(row.getCell(5).getStringCellValue());
                 obj.setReceiveUserCode(row.getCell(7).getStringCellValue());
                 obj.setQty((float) row.getCell(4).getNumericCellValue());
-                obj.setMachine(row.getCell(8).getStringCellValue());
+                //obj.setMachine(row.getCell(8).getStringCellValue());
                 obj.setLine(row.getCell(9).getStringCellValue());
                 obj.setDate(row.getCell(0).getDateCellValue());
                 obj.setInsertType("excel");

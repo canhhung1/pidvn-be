@@ -14,6 +14,7 @@
         <result column="created_at" property="createdAt" javaType="Date"/>
         <result column="updated_at" property="updatedAt" javaType="Date"/>
         <result column="machine_id" property="machineId" javaType="Integer"/>
+        <result column="factory_code" property="factoryCode" javaType="String"/>
     </resultMap>
     <select id="getSparePartRecords" resultMap="getSparePartRecords-result">
         select
@@ -22,7 +23,7 @@
             (select U.name from users U where U.username = A.receive_user_code) other_user,
             A.machine machine_id, A.created_at, A.updated_at, A.wh_user_code, A.receive_user_code,
             (select B.vn_name from spare_part_machine_standard B where 1 = 1 and B.id = A.machine) machine,
-            B.galileo_name,
+            B.galileo_name, A.factory_code,
             CASE
                 WHEN A.type = 'INPUT' then A.qty
                 WHEN A.type = 'OUTPUT' then A.qty

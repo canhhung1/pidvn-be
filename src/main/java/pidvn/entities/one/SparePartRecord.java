@@ -54,7 +54,7 @@ public class SparePartRecord {
     private String line;
 
     @Column(name = "machine")
-    private String machine;
+    private Integer machine;
 
     @Column(name = "warehouse")
     private String warehouse;
@@ -169,11 +169,11 @@ public class SparePartRecord {
         this.line = line;
     }
 
-    public String getMachine() {
+    public Integer getMachine() {
         return machine;
     }
 
-    public void setMachine(String machine) {
+    public void setMachine(Integer machine) {
         this.machine = machine;
     }
 

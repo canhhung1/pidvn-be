@@ -4,17 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 import pidvn.entities.one.SparePart;
-import pidvn.entities.one.SparePartInventoryData;
-import pidvn.entities.one.SparePartInventoryRequest;
 import pidvn.entities.one.SparePartRecord;
-import pidvn.exceptions.ConflictException;
 import pidvn.modules.spare_part.models.SearchVo;
 import pidvn.modules.spare_part.services.SparePartSvc;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -61,6 +55,11 @@ public class SparePartCtrl {
     @PostMapping("SparePartRecords")
     public ResponseEntity<?> saveSparePartRecords(@RequestBody List<SparePartRecord> sparePartRecords) {
         return new ResponseEntity<>(this.sparePartSvc.saveSparePartRecords(sparePartRecords), HttpStatus.OK);
+    }
+
+    @PutMapping("SparePartRecord")
+    public ResponseEntity<?> updateSparePartRecord(@RequestBody SparePartRecord sparePartRecord) {
+        return new ResponseEntity<>(this.sparePartSvc.updateSparePartRecord(sparePartRecord), HttpStatus.OK);
     }
 
 //    @GetMapping("SparePartInventoryRequests")

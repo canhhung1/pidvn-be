@@ -95,7 +95,7 @@ public class SparePartCronSvc implements ISparePartCronSvc {
                 obj.setQty((float) row.getCell(7).getNumericCellValue());
                 obj.setWhUserCode(row.getCell(8).getStringCellValue());
                 obj.setReceiveUserCode(row.getCell(10).getStringCellValue());
-                obj.setMachine(row.getCell(11).getStringCellValue());
+                //obj.setMachine(row.getCell(11).getStringCellValue());
                 obj.setLine(row.getCell(13).getStringCellValue());
                 obj.setInsertType("excel");
                 obj.setType("OUTPUT");

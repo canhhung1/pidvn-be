@@ -9,7 +9,7 @@ public class SparePartRecordVo {
     private String galileoName;
     private String requestNo;
     private Date date;
-    private String qty;
+    private Integer qty;
     private String whUserCode;
     private String receiveUserCode;
     private String whUser;
@@ -70,11 +70,11 @@ public class SparePartRecordVo {
         this.date = date;
     }
 
-    public String getQty() {
+    public Integer getQty() {
         return qty;
     }
 
-    public void setQty(String qty) {
+    public void setQty(Integer qty) {
         this.qty = qty;
     }
 

@@ -120,6 +120,17 @@ public class SparePartSvc implements ISparePartSvc {
         return this.sparePartRecordRepo.save(record);
     }
 
+    @Override
+    public Map deleteSparePartRecord(Integer id) {
+
+        this.sparePartRecordRepo.deleteById(id);
+
+        Map result = new HashMap();
+        result.put("message", "Xóa thành công");
+
+        return result;
+    }
+
 //    @Override
 //    public SparePartRecord saveSparePartRecord(SparePartRecord sparePartRecord) {
 //        return this.sparePartRecordRepo.save(sparePartRecord);

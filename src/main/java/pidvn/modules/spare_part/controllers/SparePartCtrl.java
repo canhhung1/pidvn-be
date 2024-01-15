@@ -62,6 +62,11 @@ public class SparePartCtrl {
         return new ResponseEntity<>(this.sparePartSvc.updateSparePartRecord(sparePartRecord), HttpStatus.OK);
     }
 
+    @DeleteMapping("SparePartRecord/{id}")
+    public ResponseEntity<?> deleteSparePartRecord(@PathVariable Integer id) {
+        return new ResponseEntity<>(this.sparePartSvc.deleteSparePartRecord(id), HttpStatus.OK);
+    }
+
 //    @GetMapping("SparePartInventoryRequests")
 //    public ResponseEntity<?> getSparePartInventoryRequests() {
 //        return new ResponseEntity<>(this.sparePartSvc.getSparePartInventoryRequests(), HttpStatus.OK);

@@ -26,6 +26,8 @@ public interface ISparePartSvc {
 
     SparePartRecord updateSparePartRecord(SparePartRecord sparePartRecord);
 
+    Map deleteSparePartRecord(Integer id);
+
     SparePartInventoryRequest saveSparePartInventoryRequest(SparePartInventoryRequest request) throws Exception;
 
     List<SparePartInventoryRequest> getSparePartInventoryRequests();

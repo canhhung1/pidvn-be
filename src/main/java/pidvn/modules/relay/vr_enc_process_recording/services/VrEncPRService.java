@@ -134,11 +134,11 @@ public class VrEncPRService implements IVrEncPRService {
         /**
          * Update lại số lượng trong bảng lot
          */
-        for (Lots item: lots) {
+        /*for (Lots item: lots) {
             MaterialVo obj = map.get(item.getLotNo());
             Float qty = item.getQty() - obj.getQty();
             item.setQty(qty);
-        }
+        }*/
 
         this.lotsRepo.saveAll(lots);
 
@@ -148,43 +148,23 @@ public class VrEncPRService implements IVrEncPRService {
 
     @Override
     public MaterialControls updateMaterial(MaterialVo materialVo) throws Exception {
-        /**
-         * Logic mới: update Qty trong bảng lot
-         *
-         * Kiểm tra nếu qty truyền lên backend mà nhỏ hơn qty hiện tại thì cộng số lượng vào qty của lot và ngược lại
-         *
-         * TODO
-         */
+
         Lots lot = this.lotsRepo.findByLotNo(materialVo.getClotno());
         MaterialControls material = this.materialControlsRepo.findById(materialVo.getId()).get();
 
-        float clientQty = materialVo.getQty();
-        float actualQty = material.getQty();
-        float chenhLech = clientQty - actualQty;
+        /**
+         * Kiểm tra qty update
+         * Nếu updateQty > lotQty => không cho update dữ liệu
+         */
 
-        if (chenhLech < 0) {
-            float lotQty = lot.getQty();
-            lotQty+=(chenhLech*-1);
+        Float lotQty = lot.getQty();
+        Float updateQty = materialVo.getQty();
 
-            if (lotQty < 0) {
-                throw new Exception("Không thể Update Qty được vì chênh lệch < 0");
-            }
-
-            lot.setQty(lotQty);
-            this.lotsRepo.save(lot);
-        } else if (chenhLech > 0) {
-            float lotQty = lot.getQty();
-            lotQty-=chenhLech;
-            lot.setQty(lotQty);
-
-            if (lotQty < 0) {
-                throw new Exception("Không thể Update Qty được vì chênh lệch < 0");
-            }
-
-            this.lotsRepo.save(lot);
+        if (updateQty > lotQty) {
+            throw new Exception("Số lượng không được vượt quá : " + lotQty);
         }
 
-        material.setQty(materialVo.getQty());
+        material.setQty(updateQty);
         material.setRemark(materialVo.getRemark());
         return this.materialControlsRepo.save(material);
     }

@@ -160,9 +160,9 @@ public class VrEncPRService implements IVrEncPRService {
         Float lotQty = lot.getQty();
         Float updateQty = materialVo.getQty();
 
-        if (updateQty > lotQty) {
-            throw new Exception("Số lượng không được vượt quá : " + lotQty);
-        }
+//        if (updateQty > lotQty) {
+//            throw new Exception("Số lượng không được vượt quá : " + lotQty);
+//        }
 
         material.setQty(updateQty);
         material.setRemark(materialVo.getRemark());

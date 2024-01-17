@@ -66,10 +66,6 @@ public class SparePartSvc implements ISparePartSvc {
             throw new Exception("Part Number đã tồn tại");
         }
 
-        if (this.sparePartRepo.findByGalileoName(sparePart.getGalileoName()) != null) {
-            throw new Exception("Galileo Name đã tồn tại");
-        }
-
         return this.sparePartRepo.save(sparePart);
     }
 

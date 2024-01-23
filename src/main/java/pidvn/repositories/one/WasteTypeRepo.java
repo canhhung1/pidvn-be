@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface WasteTypeRepo extends JpaRepository<WasteType, Integer> {
-    List<WasteType> findByWasteGroup(Integer group);
+    List<WasteType> findByWasteGroupAndStatus(Integer group, Integer status);
 }

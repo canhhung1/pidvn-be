@@ -126,7 +126,7 @@ public class WasteMngService implements IWasteMngService {
 
     @Override
     public List<WasteType> getWasteType(Integer group) {
-        return this.wasteTypeRepo.findByWasteGroup(group);
+        return this.wasteTypeRepo.findByWasteGroupAndStatus(group, 1);
     }
 
     @Override

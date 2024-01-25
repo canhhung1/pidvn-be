@@ -8,10 +8,7 @@ import pidvn.modules.hr.meal.models.MealRecordVo;
 import pidvn.modules.hr.meal.models.SearchVo;
 import pidvn.repositories.one.EMealDataRepo;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class HrMealSvc implements IHrMealSvc {
@@ -50,12 +47,17 @@ public class HrMealSvc implements IHrMealSvc {
         List<EMealData> data = this.hrMealMapper.getAmountTicketByTimeSheetAndActualUserScan(date);
         
         List<EMealData> oldDataTimeSheet = this.eMealDataRepo.getDataByMonth(date);
-        
+        List<Integer> listIdDelete = new ArrayList<>();
+        for (EMealData item : oldDataTimeSheet) {
+            listIdDelete.add(item.getId());
+        }
+
         if (data.size() > 0) {
             /**
              * Xóa dữ liệu timesheet cũ trong DB: pidvn
              */
-            this.eMealDataRepo.deleteAll(oldDataTimeSheet);
+            // this.eMealDataRepo.deleteAll(oldDataTimeSheet);
+            this.eMealDataRepo.deleteByIds(listIdDelete);
 
             /**
              * Lưu dữ liệu mới lấy đc từ DB: PVG

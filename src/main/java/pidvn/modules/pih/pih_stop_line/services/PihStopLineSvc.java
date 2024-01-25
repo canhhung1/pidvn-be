@@ -125,7 +125,10 @@ public class PihStopLineSvc implements IPihStopLineSvc {
     @Override
     public Map getProductTypeIdByUser(String username) throws IOException {
 
-        String rootURL = "\\\\27497-vm-dfs\\PVG-Data\\PIDVN\\Pidvn_new\\Public\\CanhHung\\Project\\PIH\\UserNhapDungMay\\DanhSach.xlsx";
+        //String rootURL = "\\\\27497-vm-dfs\\PVG-Data\\PIDVN\\Pidvn_new\\Public\\CanhHung\\Project\\PIH\\UserNhapDungMay\\DanhSach.xlsx";
+
+        String rootURL = "E:\\(C) Save File FDCS\\FDCS-Server-2\\PIH\\StopLine\\UserNhapDungMay\\DanhSach.xlsx";
+
         File file = new File(rootURL);
 
         FileInputStream inputStream = new FileInputStream(file);

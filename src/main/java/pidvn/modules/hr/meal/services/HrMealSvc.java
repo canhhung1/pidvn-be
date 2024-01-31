@@ -3,6 +3,7 @@ package pidvn.modules.hr.meal.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pidvn.entities.one.EMealData;
+import pidvn.mappers.one.hr.e_meal.HrEMealMapper;
 import pidvn.mappers.three.hr.meal.HrMealMapper;
 import pidvn.modules.hr.meal.models.MealRecordVo;
 import pidvn.modules.hr.meal.models.SearchVo;
@@ -15,6 +16,9 @@ public class HrMealSvc implements IHrMealSvc {
 
     @Autowired
     private HrMealMapper hrMealMapper;
+
+    @Autowired
+    private HrEMealMapper hrEMealMapperDB1;
 
     @Autowired
     private EMealDataRepo eMealDataRepo;
@@ -57,7 +61,8 @@ public class HrMealSvc implements IHrMealSvc {
              * Xóa dữ liệu timesheet cũ trong DB: pidvn
              */
             // this.eMealDataRepo.deleteAll(oldDataTimeSheet);
-            this.eMealDataRepo.deleteByIds(listIdDelete);
+            // this.eMealDataRepo.deleteByIds(listIdDelete);
+            this.hrEMealMapperDB1.deleteEMealDataByIds(listIdDelete);
 
             /**
              * Lưu dữ liệu mới lấy đc từ DB: PVG

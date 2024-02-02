@@ -88,7 +88,7 @@ public class VrEncPRService implements IVrEncPRService {
 
         Map result = null;
 
-        if ("VEP".equals(material.getRecordType())){
+        if ("VEP".equals(material.getRecordType())) {
             result = this.validateMaterial(material);
         }
 
@@ -107,7 +107,7 @@ public class VrEncPRService implements IVrEncPRService {
 
         List<MaterialControls> insertList = new ArrayList<>();
 
-        for (MaterialVo material: materialVos) {
+        for (MaterialVo material : materialVos) {
             MaterialControls obj = new MaterialControls();
             obj.setPpn(material.getPpn());
             obj.setCpn(material.getCpn());
@@ -181,7 +181,7 @@ public class VrEncPRService implements IVrEncPRService {
 
         String qaCard = searchVo.getQaCard();
 
-        String [] data = searchVo.getQaCard().split("\\*");
+        String[] data = searchVo.getQaCard().split("\\*");
         String product = data[0];
         String line = data[1];
         String productType = data[1].split("-")[0];
@@ -191,22 +191,22 @@ public class VrEncPRService implements IVrEncPRService {
         String sourcePath = "";
         String targetPath = "";
 
-        String tempName = "temp-" + new Random().nextInt(1000) + "xls" ;
+        String tempName = "temp-" + new Random().nextInt(1000) + "xls";
 
         // String rootFolder = "P:\\IS\\(C) Save File FDCS\\FDCS-Server-2\\VR-EMC-Process-Recording\\";
 
-        String rootFolder  = "E:\\(C) Save File FDCS\\FDCS-Server-2\\VR-EMC-Process-Recording\\";
+        String rootFolder = "E:\\(C) Save File FDCS\\FDCS-Server-2\\VR-EMC-Process-Recording\\";
 
         if (productType.equals("11GS")) {
             sourcePath = rootFolder + "11GS.xls";
             targetPath = rootFolder + tempName;
-        }else if (productType.equals("11G2")) {
+        } else if (productType.equals("11G2")) {
             sourcePath = rootFolder + "11G2.xls";
             targetPath = rootFolder + tempName;
         } else if (productType.equals("GMT")) {
             sourcePath = rootFolder + "GMT.xls";
             targetPath = rootFolder + tempName;
-        } else if(productType.equals("TEMP")) {
+        } else if (productType.equals("TEMP")) {
             sourcePath = rootFolder + "Temp.xls";
             targetPath = rootFolder + tempName;
         }
@@ -277,15 +277,15 @@ public class VrEncPRService implements IVrEncPRService {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String strDate = dateFormat.format(date);
 
-        qaCard = qaCardVo.getModel() + "*" + qaCardVo.getLineCode() + "*" + strDate + "*" +  qaCardVo.getShiftCode() + "*001";
+        qaCard = qaCardVo.getModel() + "*" + qaCardVo.getLineCode() + "*" + strDate + "*" + qaCardVo.getShiftCode() + "*001";
 
         if (qaCardVo.getId() == null) {
 
             Lots data = this.lotsRepo.findByLotNo(qaCard);
 
             if (data != null) {
-                result.put("result","ERROR");
-                result.put("message","QA card đã tồn tại");
+                result.put("result", "ERROR");
+                result.put("message", "QA card đã tồn tại");
                 return result;
             }
         }
@@ -307,7 +307,7 @@ public class VrEncPRService implements IVrEncPRService {
 
         Lots qa = this.lotsRepo.save(lot);
 
-        result.put("result","OK");
+        result.put("result", "OK");
         result.put("message", qa);
 
         return result;
@@ -316,7 +316,7 @@ public class VrEncPRService implements IVrEncPRService {
 
     private QaCardVo parseQaCard(String qaCard) throws ParseException {
 
-        String data [] = qaCard.split("\\*");
+        String data[] = qaCard.split("\\*");
 
         SimpleDateFormat formatter = new SimpleDateFormat("YYYY-MM-dd");
 
@@ -331,7 +331,7 @@ public class VrEncPRService implements IVrEncPRService {
 
     private LabelVo parseLabel(String label) {
 
-        String data [] = label.split(";");
+        String data[] = label.split(";");
 
         LabelVo result = new LabelVo();
 
@@ -363,7 +363,9 @@ public class VrEncPRService implements IVrEncPRService {
 
         Lots lot = this.lotsRepo.findByLotNo(material.getClotno());
 
-
+        if (lot == null) {
+            throw new Exception("Lot đã bị xóa !");
+        }
 
 
         Map result = new HashMap();

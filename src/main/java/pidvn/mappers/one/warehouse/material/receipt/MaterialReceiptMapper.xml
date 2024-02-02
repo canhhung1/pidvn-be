@@ -96,6 +96,7 @@
     <resultMap id="getInvoiceDetail-result"
                type="pidvn.modules.warehouse.material.receipt.models.InvoiceDetailVo">
         <result column="lot_no" property="lotNo" javaType="String"/>
+        <result column="lot_group" property="lotGroup" javaType="String"/>
     </resultMap>
     <select id="getInvoiceDetail" resultMap="getInvoiceDetail-result">
         select

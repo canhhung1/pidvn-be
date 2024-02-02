@@ -149,21 +149,8 @@ public class VrEncPRService implements IVrEncPRService {
     @Override
     public MaterialControls updateMaterial(MaterialVo materialVo) throws Exception {
 
-        Lots lot = this.lotsRepo.findByLotNo(materialVo.getClotno());
         MaterialControls material = this.materialControlsRepo.findById(materialVo.getId()).get();
-
-        /**
-         * Kiểm tra qty update
-         * Nếu updateQty > lotQty => không cho update dữ liệu
-         */
-
-        Float lotQty = lot.getQty();
         Float updateQty = materialVo.getQty();
-
-//        if (updateQty > lotQty) {
-//            throw new Exception("Số lượng không được vượt quá : " + lotQty);
-//        }
-
         material.setQty(updateQty);
         material.setRemark(materialVo.getRemark());
         return this.materialControlsRepo.save(material);

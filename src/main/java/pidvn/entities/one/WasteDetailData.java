@@ -52,6 +52,9 @@ public class WasteDetailData {
     @Column(name = "updated_at")
     private Date updatedAt;
 
+    @Column(name = "remark")
+    private String remark;
+
     public Integer getId() {
         return id;
     }
@@ -146,5 +149,13 @@ public class WasteDetailData {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

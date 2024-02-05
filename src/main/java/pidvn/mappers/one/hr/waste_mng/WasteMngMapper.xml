@@ -53,7 +53,7 @@
     <select id="getWasteDetailData" resultMap="getWasteDetailData-result">
         select
             D.*, T.name as waste_type_name, T.code, T.unit, T.handle_method, T.waste_status, T.code as waste_type_code,
-            (select H.name from waste_handle_method H where H.id = T.handle_method) as handle_method_name,
+            (select H.name from waste_handle_method H where H.id = T.handle_method) as handle_method_name, D.remark,
             (select S.name from waste_status S where S.id = T.waste_status) as waste_status_name,
             G.name as waste_group_name, SUBSTRING_INDEX(TRIM(U.name), ' ', -1) as created_by_name,
             row_number() over (order by D.id desc) AS row_num

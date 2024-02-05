@@ -78,6 +78,7 @@ public class WasteMngService implements IWasteMngService {
         detailData.setSealNo(dataVo.getSealNo());
         detailData.setPackagingNo(dataVo.getPackagingNo());
         detailData.setCreatedBy(dataVo.getCreatedBy());
+        detailData.setRemark(dataVo.getRemark());
 
         WasteDetailData detail = this.detailDataRepo.save(detailData);
 

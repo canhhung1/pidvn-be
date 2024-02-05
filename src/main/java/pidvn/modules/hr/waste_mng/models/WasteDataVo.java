@@ -33,6 +33,8 @@ public class WasteDataVo {
     private String packagingNo;
     private Integer rowNum;
 
+    private String remark;
+
     public Integer getId() {
         return id;
     }
@@ -255,5 +257,13 @@ public class WasteDataVo {
 
     public void setRowNum(Integer rowNum) {
         this.rowNum = rowNum;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

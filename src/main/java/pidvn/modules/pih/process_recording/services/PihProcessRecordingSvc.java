@@ -395,7 +395,7 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
             (label[0] + "*" + label[1] + "*" + label[2] + "*" +label[3]), fromBox, toBox, numberOfBobbin, coilCode
         );
 
-        materialUpdate.setQty(qty);
+        materialUpdate.setQty(qty == null ? 0 : qty);
         materialUpdate.setToBox(toBox);
         materialUpdate.setRemark("Test: consumption (change coil)");
         return this.materialControlsRepo.save(materialUpdate);

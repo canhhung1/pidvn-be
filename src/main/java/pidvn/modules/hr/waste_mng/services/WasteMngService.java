@@ -8,6 +8,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +27,8 @@ import java.util.*;
 
 @Service
 public class WasteMngService implements IWasteMngService {
+
+    Logger logger = LoggerFactory.getLogger(WasteMngService.class);
 
     @Autowired
     private UsersRepo usersRepo;
@@ -160,78 +164,84 @@ public class WasteMngService implements IWasteMngService {
 
     @Override
     public byte[] exportMasterData(Integer masterId) {
-
-        WasteMasterData master = this.masterDataRepo.getById(masterId);
-
-        WasteHandleCompany company = this.handleCompanyRepo.getById(master.getHandleCompany());
-
-        String reportPath = "P:\\IS\\CanhHung\\JasperReport\\HR\\WasteManagement";
-        WasteSearchVo searchVo = new WasteSearchVo();
-        searchVo.setWasteMaster(masterId);
-        List<WasteDataVo> dataList = null;
-
-        // Compile the Jasper report from .jrxml to .japser
-        JasperReport jasperReport = null;
-        try {
-
-            // Chất thải nguy hại
-            if (master.getWasteGroup() == 4) {
-                dataList = this.wasteMngMapper.getWasteDetailDataSummary(searchVo);
-                jasperReport = JasperCompileManager.compileReport(reportPath + "\\BBBG-CTNH.jrxml");
-            }
-            // Chất thải Kim loại giá trị
-            else if (master.getWasteGroup() == 3) {
-                searchVo.setWasteGroup(3);
-                searchVo.setSqlType("Report");
-                dataList = this.wasteMngMapper.getWasteDetailData(searchVo);
-                jasperReport = JasperCompileManager.compileReport(reportPath + "\\BBBG-CTKLGT.jrxml");
-            } else {
-                dataList = this.wasteMngMapper.getWasteDetailDataSummary(searchVo);
-                jasperReport = JasperCompileManager.compileReport(reportPath + "\\BBBG.jrxml");
-            }
-
-        } catch (JRException e) {
-            e.printStackTrace();
-            System.out.printf("ERROR" + e.toString());
-        }
-
-        // Get your data source
-        JRBeanCollectionDataSource jrBeanCollectionDataSource = new JRBeanCollectionDataSource(dataList);
-
-        // Add parameters
-        Map<String, Object> parameters = new HashMap<>();
-
-        String title = "";
-        String wasteName = "";
-        if (master.getWasteGroup() == 1) {
-            title = "BIÊN BẢN BÀN GIAO CTRSH, CTRCN THÔNG THƯỜNG";
-            wasteName = "CTRSH, CTRCN";
-        } else if (master.getWasteGroup() == 2) {
-            title = "BIÊN BẢN BẢN GIAO CTRTT TÁI CHẾ";
-            wasteName = "CTRTT";
-        } else if (master.getWasteGroup() == 3) {
-            title = "BIÊN BẢN BẢN GIAO CHẤT THẢI KIM LOẠI GIÁ TRỊ";
-            wasteName = "";
-        } else if (master.getWasteGroup() == 4) {
-            title = "BIÊN BẢN BẢN GIAO CHẤT THẢI NGUY HẠI";
-            wasteName = "CHẤT THẢI NGUY HẠI";
-        }
-
-        parameters.put("title", title);
-        parameters.put("wasteName", wasteName);
-        parameters.put("handleCompanyName", company.getName());
-        parameters.put("handleCompanyAddress1", company.getAddress1());
-        parameters.put("handleCompanyAddress2", company.getAddress2());
-        parameters.put("handleCompanyPhone1", company.getPhone1());
-        parameters.put("handleCompanyPhone2", company.getPhone2());
-        // Fill the report
-
+        logger.debug("XUAT BIEN BAN RAC THAI");
         byte[] result = new byte[0];
+
         try {
-            result = JasperExportManager.exportReportToPdf(JasperFillManager.fillReport(jasperReport, parameters, jrBeanCollectionDataSource));
-        } catch (JRException e) {
-            e.printStackTrace();
-            System.out.printf("EEEEEE =======>>" + e.toString());
+            WasteMasterData master = this.masterDataRepo.getById(masterId);
+
+            WasteHandleCompany company = this.handleCompanyRepo.getById(master.getHandleCompany());
+
+            String reportPath = "P:\\IS\\CanhHung\\JasperReport\\HR\\WasteManagement";
+            WasteSearchVo searchVo = new WasteSearchVo();
+            searchVo.setWasteMaster(masterId);
+            List<WasteDataVo> dataList = null;
+
+            // Compile the Jasper report from .jrxml to .japser
+            JasperReport jasperReport = null;
+            try {
+
+                // Chất thải nguy hại
+                if (master.getWasteGroup() == 4) {
+                    dataList = this.wasteMngMapper.getWasteDetailDataSummary(searchVo);
+                    jasperReport = JasperCompileManager.compileReport(reportPath + "\\BBBG-CTNH.jrxml");
+                }
+                // Chất thải Kim loại giá trị
+                else if (master.getWasteGroup() == 3) {
+                    searchVo.setWasteGroup(3);
+                    searchVo.setSqlType("Report");
+                    dataList = this.wasteMngMapper.getWasteDetailData(searchVo);
+                    jasperReport = JasperCompileManager.compileReport(reportPath + "\\BBBG-CTKLGT.jrxml");
+                } else {
+                    dataList = this.wasteMngMapper.getWasteDetailDataSummary(searchVo);
+                    jasperReport = JasperCompileManager.compileReport(reportPath + "\\BBBG.jrxml");
+                }
+
+            } catch (JRException e) {
+                e.printStackTrace();
+                System.out.printf("ERROR" + e.toString());
+            }
+
+            // Get your data source
+            JRBeanCollectionDataSource jrBeanCollectionDataSource = new JRBeanCollectionDataSource(dataList);
+
+            // Add parameters
+            Map<String, Object> parameters = new HashMap<>();
+
+            String title = "";
+            String wasteName = "";
+            if (master.getWasteGroup() == 1) {
+                title = "BIÊN BẢN BÀN GIAO CTRSH, CTRCN THÔNG THƯỜNG";
+                wasteName = "CTRSH, CTRCN";
+            } else if (master.getWasteGroup() == 2) {
+                title = "BIÊN BẢN BẢN GIAO CTRTT TÁI CHẾ";
+                wasteName = "CTRTT";
+            } else if (master.getWasteGroup() == 3) {
+                title = "BIÊN BẢN BẢN GIAO CHẤT THẢI KIM LOẠI GIÁ TRỊ";
+                wasteName = "";
+            } else if (master.getWasteGroup() == 4) {
+                title = "BIÊN BẢN BẢN GIAO CHẤT THẢI NGUY HẠI";
+                wasteName = "CHẤT THẢI NGUY HẠI";
+            }
+
+            parameters.put("title", title);
+            parameters.put("wasteName", wasteName);
+            parameters.put("handleCompanyName", company.getName());
+            parameters.put("handleCompanyAddress1", company.getAddress1());
+            parameters.put("handleCompanyAddress2", company.getAddress2());
+            parameters.put("handleCompanyPhone1", company.getPhone1());
+            parameters.put("handleCompanyPhone2", company.getPhone2());
+            // Fill the report
+
+
+            try {
+                result = JasperExportManager.exportReportToPdf(JasperFillManager.fillReport(jasperReport, parameters, jrBeanCollectionDataSource));
+            } catch (JRException e) {
+                e.printStackTrace();
+                System.out.printf("EEEEEE =======>>" + e.toString());
+            }
+        } catch (Exception e) {
+            logger.debug(e.toString());
         }
 
         return result;
@@ -239,40 +249,48 @@ public class WasteMngService implements IWasteMngService {
 
     @Override
     public byte[] exportChungTu(Integer masterId) throws JRException {
-        WasteMasterData master = this.masterDataRepo.getById(masterId);
-        WasteHandleCompany company = this.handleCompanyRepo.getById(master.getHandleCompany());
-        String reportPath = "P:\\IS\\CanhHung\\JasperReport\\HR\\WasteManagement";
-        WasteSearchVo searchVo = new WasteSearchVo();
-        searchVo.setWasteMaster(masterId);
-        List<WasteDataVo> dataList = this.wasteMngMapper.getWasteDetailDataSummary(searchVo);
-
-        // Compile the Jasper report from .jrxml to .japser
-        JasperReport jasperReport = null;
-        try {
-            jasperReport = JasperCompileManager.compileReport(reportPath + "\\ChungTu_CTNH.jrxml");
-        } catch (JRException e) {
-            e.printStackTrace();
-            System.out.printf("EEEEEE =======>>" + e.toString());
-        }
-
-        // Get your data source
-        JRBeanCollectionDataSource jrBeanCollectionDataSource = new JRBeanCollectionDataSource(dataList);
-
-        // Add parameters
-        Map<String, Object> parameters = new HashMap<>();
-
-        parameters.put("handleCompanyName", company.getName());
-        parameters.put("handleCompanyAddress1", company.getAddress1());
-        parameters.put("handleCompanyAddress2", company.getAddress2());
-        parameters.put("handleCompanyPhone1", company.getPhone1());
-        parameters.put("handleCompanyPhone2", company.getPhone2());
+        logger.debug("XUAT CHUNG TU RAC THAI");
 
         byte[] result = new byte[0];
+
         try {
-            result = JasperExportManager.exportReportToPdf(JasperFillManager.fillReport(jasperReport, parameters, jrBeanCollectionDataSource));
-        } catch (JRException e) {
-            e.printStackTrace();
-            System.out.printf("EEEEEE =======>>" + e.toString());
+            WasteMasterData master = this.masterDataRepo.getById(masterId);
+            WasteHandleCompany company = this.handleCompanyRepo.getById(master.getHandleCompany());
+            String reportPath = "P:\\IS\\CanhHung\\JasperReport\\HR\\WasteManagement";
+            WasteSearchVo searchVo = new WasteSearchVo();
+            searchVo.setWasteMaster(masterId);
+            List<WasteDataVo> dataList = this.wasteMngMapper.getWasteDetailDataSummary(searchVo);
+
+            // Compile the Jasper report from .jrxml to .japser
+            JasperReport jasperReport = null;
+            try {
+                jasperReport = JasperCompileManager.compileReport(reportPath + "\\ChungTu_CTNH.jrxml");
+            } catch (JRException e) {
+                e.printStackTrace();
+                System.out.printf("EEEEEE =======>>" + e.toString());
+            }
+
+            // Get your data source
+            JRBeanCollectionDataSource jrBeanCollectionDataSource = new JRBeanCollectionDataSource(dataList);
+
+            // Add parameters
+            Map<String, Object> parameters = new HashMap<>();
+
+            parameters.put("handleCompanyName", company.getName());
+            parameters.put("handleCompanyAddress1", company.getAddress1());
+            parameters.put("handleCompanyAddress2", company.getAddress2());
+            parameters.put("handleCompanyPhone1", company.getPhone1());
+            parameters.put("handleCompanyPhone2", company.getPhone2());
+
+
+            try {
+                result = JasperExportManager.exportReportToPdf(JasperFillManager.fillReport(jasperReport, parameters, jrBeanCollectionDataSource));
+            } catch (JRException e) {
+                e.printStackTrace();
+                System.out.printf("EEEEEE =======>>" + e.toString());
+            }
+        } catch (Exception e) {
+            logger.debug(e.toString());
         }
         return result;
     }

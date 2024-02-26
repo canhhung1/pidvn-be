@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.qa.qa_training_matrix.QaTrainingMatrixMapper">
+
+
+
+    <resultMap id="getCourses-result"
+               type="pidvn.modules.qa.qa_training_matrix.models.CourseVo">
+        <result column="course_name" property="courseName" javaType="String"/>
+        <result column="group_course" property="groupCourse" javaType="String"/>
+        <result column="group_training" property="groupTraining" javaType="String"/>
+    </resultMap>
+    <select id="getCourses" resultMap="getCourses-result">
+        SELECT A.id, A.name course_name, B.name group_course, B.group_training
+        FROM qa_training_matrix_course A
+        inner join qa_training_matrix_group_course B on A.group_course = B.id
+    </select>
+
+
+
+    <resultMap id="getTrainingRecords-result"
+               type="pidvn.modules.qa.qa_training_matrix.models.TrainingRecordVo">
+        <result column="full_name" property="fullName" javaType="String"/>
+        <result column="training_date" property="trainingDate" javaType="Date"/>
+        <result column="training_type" property="trainingType" javaType="String"/>
+        <result column="training_status" property="trainingStatus" javaType="String"/>
+        <result column="course_name" property="courseName" javaType="String"/>
+        <result column="group_course" property="groupCourse" javaType="String"/>
+        <result column="group_training" property="groupTraining" javaType="String"/>
+    </resultMap>
+    <select id="getTrainingRecords" resultMap="getTrainingRecords-result">
+        with
+            T01 as (
+            select A.id, A.name course_name, B.name group_course, B.group_training
+            from qa_training_matrix_course A
+            inner join qa_training_matrix_group_course B on A.group_course = B.id
+        ),
+        T02 as (
+            select U.username, U.name full_name, P.name position, T.section from users U
+            left join position P on U.position_id = P.id
+            left join (
+                select A.id subsection_id, B.name section from subsection A inner join section B on A.section_id = B.id
+            ) T on U.subsection_id = T.subsection_id
+            where U.status = 1
+        )
+        select
+            R.*, T02.username, T02.full_name, T02.position, T02.section,
+            T01.course_name, T01.group_course, T01.group_training
+        from qa_training_matrix_record R
+        left join T01 on R.course_id = T01.id
+        left join T02 on R.username = T02.username
+        where 1 = 1
+        <if test="trainingDate != null">
+            and YEAR(R.training_date) = YEAR(#{trainingDate})
+        </if>
+        <if test="courseId != null">
+            and R.course_id = #{courseId}
+        </if>
+
+    </select>
+
+
+
+</mapper>

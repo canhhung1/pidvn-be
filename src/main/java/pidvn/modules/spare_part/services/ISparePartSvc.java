@@ -43,4 +43,6 @@ public interface ISparePartSvc {
 
     Map getSparePartDataChart(SearchVo searchVo);
 
+    List<SparePartRecordVo> getSparePartRecordsByStandardPrice(SearchVo searchVo);
+
 }

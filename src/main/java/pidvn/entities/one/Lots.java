@@ -89,6 +89,9 @@ public class Lots {
     @Column(name = "vendor_code")
     private String vendorCode;
 
+    @Column(name = "first_qty")
+    private Float firstQty;
+
     public Integer getId() {
         return id;
     }
@@ -279,5 +282,13 @@ public class Lots {
 
     public void setVendorCode(String vendorCode) {
         this.vendorCode = vendorCode;
+    }
+
+    public Float getFirstQty() {
+        return firstQty;
+    }
+
+    public void setFirstQty(Float firstQty) {
+        this.firstQty = firstQty;
     }
 }

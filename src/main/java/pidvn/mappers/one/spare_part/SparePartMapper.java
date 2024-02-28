@@ -12,7 +12,6 @@ import java.util.List;
 public interface SparePartMapper {
     List<SparePartRecordVo> getSparePartRecords(SearchVo searchVo);
 
-
     List<SparePartRecordVo> getSparePartRecordsByStandardPrice(SearchVo searchVo);
 
     List<SparePartRecordVo> getSparePartInventory(Integer requestId);

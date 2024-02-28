@@ -67,18 +67,17 @@
         T01 as (
         select
         A.part_number, B.galileo_name, A.date, A.qty, A.wh_user_code, A.receive_user_code, A.created_at,
-        A.line, A.machine, A.remark,  A.factory_code, A.request_no,
+        A.line, C.vn_name machine, A.remark,  A.factory_code, A.request_no,
         case
-        when A.type = 'XK' then 'Xuất kho'
-        when A.type = 'OUT' then 'Xuất kho'
-        when A.type = 'NK' then 'Nhập kho'
+            when A.type = 'OUTPUT' then 'Xuất kho'
+            when A.type = 'OK_RETURN' then 'Trả về kho'
         end as type
         from spare_part_records A
         left join spare_parts B on A.part_number = B.part_number
+        left join spare_part_machine_standard C on A.machine = C.id
         where 1 = 1
-        <if test="dateRange != null and dateRange.size != 0">
-            and (A.date <![CDATA[>=]]> DATE_FORMAT(#{dateRange[0]},'%Y-%m-%d') and A.date <![CDATA[<=]]>
-            DATE_FORMAT(#{dateRange[1]},'%Y-%m-%d'))
+        <if test="date != null">
+            and DATE_FORMAT(A.date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
         </if>
         ),
         T02 as (

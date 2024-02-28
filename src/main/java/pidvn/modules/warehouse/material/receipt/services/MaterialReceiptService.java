@@ -67,6 +67,7 @@ public class MaterialReceiptService implements IMaterialReceiptService {
                 obj.setModel(material.getModel().toUpperCase());
                 obj.setDate(new Date());
                 obj.setQty(material.getQty());
+                obj.setFirstQty(material.getQty());
                 obj.setUserCode(material.getWhUserCode());
                 obj.setLotGroup(material.getLotGroup());
                 obj.setInvoice(material.getInvoiceNo());

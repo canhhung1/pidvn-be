@@ -67,25 +67,7 @@ public class SparePartCtrl {
         return new ResponseEntity<>(this.sparePartSvc.deleteSparePartRecord(id), HttpStatus.OK);
     }
 
-//    @GetMapping("SparePartInventoryRequests")
-//    public ResponseEntity<?> getSparePartInventoryRequests() {
-//        return new ResponseEntity<>(this.sparePartSvc.getSparePartInventoryRequests(), HttpStatus.OK);
-//    }
 
-//    @PostMapping("SparePartInventoryRequest")
-//    public ResponseEntity<?> saveSparePartInventoryRequest(@RequestBody SparePartInventoryRequest request) throws ResponseStatusException, ConflictException {
-//        return new ResponseEntity<>(this.sparePartSvc.saveSparePartInventoryRequest(request), HttpStatus.OK);
-//    }
-
-//    @PostMapping("SparePartInventoryData")
-//    public ResponseEntity<?> saveInventoryData(@RequestBody List<SparePartInventoryData> sparePartInventoryDataList) {
-//        return new ResponseEntity<>(this.sparePartSvc.saveInventoryData(sparePartInventoryDataList), HttpStatus.OK);
-//    }
-
-//    @PostMapping("UploadExcel")
-//    public ResponseEntity<?> uploadExcel(@RequestBody MultipartFile file, @RequestParam String recordType) throws IOException {
-//        return new ResponseEntity<>(this.sparePartSvc.uploadExcel(file, recordType), HttpStatus.OK);
-//    }
 
 
     /**
@@ -114,6 +96,10 @@ public class SparePartCtrl {
         return new ResponseEntity<>(this.sparePartSvc.getSparePartDataChart(searchVo), HttpStatus.OK);
     }
 
+    @PostMapping("SparePartRecordsByStandardPrice")
+    public ResponseEntity<?> getSparePartRecordsByStandardPrice(@RequestBody SearchVo searchVo) {
+        return new ResponseEntity<>(this.sparePartSvc.getSparePartRecordsByStandardPrice(searchVo), HttpStatus.OK);
+    }
 
 
 

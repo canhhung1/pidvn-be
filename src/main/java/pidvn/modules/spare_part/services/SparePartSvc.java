@@ -229,6 +229,13 @@ public class SparePartSvc implements ISparePartSvc {
 
     }
 
+    @Override
+    public List<SparePartRecordVo> getSparePartRecordsByStandardPrice(SearchVo searchVo) {
+
+
+        return this.sparePartMapper.getSparePartRecordsByStandardPrice(searchVo);
+    }
+
 
     /**
      * Đọ dữ liệu xuất spare part từ excel

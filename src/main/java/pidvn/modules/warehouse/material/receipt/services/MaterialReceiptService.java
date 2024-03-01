@@ -63,7 +63,7 @@ public class MaterialReceiptService implements IMaterialReceiptService {
             if (lot == null) {
                 // Nếu chưa có lotNo thì tạo lotNo
                 Lots obj = new Lots();
-                obj.setLotNo(material.getLotNo());
+                obj.setLotNo(material.getLotNo().toUpperCase());
                 obj.setModel(material.getModel().toUpperCase());
                 obj.setDate(new Date());
                 obj.setQty(material.getQty());
@@ -88,7 +88,7 @@ public class MaterialReceiptService implements IMaterialReceiptService {
 
             // Lưu data vào bảng pur_wh_records
             PurWhRecords obj = new PurWhRecords();
-            obj.setLotNo(material.getLotNo());
+            obj.setLotNo(material.getLotNo().toUpperCase());
             obj.setRecordType("IM");
             obj.setQty(material.getQty());
             obj.setModel(material.getModel().toUpperCase());
@@ -166,7 +166,7 @@ public class MaterialReceiptService implements IMaterialReceiptService {
 
             // Lưu data vào bảng pur_wh_records
             PurWhRecords obj = new PurWhRecords();
-            obj.setLotNo(material.getLotNo());
+            obj.setLotNo(material.getLotNo().toUpperCase());
             obj.setRecordType("IM");
             obj.setQty(material.getQty());
             obj.setModel(material.getModel());

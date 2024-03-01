@@ -84,6 +84,7 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
         material.setKeyUser(scannerVo.getUserId());
         material.setWindingBobbin(scannerVo.getPosition());
         material.setNgQty(0);
+        material.setRemark("Test: consumption (change coil: qty=0)");
 
         MaterialControls materialSave = this.materialControlsRepo.save(material);
 
@@ -92,6 +93,7 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
 
         return result;
     }
+
 
     @Override
     public List<MaterialVo> getMaterials(MaterialSearchVo searchVo) {
@@ -397,7 +399,7 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
 
         materialUpdate.setQty(qty == null ? 0 : qty);
         materialUpdate.setToBox(toBox);
-        materialUpdate.setRemark("Test: consumption (change coil)");
+        materialUpdate.setRemark("Test: consumption (change coil: update toBox & qty)");
         return this.materialControlsRepo.save(materialUpdate);
     }
 
@@ -415,13 +417,14 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
         material.setDate(new Date());
         material.setPlotno(label[0] + "*" + label[1] + "*" + label[2] + "*" +label[3]);
         material.setClotno(scannerVo.getNewCoil());
-        material.setQty(lot.getQty());
+        material.setQty((float) 0);
         material.setFrBox(scannerVo.getSequence());
         material.setToBox(null);
         material.setUser1(scannerVo.getUserId());
         material.setKeyUser(scannerVo.getUserId());
         material.setWindingBobbin(materialControls.getWindingBobbin());
         material.setNgQty(0);
+        material.setRemark("Test: consumption (change coil: add new qty=0)");
 
         return this.materialControlsRepo.save(material);
     }

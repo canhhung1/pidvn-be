@@ -1,6 +1,7 @@
 package pidvn.modules.hr.meal.services;
 
 import pidvn.entities.one.EMealData;
+import pidvn.modules.hr.meal.models.MealCouponVo;
 import pidvn.modules.hr.meal.models.MealRecordVo;
 import pidvn.modules.hr.meal.models.SearchVo;
 
@@ -12,7 +13,8 @@ public interface IHrMealSvc {
 
     Map getMealRecords(SearchVo searchVo) ;
 
-    List<EMealData> getBalance(Date month);
+    List<MealCouponVo> getBalance(Date month);
 
-    List<EMealData> timesheetConfirm();
+    Map timesheetConfirm();
+
 }

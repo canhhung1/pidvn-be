@@ -364,4 +364,99 @@
 
         ]]>
     </select>
+
+
+    <resultMap id="getAttendanceDetails-result"
+               type="pidvn.entities.one.HrAttendanceDetail">
+        <result column="CodeEmp" property="username" javaType="String"/>
+        <result column="ProfileName" property="profileName" javaType="String"/>
+        <result column="NgayCong" property="ngayCong" javaType="Date"/>
+        <result column="CaLamViec" property="caLamViec" javaType="String"/>
+        <result column="FirstInTime" property="firstInTime" javaType="Date"/>
+        <result column="LastOutTime" property="lastOutTime" javaType="Date"/>
+        <result column="TrangThaiTinhCong" property="trangThaiTinhCong" javaType="String"/>
+        <result column="LeaveCode" property="leaveCode" javaType="String"/>
+
+    </resultMap>
+    <select id="getAttendanceDetails" resultMap="getAttendanceDetails-result">
+        SELECT
+             A.CodeEmp
+            ,A.ProfileName
+            ,A.NgayCong
+            ,A.CaLamViec
+            ,A.FirstInTime
+            ,A.LastOutTime
+            ,A.TrangThaiTinhCong
+            ,A.LeaveCode
+        FROM View_PIDVN_AttendanceDetail A
+        where 1 = 1
+        AND FORMAT(NgayCong, 'yyyy-MM') = FORMAT(CAST(DATEADD(month, -1, GETDATE()) AS DATE), 'yyyy-MM')
+    </select>
+
+
+    <resultMap id="getOvertimeData-result"
+               type="pidvn.entities.one.HrOvertimeData">
+        <result column="CodeEmp" property="username" javaType="String"/>
+        <result column="ProfileName" property="profileName" javaType="String"/>
+        <result column="WorkDateRoot" property="ngayCong" javaType="Date"/>
+        <result column="StatusVN" property="status" javaType="String"/>
+        <result column="MethodPaymentVN" property="methodPayment" javaType="String"/>
+        <result column="RegisterHours" property="registerHours" javaType="Float"/>
+        <result column="ConfirmHours" property="confirmHours" javaType="Float"/>
+        <result column="OvertimeTypeName" property="overtimeTypeName" javaType="String"/>
+        <result column="CodeStatistic" property="codeStatistic" javaType="String"/>
+    </resultMap>
+
+    <select id="getOvertimeData" resultMap="getOvertimeData-result">
+        SELECT [CodeEmp]
+            ,[ProfileName]
+            ,[WorkDateRoot]
+            ,[StatusVN]
+            ,[MethodPaymentVN]
+            ,[RegisterHours]
+            ,[ConfirmHours]
+            ,[OvertimeTypeName]
+            ,[CodeStatistic]
+        FROM [PVG].[dbo].[View_ThongTinOT_PIDVN]
+        WHERE 1 = 1
+        AND FORMAT(WorkDateRoot, 'yyyy-MM') = FORMAT(CAST(DATEADD(month, -1, GETDATE()) AS DATE), 'yyyy-MM')
+
+    </select>
+
+    <resultMap id="getHrMealRecord-result"
+               type="pidvn.entities.one.HrMealRecord">
+        <result column="CodeEmp" property="username" javaType="String"/>
+        <result column="ProfileName" property="profileName" javaType="String"/>
+        <result column="WorkDay" property="ngayCong" javaType="Date"/>
+        <result column="MachineCode" property="machineCode" javaType="String"/>
+        <result column="Amount" property="amount" javaType="String"/>
+        <result column="CanteenCode" property="canteenCode" javaType="String"/>
+        <result column="CanteenName" property="canteenName" javaType="String"/>
+        <result column="CateringCode" property="cateringCode" javaType="String"/>
+        <result column="CateringName" property="cateringName" javaType="String"/>
+        <result column="LineCode" property="lineCode" javaType="String"/>
+        <result column="LineName" property="lineName" javaType="String"/>
+    </resultMap>
+    <select id="getHrMealRecord" resultMap="getHrMealRecord-result">
+        SELECT [CodeEmp]
+            ,[ProfileName]
+            ,[DateHire]
+            ,[WorkDay]
+            ,[TimeLog]
+            ,[MachineCode]
+            ,[Amount]
+            ,[CanteenCode]
+            ,[CanteenName]
+            ,[CateringCode]
+            ,[CateringName]
+            ,[LineCode]
+            ,[LineName]
+            ,[OrgStructureName]
+            ,[Code]
+        FROM [PVG].[dbo].[PIDVN_MealRecord]
+        WHERE 1 = 1
+        AND FORMAT(WorkDay, 'yyyy-MM') = FORMAT(CAST(DATEADD(month, -1, GETDATE()) AS DATE), 'yyyy-MM')
+    </select>
+    
+
 </mapper>

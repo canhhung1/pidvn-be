@@ -2,13 +2,24 @@ package pidvn.modules.hr.meal.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pidvn.entities.one.EMealData;
+import pidvn.entities.one.HrAttendanceDetail;
+import pidvn.entities.one.HrMealRecord;
+import pidvn.entities.one.HrOvertimeData;
 import pidvn.mappers.one.hr.e_meal.HrEMealMapper;
 import pidvn.mappers.three.hr.meal.HrMealMapper;
+import pidvn.modules.hr.meal.models.MealCouponVo;
 import pidvn.modules.hr.meal.models.MealRecordVo;
 import pidvn.modules.hr.meal.models.SearchVo;
 import pidvn.repositories.one.EMealDataRepo;
+import pidvn.repositories.one.HrAttendanceDetailRepo;
+import pidvn.repositories.one.HrMealRecordRepo;
+import pidvn.repositories.one.HrOvertimeDataRepo;
 
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import java.util.*;
 
 @Service
@@ -22,6 +33,16 @@ public class HrMealSvc implements IHrMealSvc {
 
     @Autowired
     private EMealDataRepo eMealDataRepo;
+
+    @Autowired
+    private HrAttendanceDetailRepo hrAttendanceDetailRepo;
+
+    @Autowired
+    private HrOvertimeDataRepo hrOvertimeDataRepo;
+
+    @Autowired
+    private HrMealRecordRepo hrMealRecordRepo;
+
 
     @Override
     public Map getMealRecords(SearchVo searchVo) {
@@ -37,39 +58,54 @@ public class HrMealSvc implements IHrMealSvc {
     }
 
     @Override
-    public List<EMealData> getBalance(Date month) {
-        return this.hrMealMapper.getAmountTicketByTimeSheetAndActualUserScan(month);
+    public List<MealCouponVo> getBalance(Date month) {
+        return this.hrEMealMapperDB1.getMealCouponData(month);
     }
 
+
     @Override
-    public List<EMealData> timesheetConfirm() {
+    @Transactional(transactionManager = "transactionManagerOne")
+    public Map timesheetConfirm() {
 
-        // B2: Tổng hợp dữ liệu timesheet từ PVG database
+        /**
+         * Xóa data AttendanceDetails tháng trước đó ở FDSC db
+         */
+        //this.hrAttendanceDetailRepo.deleteAttendanceDetailsPreviousMonth();
 
-        Date date = new Date();
-        date.setMonth(date.getMonth() - 1);
-        List<EMealData> data = this.hrMealMapper.getAmountTicketByTimeSheetAndActualUserScan(date);
-        
-        List<EMealData> oldDataTimeSheet = this.eMealDataRepo.getDataByMonth(date);
-        List<Integer> listIdDelete = new ArrayList<>();
-        for (EMealData item : oldDataTimeSheet) {
-            listIdDelete.add(item.getId());
-        }
+        /**
+         * Xóa data Overtime tháng trước đó ở FDSC db
+         */
+        //this.hrOvertimeDataRepo.deleteOvertimeDataPreviousMonth();
 
-        if (data.size() > 0) {
-            /**
-             * Xóa dữ liệu timesheet cũ trong DB: pidvn
-             */
-            // this.eMealDataRepo.deleteAll(oldDataTimeSheet);
-            // this.eMealDataRepo.deleteByIds(listIdDelete);
-            this.hrEMealMapperDB1.deleteEMealDataByIds(listIdDelete);
+        /**
+         * Xóa data MealRecord tháng trước đó ở FDCS db
+         */
+        this.hrMealRecordRepo.deleteMealRecordsPreviousMonth();
 
-            /**
-             * Lưu dữ liệu mới lấy đc từ DB: PVG
-             */
-            return this.eMealDataRepo.saveAll(data);
-        }
+        /**
+         * Lấy dữ liệu AttendanceDetails, Overtime, MealRecord từ PVG database
+         */
+        //List<HrAttendanceDetail> attendanceDetails = this.hrMealMapper.getAttendanceDetails();
+        //List<HrOvertimeData> overtimeData = this.hrMealMapper.getOvertimeData();
+        List<HrMealRecord> mealRecords = this.hrMealMapper.getHrMealRecord();
 
-        return oldDataTimeSheet;
+        /**
+         * Lưu dữ liệu AttendanceDetails, Overtime, MealRecord vào FDCS database
+         */
+        //List<HrAttendanceDetail> attendanceDetailResult = this.hrAttendanceDetailRepo.saveAll(attendanceDetails);
+        //List<HrOvertimeData> overtimeResult = this.hrOvertimeDataRepo.saveAll(overtimeData);
+        List<HrMealRecord> mealRecordResult = this.hrMealRecordRepo.saveAll(mealRecords);
+
+        /**
+         * Lưu dữ liệu MealRecords
+         */
+
+        Map map = new HashMap();
+        //map.put("attendanceDetailResult", attendanceDetailResult.size());
+        //map.put("overtimeResult", overtimeResult.size());
+        map.put("mealRecordResult", mealRecordResult.size());
+
+
+        return map;
     }
 }

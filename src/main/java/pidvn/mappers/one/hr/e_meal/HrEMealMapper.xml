@@ -9,4 +9,195 @@
         </foreach>
     </delete>
 
+    <resultMap id="getMealCouponData-result"
+               type="pidvn.modules.hr.meal.models.MealCouponVo">
+        <result column="profile_name" property="profileName" javaType="String"/>
+        <result column="act_coupon" property="actCoupon" javaType="Integer"/>
+        <result column="ts_coupon" property="tsCoupon" javaType="Integer"/>
+        <result column="act_sub_coupon" property="actSubCoupon" javaType="Integer"/>
+        <result column="ts_sub_coupon" property="tsSubCoupon" javaType="Integer"/>
+        <result column="balance_coupon" property="balanceCoupon" javaType="Integer"/>
+        <result column="balance_sub_coupon" property="balanceSubCoupon" javaType="Integer"/>
+    </resultMap>
+    <select id="getMealCouponData" resultMap="getMealCouponData-result">
+        <![CDATA[
+            with
+            T01 as (
+                select
+                    A.*,
+                    CASE
+                        WHEN leave_code LIKE '0.25%' THEN (A.shift*0.75)
+                        WHEN leave_code LIKE '0.5%' THEN (A.shift*0.5)
+                        WHEN leave_code LIKE '0.75%' THEN (A.shift*0.25)
+                        WHEN leave_code = '0' THEN A.shift
+                        ELSE 0
+                    END working_time
+                from (
+                    select
+                        username, profile_name, ngay_cong, ca_lam_viec, leave_code,
+                        CASE
+                            WHEN ca_lam_viec = '3HCA' THEN 9.5
+                            WHEN ca_lam_viec = '3HCA1' THEN 9.5
+                            WHEN ca_lam_viec = '310A' THEN 10
+                            WHEN ca_lam_viec = '310B' THEN 10
+                            WHEN ca_lam_viec = '310S' THEN 10
+                            WHEN ca_lam_viec = '312A' THEN 12
+                            WHEN ca_lam_viec = '312B' THEN 12
+                            WHEN ca_lam_viec = '312S' THEN 12
+                            WHEN ca_lam_viec = '31242A' THEN 12
+                            WHEN ca_lam_viec = '31242B' THEN 12
+                            WHEN ca_lam_viec IS NULL THEN 0
+                            ELSE 8
+                        END shift
+                    from hr_attendance_detail
+                    where 1 = 1 and DATE_FORMAT(ngay_cong, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m')
+                ) A
+            ),
+            -- Tính tổng thời gian đã làm việc theo ngày công
+            T02 as (
+                SELECT
+                    T01.*, A.confirm_hours ot_time, (T01.working_time + ifnull(A.confirm_hours, 0)) total_working_time, B.allowance_type
+                FROM T01
+                LEFT JOIN (
+                    -- Dữ liệu OT
+                    SELECT username, profile_name, ngay_cong, SUM(confirm_hours) confirm_hours
+                    FROM hr_overtime_data
+                    WHERE 1 = 1
+                    GROUP BY ngay_cong, username, profile_name
+                ) A ON T01.username = A.username AND T01.ngay_cong = A.ngay_cong
+                LEFT JOIN hr_meal_allowance_coupon B on T01.username = B.username
+            ),
+            -- Tính vé theo TimeSheet
+            T03 as (
+                select
+                    T02.*,
+
+                    -- Vé chính theo timesheet
+                    case
+                        -- Các trường hợp nghỉ 100% => 0 coupon
+                        when (T02.ca_lam_viec is not null and T02.working_time = 0) THEN 0
+
+
+                        -- I. Trường hợp không OT
+                        -- 1. Ca 8, 9.5, 10 tiếng => 1 coupon
+                        when (T02.shift = 8 and T02.ot_time is null and T02.total_working_time > 4 and T02.total_working_time < 11.5) THEN 1
+                        when (T02.shift = 8 and T02.ot_time is null and T02.total_working_time <= 4) THEN 0
+                        when (T02.shift = 9.5 and T02.ot_time is null and T02.total_working_time > 4 and T02.total_working_time < 11.5) THEN 1
+                        when (T02.shift = 9.5 and T02.ot_time is null and T02.total_working_time <= 4) THEN 1
+                        when (T02.shift = 10 and T02.ot_time is null and T02.total_working_time > 4 and T02.total_working_time < 11.5) THEN 1
+                        when (T02.shift = 10 and T02.ot_time is null and T02.total_working_time <= 4) THEN 0
+                        -- 2. Ca 12 tiếng => 2 coupon
+                        when (T02.shift = 12 and T02.ot_time is null and T02.total_working_time > 11.5) THEN 2
+                        when (T02.shift = 12 and T02.ot_time is null and T02.total_working_time > 4 and T02.total_working_time < 11.5) THEN 1
+                        when (T02.shift = 12 and T02.ot_time is null and T02.total_working_time <= 4) THEN 0
+
+                        -- II. Trường hợp OT
+                        -- 1. OT ngày thường
+                        -- Ca 8, 9.5, 10, 12 tiếng => total_working_time >= 11.5 có 2 vé
+                        when (T02.shift = 8 and T02.ot_time is not null and T02.total_working_time >= 11.5) THEN 2
+                        when (T02.shift = 9.5 and T02.ot_time is not null and T02.total_working_time >= 11.5) THEN 2
+                        when (T02.shift = 10 and T02.ot_time is not null and T02.total_working_time >= 11.5) THEN 2
+                        when (T02.shift = 12 and T02.ot_time is not null and T02.total_working_time >= 11.5) THEN 2
+                        -- Ca 8, 9.5, 10, 12 tiếng => 4 < total_working_time  < 11.5 có 1 vé
+                        when (T02.shift = 8 and T02.ot_time is not null and T02.total_working_time > 4 and T02.total_working_time < 11.5) THEN 1
+                        when (T02.shift = 9.5 and T02.ot_time is not null and T02.total_working_time > 4 and  T02.total_working_time < 11.5) THEN 1
+                        when (T02.shift = 10 and T02.ot_time is not null and T02.total_working_time > 4 and T02.total_working_time < 11.5) THEN 1
+                        when (T02.shift = 12 and T02.ot_time is not null and T02.total_working_time > 4 and T02.total_working_time < 11.5) THEN 1
+                        -- Ca 8, 9.5, 10, 12 tiếng => total_working_time <= 4 có 1 vé
+                        when (T02.shift = 8 and T02.ot_time is not null and T02.total_working_time <= 4) THEN 0
+                        when (T02.shift = 9.5 and T02.ot_time is not null and T02.total_working_time <= 4) THEN 0
+                        when (T02.shift = 10 and T02.ot_time is not null and T02.total_working_time <= 4) THEN 0
+                        when (T02.shift = 12 and T02.ot_time is not null and T02.total_working_time <= 4) THEN 0
+
+                        -- 2. OT ngày nghỉ
+                        when (T02.shift = 0 and T02.ot_time is not null and T02.total_working_time >= 11.5) THEN 2
+                        when (T02.shift = 0 and T02.ot_time is not null and T02.total_working_time > 4 and T02.total_working_time < 11.5) THEN 1
+                        when (T02.shift = 0 and T02.ot_time is not null and T02.total_working_time <= 4 ) THEN 0
+                    end ts_coupon,
+
+                    -- Vé phụ theo timesheet trường hợp OT
+                    case
+                        -- Các trường hợp nghỉ 100% => 0 coupon
+                        when (T02.ca_lam_viec is not null and T02.working_time = 0) THEN 0
+
+                        -- OT ngày nghỉ: 10.5 <= total_working_time <= 11.5
+                        when (T02.shift = 0 and T02.total_working_time >= 10.5 and T02.total_working_time <= 11.5) then 1
+
+                        -- Check kỹ trường hợp này
+                        -- OT ngày thương: 10.5 <= total_working_time <= 11.5
+                        when (T02.shift != 0 and T02.total_working_time >= 11.5) then 0
+                        -- OT ngày nghỉ: 10.5 <= total_working_time <= 11.5
+                        when (T02.shift != 0 and T02.total_working_time >= 10.5 and T02.total_working_time < 11.5) then 1
+
+                    end ts_sub_coupon,
+
+                    -- Vé phụ trợ cấp
+                    case
+                        when T02.allowance_type is not null and T02.total_working_time > 4 then 1
+                        else 0
+                    end allowance_sub_coupon
+
+                from T02
+            ),
+
+            -- Tổng hợp coupon theo timesheet
+            T04 as (
+                select
+                    T03.username, T03.profile_name, sum(T03.ts_coupon) ts_coupon,
+                    sum(T03.ts_sub_coupon) + sum(T03.allowance_sub_coupon) ts_sub_coupon
+                from T03
+                group by T03.username, T03.profile_name
+            ),
+
+            -- Tổng hợp coupon theo thực tế
+            T05 as (
+                select A.username, sum(A.coupon) coupon, sum(A.sub_coupon) sub_coupon from (
+                    SELECT username,
+                        CASE
+                            WHEN line_code = 'PEOC1' THEN 0
+                            WHEN line_code = 'PBS2' THEN 0
+                            ELSE 1
+                        END coupon,
+                        CASE
+                            WHEN line_code = 'PEOC1' THEN 1
+                            WHEN line_code = 'PBS2' THEN 1
+                            ELSE 0
+                        END sub_coupon,
+
+                        CASE
+                            WHEN time(time_log) >= '00:00:00' and time(time_log) <= '07:30:00' then date_format(date_sub(time_log, interval 1 DAY), '%Y-%m-%d')
+                            ELSE date_format(time_log,'%Y-%m-%d')
+                        END as ngay_cong,
+                        line_name, time_log
+                    FROM hr_meal_record
+                    where 1 = 1
+                    and DATE_FORMAT(time_log, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m')
+                ) A
+                where 1 = 1 and DATE_FORMAT(ngay_cong , '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m')
+                group by A.username
+            ),
+            -- Tổng hợp timesheet và thực tế
+            T06 as (
+
+                select
+                    T04.username, T04.profile_name, T05.coupon act_coupon, T04.ts_coupon,
+                    T05.sub_coupon act_sub_coupon, T04.ts_sub_coupon
+                from T04
+                left join T05 on T04.username = T05.username
+
+            )
+            -- Kết quả
+            select
+                T06.*, (T06.ts_coupon - T06.act_coupon) balance_coupon,
+                (T06.ts_sub_coupon - T06.act_sub_coupon) balance_sub_coupon
+            from T06
+
+        ]]>
+
+
+
+    </select>
+
+
+
 </mapper>

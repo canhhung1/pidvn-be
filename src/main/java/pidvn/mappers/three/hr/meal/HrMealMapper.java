@@ -2,6 +2,9 @@ package pidvn.mappers.three.hr.meal;
 
 import org.apache.ibatis.annotations.Mapper;
 import pidvn.entities.one.EMealData;
+import pidvn.entities.one.HrAttendanceDetail;
+import pidvn.entities.one.HrMealRecord;
+import pidvn.entities.one.HrOvertimeData;
 import pidvn.modules.hr.meal.models.MealRecordVo;
 import pidvn.modules.hr.meal.models.SearchVo;
 
@@ -23,4 +26,10 @@ public interface HrMealMapper {
      * @return
      */
     List<EMealData> getAmountTicketByTimeSheetAndActualUserScan(Date month);
+
+    List<HrAttendanceDetail> getAttendanceDetails();
+
+    List<HrOvertimeData> getOvertimeData();
+
+    List<HrMealRecord> getHrMealRecord();
 }

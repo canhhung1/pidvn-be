@@ -43,6 +43,10 @@ public class JwtUserDetailsService implements UserDetailsService {
 
         Users user = this.usersRepo.findByUsername(username);
 
+        if (user.getStatus() != 1) {
+            throw new UsernameNotFoundException("Nhân viên: " + username + " đã nghỉ việc !");
+        }
+
         logger.debug("LOGGER ===>: User Login: "  + user.toString());
 
         List<AuthVo> authVoList = this.authMapper.getRoleAndPermissionByUsername(username);

@@ -43,7 +43,7 @@ public class Users {
     private String avatar;
 
     @Column(name = "status")
-    private String status;
+    private Integer status;
 
     @Column(name = "subsection_id")
     private Integer subsectionId;
@@ -137,11 +137,11 @@ public class Users {
         this.avatar = avatar;
     }
 
-    public String getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

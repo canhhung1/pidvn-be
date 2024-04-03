@@ -18,6 +18,9 @@
         <result column="ts_sub_coupon" property="tsSubCoupon" javaType="Integer"/>
         <result column="balance_coupon" property="balanceCoupon" javaType="Integer"/>
         <result column="balance_sub_coupon" property="balanceSubCoupon" javaType="Integer"/>
+        <result column="balance_coupon_price" property="balanceCouponPrice" javaType="Integer"/>
+        <result column="balance_sub_coupon_price" property="balanceSubCouponPrice" javaType="Integer"/>
+        <result column="balance_price" property="balancePrice" javaType="Integer"/>
     </resultMap>
     <select id="getMealCouponData" resultMap="getMealCouponData-result">
         <![CDATA[
@@ -171,7 +174,11 @@
                         line_name, time_log
                     FROM hr_meal_record
                     where 1 = 1
-                    and DATE_FORMAT(time_log, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m')
+                    and (
+                        DATE_FORMAT(time_log, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m')
+                        or
+                        DATE_FORMAT(time_log, '%Y-%m') = DATE_FORMAT(DATE_ADD(#{month}, INTERVAL 1 MONTH), '%Y-%m')
+                    )
                 ) A
                 where 1 = 1 and DATE_FORMAT(ngay_cong , '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m')
                 group by A.username
@@ -185,12 +192,27 @@
                 from T04
                 left join T05 on T04.username = T05.username
 
+            ),
+            -- Lấy thêm một vài người có vé trợ cấp theo một vài ngày
+            T07 as (
+                select T06.*, ifnull(A.qty, 0) sub_allowance_coupon from T06
+                left join hr_meal_allowance_coupon A on (T06.username = A.username and A.qty is not null)
+            ),
+            -- Tính toán chênh lệnh giữa TimeSheet và Actual
+            T08 as (
+                select
+                    A.*, ( A.ts_coupon - A.act_coupon) balance_coupon, (A.ts_sub_coupon - A.act_sub_coupon) balance_sub_coupon,
+                    (A.ts_coupon - A.act_coupon)*22000 balance_coupon_price, (A.ts_sub_coupon - A.act_sub_coupon)*14000 balance_sub_coupon_price
+                from (
+                    select
+                        T07.username, T07.profile_name, T07.act_coupon, T07.ts_coupon, T07.act_sub_coupon,
+                        (T07.ts_sub_coupon + T07.sub_allowance_coupon) ts_sub_coupon
+                    from T07
+                ) A
             )
             -- Kết quả
-            select
-                T06.*, (T06.ts_coupon - T06.act_coupon) balance_coupon,
-                (T06.ts_sub_coupon - T06.act_sub_coupon) balance_sub_coupon
-            from T06
+            select T08.*, (T08.balance_coupon_price + T08.balance_sub_coupon_price) as balance_price from T08
+            where 1 = 1
 
         ]]>
 

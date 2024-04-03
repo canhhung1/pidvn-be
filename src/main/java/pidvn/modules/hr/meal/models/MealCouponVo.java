@@ -10,6 +10,9 @@ public class MealCouponVo {
     private Integer tsSubCoupon;
     private Integer balanceCoupon;
     private Integer balanceSubCoupon;
+    private Integer balanceCouponPrice;
+    private Integer balanceSubCouponPrice;
+    private Integer balancePrice;
 
     public String getUsername() {
         return username;
@@ -73,5 +76,29 @@ public class MealCouponVo {
 
     public void setBalanceSubCoupon(Integer balanceSubCoupon) {
         this.balanceSubCoupon = balanceSubCoupon;
+    }
+
+    public Integer getBalanceCouponPrice() {
+        return balanceCouponPrice;
+    }
+
+    public void setBalanceCouponPrice(Integer balanceCouponPrice) {
+        this.balanceCouponPrice = balanceCouponPrice;
+    }
+
+    public Integer getBalanceSubCouponPrice() {
+        return balanceSubCouponPrice;
+    }
+
+    public void setBalanceSubCouponPrice(Integer balanceSubCouponPrice) {
+        this.balanceSubCouponPrice = balanceSubCouponPrice;
+    }
+
+    public Integer getBalancePrice() {
+        return balancePrice;
+    }
+
+    public void setBalancePrice(Integer balancePrice) {
+        this.balancePrice = balancePrice;
     }
 }

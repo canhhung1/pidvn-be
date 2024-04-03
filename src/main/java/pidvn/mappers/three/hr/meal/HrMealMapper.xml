@@ -455,7 +455,7 @@
             ,[Code]
         FROM [PVG].[dbo].[PIDVN_MealRecord]
         WHERE 1 = 1
-        AND FORMAT(WorkDay, 'yyyy-MM') = FORMAT(CAST(DATEADD(month, -1, GETDATE()) AS DATE), 'yyyy-MM')
+        AND FORMAT(WorkDay, 'yyyy-MM') >= FORMAT(CAST(DATEADD(month, -1, GETDATE()) AS DATE), 'yyyy-MM')
     </select>
     
 

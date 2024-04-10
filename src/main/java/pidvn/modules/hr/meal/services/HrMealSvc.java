@@ -70,12 +70,12 @@ public class HrMealSvc implements IHrMealSvc {
         /**
          * Xóa data AttendanceDetails tháng trước đó ở FDSC db
          */
-        //this.hrAttendanceDetailRepo.deleteAttendanceDetailsPreviousMonth();
+        this.hrAttendanceDetailRepo.deleteAttendanceDetailsPreviousMonth();
 
         /**
          * Xóa data Overtime tháng trước đó ở FDSC db
          */
-        //this.hrOvertimeDataRepo.deleteOvertimeDataPreviousMonth();
+        this.hrOvertimeDataRepo.deleteOvertimeDataPreviousMonth();
 
         /**
          * Xóa data MealRecord tháng trước đó ở FDCS db
@@ -85,15 +85,15 @@ public class HrMealSvc implements IHrMealSvc {
         /**
          * Lấy dữ liệu AttendanceDetails, Overtime, MealRecord từ PVG database
          */
-        //List<HrAttendanceDetail> attendanceDetails = this.hrMealMapper.getAttendanceDetails();
-        //List<HrOvertimeData> overtimeData = this.hrMealMapper.getOvertimeData();
+        List<HrAttendanceDetail> attendanceDetails = this.hrMealMapper.getAttendanceDetails();
+        List<HrOvertimeData> overtimeData = this.hrMealMapper.getOvertimeData();
         List<HrMealRecord> mealRecords = this.hrMealMapper.getHrMealRecord();
 
         /**
          * Lưu dữ liệu AttendanceDetails, Overtime, MealRecord vào FDCS database
          */
-        //List<HrAttendanceDetail> attendanceDetailResult = this.hrAttendanceDetailRepo.saveAll(attendanceDetails);
-        //List<HrOvertimeData> overtimeResult = this.hrOvertimeDataRepo.saveAll(overtimeData);
+        List<HrAttendanceDetail> attendanceDetailResult = this.hrAttendanceDetailRepo.saveAll(attendanceDetails);
+        List<HrOvertimeData> overtimeResult = this.hrOvertimeDataRepo.saveAll(overtimeData);
         List<HrMealRecord> mealRecordResult = this.hrMealRecordRepo.saveAll(mealRecords);
 
         /**
@@ -101,8 +101,8 @@ public class HrMealSvc implements IHrMealSvc {
          */
 
         Map map = new HashMap();
-        //map.put("attendanceDetailResult", attendanceDetailResult.size());
-        //map.put("overtimeResult", overtimeResult.size());
+        map.put("attendanceDetailResult", attendanceDetailResult.size());
+        map.put("overtimeResult", overtimeResult.size());
         map.put("mealRecordResult", mealRecordResult.size());
 
 

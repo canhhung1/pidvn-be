@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.vr.defect_record.VrDefectRecordMapper">
+
+    <resultMap id="getProcesses-result"
+               type="pidvn.modules.vr.defect_record.models.ProcessVo">
+        <result column="process_name" property="processName" javaType="String"/>
+    </resultMap>
+    <select id="getProcesses" resultMap="getProcesses-result">
+        select B.id, A.line, B.name process_name
+        from line_process_pivots A
+        left join process B on A.process_id = B.id
+        where 1 = 1
+        and A.line = #{line}
+        order by B.order asc
+    </select>
+
+
+    <resultMap id="getDefectRecords-result"
+               type="pidvn.modules.vr.defect_record.models.DefectRecordVo">
+        <result column="process_name" property="processName" javaType="String"/>
+        <result column="process_id" property="processId" javaType="Integer"/>
+        <result column="defect_code" property="defectCode" javaType="String"/>
+        <result column="lot_no" property="lotNo" javaType="String"/>
+        <result column="user_id" property="userId" javaType="Integer"/>
+        <result column="date" property="date" javaType="Date"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+
+    </resultMap>
+    <select id="getDefectRecords" resultMap="getDefectRecords-result">
+        with
+        T01 as (
+            select * from defects A where A.process_id = #{processId}
+        ),
+        T02 as (
+            select * from defect_records A where 1 = 1
+            and A.lot_no = #{lotNo}
+        )
+        select
+            T02.id, T01.name process_name, T01.process_id, T01.code defect_code,
+            T02.lot_no, T02.model, T02.line, T02.date, T02.shift, T02.user_id, T02.qty, T02.remark,
+            T02.created_at
+        from T01
+        left join T02 on T01.code = T02.defect_code
+    </select>
+
+</mapper>

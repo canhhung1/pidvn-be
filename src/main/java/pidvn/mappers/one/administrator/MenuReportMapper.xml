@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.administrator.MenuReportMapper">
+
+    <resultMap id="getMenuReport-result"
+               type="pidvn.modules.administrator.models.MenuReportVo">
+
+        <result column="code" property="code" javaType="String"/>
+        <result column="name_function" property="nameFunction" javaType="String"/>
+
+    </resultMap>
+    <select id="getMenuReport"
+            resultMap="getMenuReport-result">
+        <![CDATA[
+            select * from `pidvn_report_procedures$`
+        ]]>
+    </select>
+</mapper>

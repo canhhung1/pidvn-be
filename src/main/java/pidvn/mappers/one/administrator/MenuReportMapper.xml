@@ -12,7 +12,7 @@
     <select id="getMenuReport"
             resultMap="getMenuReport-result">
         <![CDATA[
-            select * from `pidvn_report_procedures$`
+            select * from pidvn_report_procedures$ where is_active = 1
         ]]>
     </select>
 </mapper>

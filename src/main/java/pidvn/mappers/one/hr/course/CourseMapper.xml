@@ -48,9 +48,9 @@
 
 
     <resultMap id="getCourseHistories-result"
-               type="pidvn.modules.hr.course.models.CourseVo">
-        <result column="trainingCourse" property="training_course" javaType="String"/>
-        <result column="trainingDate" property="training_date" javaType="Date"/>
+               type="pidvn.modules.hr.course.models.CourseHistoryVo">
+        <result column="training_course" property="trainingCourse" javaType="String"/>
+        <result column="training_date" property="trainingDate" javaType="Date"/>
     </resultMap>
     <select id="getCourseHistories" resultMap="getCourseHistories-result">
         with

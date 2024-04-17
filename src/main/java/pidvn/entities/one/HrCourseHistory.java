@@ -20,14 +20,11 @@ public class HrCourseHistory {
     @Column(name = "username")
     private String username;
 
-    @Column(name = "id_course")
-    private String idCourse;
+    @Column(name = "training_course")
+    private String trainingCourse;
 
-    @Column(name = "status")
-    private String status;
-
-    @Column(name = "time_attendance")
-    private Date timeAttendance;
+    @Column(name = "training_date")
+    private Date trainingDate;
 
     @CreatedDate
     @Column(name = "created_at")
@@ -53,28 +50,20 @@ public class HrCourseHistory {
         this.username = username;
     }
 
-    public String getIdCourse() {
-        return idCourse;
+    public String getTrainingCourse() {
+        return trainingCourse;
     }
 
-    public void setIdCourse(String idCourse) {
-        this.idCourse = idCourse;
+    public void setTrainingCourse(String trainingCourse) {
+        this.trainingCourse = trainingCourse;
     }
 
-    public String getStatus() {
-        return status;
+    public Date getTrainingDate() {
+        return trainingDate;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public Date getTimeAttendance() {
-        return timeAttendance;
-    }
-
-    public void setTimeAttendance(Date timeAttendance) {
-        this.timeAttendance = timeAttendance;
+    public void setTrainingDate(Date trainingDate) {
+        this.trainingDate = trainingDate;
     }
 
     public Date getCreatedAt() {

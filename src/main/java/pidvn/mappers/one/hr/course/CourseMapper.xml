@@ -46,4 +46,32 @@
     </select>
 
 
+
+    <resultMap id="getCourseHistories-result"
+               type="pidvn.modules.hr.course.models.CourseVo">
+        <result column="trainingCourse" property="training_course" javaType="String"/>
+        <result column="trainingDate" property="training_date" javaType="Date"/>
+    </resultMap>
+    <select id="getCourseHistories" resultMap="getCourseHistories-result">
+        with
+        T01 as (
+            select A.id subsection_id, B.name section from subsection A
+            inner join section B on A.section_id = B.id
+        ),
+        T02 as (
+            select A.*, B.name, B.subsection_id, B.position_id
+            from hr_course_histories A
+            left join users B on A.username = B.username
+        )
+        select
+            T02.id, T02.username, T02.name, T02.training_course, T02.training_date, T01.section, P.name position
+        from T02
+        left join T01 on T02.subsection_id = T01.subsection_id
+        left join position P on T02.position_id = P.id
+    </select>
+
+
+
+
+
 </mapper>

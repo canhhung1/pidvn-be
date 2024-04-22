@@ -28,4 +28,14 @@ public interface PihInventoryMapper {
 
     List<InventoryVo> getInventoryRawMaterialData(Integer requestId, Date fromDate, Date toDate);
 
+
+    /**
+     * Lấy dữ liệu LotNo theo tem thùng to, để lưu lại inventory
+     * @param requestId
+     * @param inventoryArea
+     * @param outerLotNoList: danh sách tem to
+     * @return
+     */
+    List<PihInventoryData> getLotNoByInOutLabel(Integer requestId, Integer inventoryArea, List<String> outerLotNoList);
+
 }

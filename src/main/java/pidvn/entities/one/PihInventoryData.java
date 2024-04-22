@@ -30,7 +30,7 @@ public class PihInventoryData {
     private Float qty;
 
     @Column(name = "inventory_area")
-    private String inventoryArea;
+    private Integer inventoryArea;
 
     @Column(name = "date")
     @Temporal(TemporalType.DATE)
@@ -46,6 +46,9 @@ public class PihInventoryData {
 
     @Column(name = "record_type")
     private String recordType;
+
+    @Transient
+    private String outerLotNo;
 
     public Integer getId() {
         return id;
@@ -87,11 +90,11 @@ public class PihInventoryData {
         this.qty = qty;
     }
 
-    public String getInventoryArea() {
+    public Integer getInventoryArea() {
         return inventoryArea;
     }
 
-    public void setInventoryArea(String inventoryArea) {
+    public void setInventoryArea(Integer inventoryArea) {
         this.inventoryArea = inventoryArea;
     }
 
@@ -125,5 +128,13 @@ public class PihInventoryData {
 
     public void setRecordType(String recordType) {
         this.recordType = recordType;
+    }
+
+    public String getOuterLotNo() {
+        return outerLotNo;
+    }
+
+    public void setOuterLotNo(String outerLotNo) {
+        this.outerLotNo = outerLotNo;
     }
 }

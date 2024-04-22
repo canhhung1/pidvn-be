@@ -71,16 +71,39 @@ public class PihInventorySvc implements IPihInventorySvc {
     }
 
     @Override
-    public Map saveListInventoryData(List<PihInventoryData> inventoryData) {
+    public Map saveListInventoryData(List<PihInventoryData> inventoryData, Integer requestId, Integer inventoryArea) {
 
         List<PihInventoryData> resultOK = new ArrayList<>();
         List<PihInventoryData> resultNG = new ArrayList<>();
 
+        List<String> outerLotNo = new ArrayList<>();
+
+
+        // Lưu tem nhỏ
         for (PihInventoryData item : inventoryData) {
+            try {
+                if (item.getOuterLotNo() == null) {
+                    PihInventoryData ivtData = this.pihInventoryDataRepo.save(item);
+                    resultOK.add(ivtData);
+                }else {
+                    outerLotNo.add(item.getOuterLotNo());
+                }
+            } catch (Exception e) {
+                logger.debug(e.toString());
+                resultNG.add(item);
+            }
+        }
+
+        /**
+         * Tìm tem nhỏ theo OuterLotNo
+         * Sau đó lưu lại vào bảng pih_inventory_data
+         */
+        List<PihInventoryData> data = this.pihInventoryMapper.getLotNoByInOutLabel(requestId, inventoryArea, outerLotNo);
+        for (PihInventoryData item : data) {
             try {
                 PihInventoryData ivtData = this.pihInventoryDataRepo.save(item);
                 resultOK.add(ivtData);
-            } catch (Exception e) {
+            }catch (Exception e) {
                 logger.debug(e.toString());
                 resultNG.add(item);
             }

@@ -24,6 +24,7 @@ public class PihInventoryCtrl {
 
     /**
      * Lấy các khu vực kiểm kê PIH
+     *
      * @return
      */
     @GetMapping("InventoryArea")
@@ -47,8 +48,11 @@ public class PihInventoryCtrl {
     }
 
     @PostMapping("SaveListInventoryData")
-    public ResponseEntity<?> saveListInventoryData(@RequestBody List<PihInventoryData> inventoryDataList) {
-        return new ResponseEntity<>(this.pihInventorySvc.saveListInventoryData(inventoryDataList), HttpStatus.OK);
+    public ResponseEntity<?> saveListInventoryData(@RequestBody List<PihInventoryData> inventoryDataList,
+                                                   @RequestParam Integer requestId,
+                                                   @RequestParam Integer inventoryArea
+    ) {
+        return new ResponseEntity<>(this.pihInventorySvc.saveListInventoryData(inventoryDataList,requestId,inventoryArea), HttpStatus.OK);
     }
 
     @PostMapping("InventoryData")
@@ -69,6 +73,7 @@ public class PihInventoryCtrl {
     /**
      * TODO
      * Chênh lệch thực tế lý thuyết
+     *
      * @return
      */
     @GetMapping("Balance")
@@ -108,10 +113,6 @@ public class PihInventoryCtrl {
         }
         return ResponseEntity.ok().body(file);
     }
-
-
-
-
 
 
 }

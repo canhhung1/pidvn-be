@@ -184,4 +184,24 @@
     </select>
 
 
+
+    <resultMap id="getLotNoByInOutLabel-result"
+               type="pidvn.entities.one.PihInventoryData">
+        <result column="request_id" property="requestId" javaType="Integer"/>
+        <result column="lot_no" property="lotNo" javaType="String"/>
+        <result column="part_no" property="partNo" javaType="String"/>
+        <result column="inventory_area" property="inventoryArea" javaType="Integer"/>
+    </resultMap>
+    <select id="getLotNoByInOutLabel" resultMap="getLotNoByInOutLabel-result">
+        SELECT
+            #{requestId} as request_id, A.inner_lot_no lot_no, A.model part_no, B.qty, #{inventoryArea} as inventory_area, sysdate() date
+        FROM inout_labels A
+        left join lots B on A.inner_lot_no = B.lot_no
+        where 1 = 1
+        and A.outer_lot_no in
+        <foreach item="item" index="index" collection="outerLotNoList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
 </mapper>

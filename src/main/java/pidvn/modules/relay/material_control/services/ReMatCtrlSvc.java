@@ -444,6 +444,7 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
         List<PurWhRecords> purWhRecords = new ArrayList<>();
         List<MaterialControls> materialControls = new ArrayList<>();
 
+
         for (MaterialVo material : materialVos) {
             if (material.getRecordType().equals("RNP") || material.getRecordType().equals("RDC") ||
                     material.getRecordType().equals("CTR") || material.getRecordType().equals("MRTW")) {
@@ -499,6 +500,27 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
         }
         if (materialControls.size() > 0) {
             result.put("data", this.materialControlsRepo.saveAll(materialControls));
+        }
+
+
+        /**
+         * Check thêm trường hợp trả kho (recordType = MRTW)
+         * Update lại các lot trong material_control (recordType = CDL)
+         */
+
+        if (materialVos.get(0).getRecordType().equals("MRTW")) {
+            List<String> lotNos = new ArrayList<>();
+            for (MaterialVo item: materialVos) {
+                lotNos.add(item.getLotNo());
+            }
+
+            // Tìm kiếm các Lot sai dữ liệu qty để update lại
+            List<MaterialVo> data = this.reMatCtrlMapper.getActualQtyUsedInLine(lotNos);
+
+            // Thực hiện update dữ liệu
+            for (MaterialVo item : data) {
+                this.reMatCtrlMapper.updateActualQtyUsedInLine(item.getId(), item.getQty());
+            }
         }
 
         return result;
@@ -701,11 +723,9 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
                 result = this.exportMaterialInLine(searchVo);
                 break;
             case "RNP":
-
         }
 
         return result;
-
 
     }
 

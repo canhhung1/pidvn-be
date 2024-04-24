@@ -126,7 +126,7 @@
                type="pidvn.modules.relay.vr_enc_process_recording.models.ModelVo">
     </resultMap>
     <select id="getModels" resultMap="getModels-result">
-        SELECT * FROM model M where M.product_type_id in (2, 3, 4, 5, 9, 18, 22, 54)
+        SELECT * FROM model M where M.product_type_id in (2, 3, 4, 5, 9, 18, 22, 54, 55)
     </select>
 
 

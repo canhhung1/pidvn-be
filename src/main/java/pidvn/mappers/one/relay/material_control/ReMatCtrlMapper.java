@@ -22,4 +22,14 @@ public interface ReMatCtrlMapper {
     List<PurWhRecordVo> getSlipRelayReturnWarehouseDetail(String slipNo, String groupBy);
 
     List<MaterialExport> exportMaterialData(MaterialSearchVo searchVo);
+
+    /**
+     * Lấy dữ liệu qty các lot thực tế đã sử dung trong line
+     * @param lotNos danh sách các lot cần update qty
+     * @return
+     */
+    List<MaterialVo> getActualQtyUsedInLine(List<String> lotNos);
+
+    void updateActualQtyUsedInLine(Integer id, Float qty);
+
 }

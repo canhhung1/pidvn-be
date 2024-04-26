@@ -98,16 +98,22 @@ public class PihInventorySvc implements IPihInventorySvc {
          * Tìm tem nhỏ theo OuterLotNo
          * Sau đó lưu lại vào bảng pih_inventory_data
          */
-        List<PihInventoryData> data = this.pihInventoryMapper.getLotNoByInOutLabel(requestId, inventoryArea, outerLotNo);
-        for (PihInventoryData item : data) {
-            try {
-                PihInventoryData ivtData = this.pihInventoryDataRepo.save(item);
-                resultOK.add(ivtData);
-            }catch (Exception e) {
-                logger.debug(e.toString());
-                resultNG.add(item);
+        if (outerLotNo.size() > 0) {
+            List<PihInventoryData> data = this.pihInventoryMapper.getLotNoByInOutLabel(requestId, inventoryArea, outerLotNo);
+
+            for (PihInventoryData item : data) {
+                try {
+                    PihInventoryData ivtData = this.pihInventoryDataRepo.save(item);
+                    resultOK.add(ivtData);
+                }catch (Exception e) {
+                    logger.debug(e.toString());
+                    resultNG.add(item);
+                }
             }
         }
+
+
+
 
         Map result = new HashMap();
         result.put("resultOK", resultOK);

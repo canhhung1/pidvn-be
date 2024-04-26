@@ -2,6 +2,8 @@ package pidvn.modules.relay.material_control.services;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pidvn.entities.one.*;
@@ -22,6 +24,8 @@ import java.util.*;
 
 @Service
 public class ReMatCtrlSvc implements IReMatCtrlSvc {
+
+    Logger logger = LoggerFactory.getLogger(ReMatCtrlSvc.class);
 
     @Autowired
     private LineRepo lineRepo;
@@ -509,6 +513,9 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
          */
 
         if (materialVos.get(0).getRecordType().equals("MRTW")) {
+
+            logger.debug("UPDATE ACTUAL QTY USING IN LINE");
+
             List<String> lotNos = new ArrayList<>();
             for (MaterialVo item: materialVos) {
                 lotNos.add(item.getLotNo());
@@ -621,7 +628,6 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
                 record2.setLotNo(item.getLotNo());
                 record2.setQty(item.getActualQty());
                 record2.setRecordType("RDC");
-                ;
                 record2.setModel(record1.getModel());
                 record2.setWhUserCode(record1.getWhUserCode());
                 record2.setFlag("1");

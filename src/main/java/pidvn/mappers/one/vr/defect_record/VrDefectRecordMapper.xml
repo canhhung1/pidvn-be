@@ -15,7 +15,6 @@
         order by B.order asc
     </select>
 
-
     <resultMap id="getDefectRecords-result"
                type="pidvn.modules.vr.defect_record.models.DefectRecordVo">
         <result column="process_name" property="processName" javaType="String"/>
@@ -37,9 +36,12 @@
             and A.lot_no = #{lotNo}
         )
         select
-            T02.id, T01.name process_name, T01.process_id, T01.code defect_code,
-            T02.lot_no, T02.model, T02.line, T02.date, T02.shift, T02.user_id, T02.qty, T02.remark,
-            T02.created_at
+            T02.id, T01.name process_name, T01.process_id, T01.code defect_code, T02.lot_no,
+            T02.model, T02.line, T02.date, T02.shift, T02.user_id, T02.qty, T02.remark, T02.created_at,
+            case
+                when T01.defect_group in ('N','OK') then null
+                else 'D'
+            end status
         from T01
         left join T02 on T01.code = T02.defect_code
     </select>

@@ -214,7 +214,7 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
          * TODO
          */
 
-         this.updateToBoxAndQtyWhenChangeTemp(scannerVo);
+         this.updateToBoxAndQtyWhenChangeTemp(scannerVo, isConsumptionMethod);
 
 
 
@@ -225,7 +225,7 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
      *
      * @param scannerVo
      */
-    private void updateToBoxAndQtyWhenChangeTemp(ScannerVo scannerVo) {
+    private void updateToBoxAndQtyWhenChangeTemp(ScannerVo scannerVo, boolean isConsumptionMethod) {
 
         String [] data = scannerVo.getLabel().split("\\*"); // VN240103*A-0408A*COIL7*B
         String line = data[2];
@@ -266,8 +266,12 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
         // Cập nhật số qty
         for (LotVo lot: lotsQty) {
             MaterialControls material = this.materialControlsRepo.findById(lot.getId()).get();
-            material.setQty(lot.getQty());
-            material.setRemark("Test: consumption (change label)");
+            if (isConsumptionMethod) {
+                material.setQty(lot.getQty());
+            }
+            material.setRemark(isConsumptionMethod ?
+                    "Method: consumption (change label)"
+                    : "Method: none consumption (change label)");
             this.materialControlsRepo.save(material);
         }
     }

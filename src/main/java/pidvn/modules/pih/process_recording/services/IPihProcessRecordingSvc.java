@@ -13,11 +13,11 @@ import java.util.Map;
 public interface IPihProcessRecordingSvc {
 
     List<PsMaster> getPsMasters(String pnpa);
-    Map insertCoil(ScannerVo scannerVo) throws Exception;
-    Map insertCoilManual(ScannerVo scannerVo) throws Exception;
+    Map insertCoil(ScannerVo scannerVo, boolean isConsumptionMethod) throws Exception;
+    Map insertCoilManual(ScannerVo scannerVo, boolean isConsumptionMethod) throws Exception;
     List<MaterialVo> getMaterials(MaterialSearchVo searchVo);
     Map changeLabel(ScannerVo scannerVo) throws Exception;
-    List<MaterialControls> changeModel(ScannerVo scannerVo);
+    List<MaterialControls> changeModel(ScannerVo scannerVo, boolean isConsumptionMethod);
     List<Line> getLines(Integer productId);
     Map scanCoil(MaterialSearchVo searchVo);
 

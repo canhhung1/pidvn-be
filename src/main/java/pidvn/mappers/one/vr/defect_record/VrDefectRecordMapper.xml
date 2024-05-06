@@ -45,5 +45,4 @@
         from T01
         left join T02 on T01.code = T02.defect_code
     </select>
-
 </mapper>

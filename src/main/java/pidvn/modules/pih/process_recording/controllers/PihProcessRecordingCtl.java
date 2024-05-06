@@ -29,12 +29,14 @@ public class PihProcessRecordingCtl {
 
     @PostMapping("InsertCoil")
     public ResponseEntity<?> insertCoil(@RequestBody ScannerVo scannerVo) throws Exception {
-        return new ResponseEntity<>(this.processRecordingSvc.insertCoil(scannerVo), HttpStatus.OK);
+        boolean isConsumptionMethod = false; // Nếu là true => tính toán Qty theo consumption
+        return new ResponseEntity<>(this.processRecordingSvc.insertCoil(scannerVo, isConsumptionMethod), HttpStatus.OK);
     }
 
     @PostMapping("InsertCoilManual")
     public ResponseEntity<?> insertCoilManual(@RequestBody ScannerVo scannerVo) throws Exception {
-        return new ResponseEntity<>(this.processRecordingSvc.insertCoilManual(scannerVo), HttpStatus.OK);
+        boolean isConsumptionMethod = false; // Nếu là true => tính toán Qty theo consumption
+        return new ResponseEntity<>(this.processRecordingSvc.insertCoilManual(scannerVo, isConsumptionMethod), HttpStatus.OK);
     }
 
     @PostMapping("Materials")
@@ -49,7 +51,8 @@ public class PihProcessRecordingCtl {
 
     @PostMapping("ChangeModel")
     public ResponseEntity<?> changeModel(@RequestBody ScannerVo scannerVo) {
-        return new ResponseEntity<>(this.processRecordingSvc.changeModel(scannerVo), HttpStatus.OK);
+        boolean isConsumptionMethod = false; // Nếu là true => tính toán Qty theo consumption
+        return new ResponseEntity<>(this.processRecordingSvc.changeModel(scannerVo, isConsumptionMethod), HttpStatus.OK);
     }
 
     @GetMapping("PsMasters")

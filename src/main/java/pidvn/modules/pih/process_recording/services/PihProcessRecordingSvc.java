@@ -42,11 +42,10 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
 
     @Override
     @Transactional(transactionManager = "chainedTransactionManager", rollbackFor = Exception.class)
-    public Map insertCoil(ScannerVo scannerVo) throws Exception {
+    public Map insertCoil(ScannerVo scannerVo, boolean isConsumptionMethod) throws Exception {
 
-        MaterialControls materialUpdate = this.updateToBoxAndQtyMaterial(scannerVo);
-
-        MaterialControls materialSave = this.addMaterial(scannerVo, materialUpdate);
+        MaterialControls materialUpdate = this.updateToBoxAndQtyMaterial(scannerVo, isConsumptionMethod);
+        MaterialControls materialSave = this.addMaterial(scannerVo, materialUpdate, isConsumptionMethod);
         Map result = new HashMap();
         result.put("materialUpdate", materialUpdate);
         result.put("materialSave", materialSave);
@@ -55,7 +54,7 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
     }
 
     @Override
-    public Map insertCoilManual(ScannerVo scannerVo) throws Exception {
+    public Map insertCoilManual(ScannerVo scannerVo, boolean isConsumptionMethod) throws Exception {
 
         Lots lot = this.lotsRepo.findByLotNo(scannerVo.getNewCoil());
 
@@ -77,14 +76,16 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
         material.setPlotno(label[0] + "*" + label[1] + "*" + label[2] + "*" +label[3]);
 
         material.setClotno(scannerVo.getNewCoil());
-        material.setQty(new Float(0));
+        material.setQty(isConsumptionMethod ? new Float(0) : lot.getFirstQty());
         material.setFrBox(scannerVo.getSequence());
         material.setToBox(null);
         material.setUser1(scannerVo.getUserId());
         material.setKeyUser(scannerVo.getUserId());
         material.setWindingBobbin(scannerVo.getPosition());
         material.setNgQty(0);
-        material.setRemark("Test: consumption (change coil: qty=0)");
+        material.setRemark(isConsumptionMethod ?
+                "Method: Consumption (change coil: qty=0)"
+                :"Method: None Consumption (change coil manual)");
 
         MaterialControls materialSave = this.materialControlsRepo.save(material);
 
@@ -100,6 +101,12 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
         return this.pihPRMapper.getMaterial(searchVo);
     }
 
+    /**
+     *
+     * @param scannerVo
+     * @return
+     * @throws Exception
+     */
     @Override
     @Transactional(transactionManager = "chainedTransactionManager", rollbackFor = Exception.class)
     public Map changeLabel(ScannerVo scannerVo) throws Exception {
@@ -151,8 +158,13 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
         return result;
     }
 
+
+
+
+
+
     @Override
-    public List<MaterialControls> changeModel(ScannerVo scannerVo) {
+    public List<MaterialControls> changeModel(ScannerVo scannerVo, boolean isConsumptionMethod) {
 
         String [] data = scannerVo.getLabel().split("\\*");
 
@@ -173,7 +185,7 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
             material.setDate(new Date());
             material.setPlotno(scannerVo.getLabel());
             material.setClotno(lot.getLotNo());
-            material.setQty((float) 0);
+            material.setQty(isConsumptionMethod ? (float) 0 : lot.getFirstQty());
             material.setFrBox(1);
             material.setUser1(scannerVo.getUserId());
             material.setKeyUser(scannerVo.getUserId());
@@ -353,7 +365,7 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
         return result;
     }
 
-    private MaterialControls updateToBoxAndQtyMaterial(ScannerVo scannerVo) throws Exception {
+    private MaterialControls updateToBoxAndQtyMaterial(ScannerVo scannerVo , boolean isConsumptionMethod) throws Exception {
 
         /**
          * Tìm Coil bị thay ra, cập nhật lại toBox
@@ -392,18 +404,26 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
         List<MaterialVo> records = this.pihPRMapper.getMaterial(searchVo);
         int numberOfBobbin = (int) records.stream().filter(item -> item.getToBox() == null).count();
 
-        // Lấy danh sách tem đã sử dụng
+        // Tính toán Qty theo consumption
         Float qty = this.pihPRMapper.calculateQtyChangeCoil(
             (label[0] + "*" + label[1] + "*" + label[2] + "*" +label[3]), fromBox, toBox, numberOfBobbin, coilCode
         );
 
-        materialUpdate.setQty(qty == null ? 0 : qty);
+        /**
+         * Nếu isConsumptionMethod == true
+         * Tính qty theo consumption
+         */
+        if (isConsumptionMethod) {
+            materialUpdate.setQty(qty == null ? 0 : qty);
+        }
         materialUpdate.setToBox(toBox);
-        materialUpdate.setRemark("Test: consumption (change coil: update toBox & qty)");
+        materialUpdate.setRemark(
+                isConsumptionMethod ? "Method: Consumption (change coil: update toBox & qty)"
+                        : "Method None Consumption (change coil: only update toBox)");
         return this.materialControlsRepo.save(materialUpdate);
     }
 
-    private MaterialControls addMaterial(ScannerVo scannerVo, MaterialControls materialControls) {
+    private MaterialControls addMaterial(ScannerVo scannerVo, MaterialControls materialControls, boolean isConsumptionMethod) {
 
         Lots lot = this.lotsRepo.findByLotNo(scannerVo.getNewCoil());
 
@@ -417,14 +437,16 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
         material.setDate(new Date());
         material.setPlotno(label[0] + "*" + label[1] + "*" + label[2] + "*" +label[3]);
         material.setClotno(scannerVo.getNewCoil());
-        material.setQty((float) 0);
+        material.setQty(isConsumptionMethod ? (float) 0 : lot.getQty());
         material.setFrBox(scannerVo.getSequence());
         material.setToBox(null);
         material.setUser1(scannerVo.getUserId());
         material.setKeyUser(scannerVo.getUserId());
         material.setWindingBobbin(materialControls.getWindingBobbin());
         material.setNgQty(0);
-        material.setRemark("Test: consumption (change coil: add new qty=0)");
+        material.setRemark(
+                isConsumptionMethod ? "Method: Consumption (change coil: add new qty=0)"
+                        : "Method None Consumption (change coil: add new qty=first_qty)");
 
         return this.materialControlsRepo.save(material);
     }

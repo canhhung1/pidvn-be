@@ -31,5 +31,10 @@ public class VrDefectRecordCtl {
         return new ResponseEntity<>(this.vrDefectRecordSvc.saveDefectRecords(defectRecords), HttpStatus.OK);
     }
 
+    @PostMapping("DefectSummary")
+    public ResponseEntity<?> summaryDefects(@RequestParam String lotNo) {
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
+
 
 }

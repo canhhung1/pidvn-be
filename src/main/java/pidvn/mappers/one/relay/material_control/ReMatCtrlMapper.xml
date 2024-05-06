@@ -415,4 +415,56 @@
 
     </select>
 
+
+    <resultMap id="getActualQtyUsedInLine-result"
+               type="pidvn.modules.relay.material_control.models.MaterialVo">
+    </resultMap>
+    <select id="getActualQtyUsedInLine" resultMap="getActualQtyUsedInLine-result">
+        <![CDATA[
+            with
+            T01 as (
+                select * from material_controls
+                where 1 = 1
+                and record_type = 'CDL'
+                and clotno in
+                <foreach item="item" collection="lotNos" open="(" separator="," close=")">
+                   #{item}
+                </foreach>
+            ),
+            T02 as (
+                select * from pur_wh_records
+                where 1 = 1
+                and record_type = 'MRTW'
+                and lot_no in
+                <foreach item="item" collection="lotNos" open="(" separator="," close=")">
+                   #{item}
+                </foreach>
+            ),
+            T03 as (
+                select T01.id, A.lot_no, A.first_qty, T01.qty used_qty, T02.qty return_qty
+                from lots A
+                left join T01 on A.lot_no = T01.clotno
+                left join T02 on A.lot_no = T02.lot_no
+                where 1 = 1
+                and A.lot_no in
+                <foreach item="item" collection="lotNos" open="(" separator="," close=")">
+                   #{item}
+                </foreach>
+            ),
+            T04 as (
+                select T03.*, (T03.first_qty - T03.return_qty) qty from T03
+            )
+            select * from T04 where 1=1
+            and T04.qty is not null and T04.qty > 0
+        ]]>
+    </select>
+
+
+    <update id="updateActualQtyUsedInLine">
+        update material_controls
+        set qty = #{qty}, remark = 'Update qty after return WH'
+        where id = #{id}
+    </update>
+
+
 </mapper>

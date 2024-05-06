@@ -7,6 +7,7 @@ public class DefectRecordVo {
     private String processName;
     private Integer processId;
     private String defectCode;
+    private String defectName;
     private String model;
     private String line;
     private Date date;
@@ -15,7 +16,6 @@ public class DefectRecordVo {
     private Double qty;
     private String remark;
     private Integer userId;
-
     private Date createdAt;
 
     public Integer getId() {
@@ -48,6 +48,14 @@ public class DefectRecordVo {
 
     public void setDefectCode(String defectCode) {
         this.defectCode = defectCode;
+    }
+
+    public String getDefectName() {
+        return defectName;
+    }
+
+    public void setDefectName(String defectName) {
+        this.defectName = defectName;
     }
 
     public String getModel() {

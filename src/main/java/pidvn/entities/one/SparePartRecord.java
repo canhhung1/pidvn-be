@@ -70,7 +70,8 @@ public class SparePartRecord {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-
+    @Column(name = "goods_type")
+    private String goodsType;
 
 
     public Integer getId() {
@@ -215,5 +216,13 @@ public class SparePartRecord {
 
     public void setRequestNo(String requestNo) {
         this.requestNo = requestNo;
+    }
+
+    public String getGoodsType() {
+        return goodsType;
+    }
+
+    public void setGoodsType(String goodsType) {
+        this.goodsType = goodsType;
     }
 }

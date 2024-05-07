@@ -30,6 +30,8 @@ public class SparePartRecordVo {
     private String unit;
     private Float totalPrice;
 
+    private String goodsType;
+
     public Integer getId() {
         return id;
     }
@@ -212,5 +214,13 @@ public class SparePartRecordVo {
 
     public void setTotalPrice(Float totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public String getGoodsType() {
+        return goodsType;
+    }
+
+    public void setGoodsType(String goodsType) {
+        this.goodsType = goodsType;
     }
 }

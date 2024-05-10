@@ -76,7 +76,7 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
         material.setPlotno(label[0] + "*" + label[1] + "*" + label[2] + "*" +label[3]);
 
         material.setClotno(scannerVo.getNewCoil());
-        material.setQty(isConsumptionMethod ? new Float(0) : lot.getFirstQty());
+        material.setQty(isConsumptionMethod ? new Float(0) : lot.getFirstQty() == null ? lot.getQty() : lot.getFirstQty() );
         material.setFrBox(scannerVo.getSequence());
         material.setToBox(null);
         material.setUser1(scannerVo.getUserId());

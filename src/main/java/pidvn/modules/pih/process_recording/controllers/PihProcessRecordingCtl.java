@@ -1,5 +1,7 @@
 package pidvn.modules.pih.process_recording.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,8 @@ import pidvn.modules.pih.process_recording.services.PihProcessRecordingSvc;
 @RestController
 @RequestMapping("PIH/ProcessRecording")
 public class PihProcessRecordingCtl {
+
+    Logger logger = LoggerFactory.getLogger(PihProcessRecordingCtl.class);
 
     @Autowired
     private PihProcessRecordingSvc processRecordingSvc;

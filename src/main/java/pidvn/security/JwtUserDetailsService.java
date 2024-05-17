@@ -67,11 +67,6 @@ public class JwtUserDetailsService implements UserDetailsService {
             grantedAuthorities.add(new SimpleGrantedAuthority(permission));
         }
 
-        if (auth == null) {
-            logger.debug("LOGGER ===>: User chưa được đăng ký");
-            throw new UsernameNotFoundException("Nhân viên: " + username + " chưa được đăng ký !");
-        }
-
         return new User(auth.getUsername(), auth.getPassword(), grantedAuthorities);
     }
 }

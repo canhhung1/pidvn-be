@@ -76,28 +76,7 @@ public class SparePartSvc implements ISparePartSvc {
 
     @Override
     public List<SparePartRecord> saveSparePartRecords(List<SparePartRecord> sparePartRecords) {
-
-        List<SparePartRecord> data = new ArrayList<>();
-
-        for (SparePartRecord item : sparePartRecords) {
-
-            // Trường hợp xuất kho
-            if (item.getQty() > 0) {
-                item.setType("OUTPUT");
-                data.add(item);
-            }
-
-            // Trường hợp trả về
-            if (item.getQty() < 0) {
-                Float qty = item.getQty()*(-1);
-                item.setRequestNo(null);
-                item.setQty(qty);
-                item.setType("OK_RETURN");
-                data.add(item);
-            }
-        }
-
-        return this.sparePartRecordRepo.saveAll(data);
+        return this.sparePartRecordRepo.saveAll(sparePartRecords);
     }
 
     @Override

@@ -4,7 +4,7 @@
 
     <resultMap id="getRoleAndPermissionByUsername-result"
                type="pidvn.auth.models.AuthVo">
-
+        <result column="user_id" property="userId" javaType="Integer"/>
         <result column="role_id" property="roleId" javaType="Integer"/>
         <result column="user_id" property="userId" javaType="Integer"/>
         <result column="role_name" property="roleName" javaType="String"/>
@@ -12,16 +12,15 @@
         <result column="username" property="username" javaType="String"/>
 
     </resultMap>
-    <select id="getRoleAndPermissionByUsername"
-            resultMap="getRoleAndPermissionByUsername-result">
-
+    <select id="getRoleAndPermissionByUsername" resultMap="getRoleAndPermissionByUsername-result">
         select
+            U.id user_id, U.username, U.password, U.email, U.position_id, U.subsection_id, U.status,
             ifnull(group_concat(R.name), '') as roles,
-            ifnull(group_concat(REGEXP_REPLACE(ifnull(R.permission,'["super_admin"]'),'(")|(\\[)|(\\])','')),'')  permissions, U.username
+            ifnull(group_concat(REGEXP_REPLACE(ifnull(R.permission,'["super_admin"]'),'(")|(\\[)|(\\])','')),'')  permissions
         from role_user RU
         inner join roles R on RU.role_id = R.id
         inner join users U on RU.user_id = U.id
-        where U.username = #{username}
+        where U.username = #{username} and U.status = 1
 
     </select>
 

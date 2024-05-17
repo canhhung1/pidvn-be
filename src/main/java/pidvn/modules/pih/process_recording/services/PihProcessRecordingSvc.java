@@ -185,7 +185,7 @@ public class PihProcessRecordingSvc implements IPihProcessRecordingSvc {
             material.setDate(new Date());
             material.setPlotno(scannerVo.getLabel());
             material.setClotno(lot.getLotNo());
-            material.setQty(isConsumptionMethod ? (float) 0 : lot.getFirstQty());
+            material.setQty(isConsumptionMethod ? (float) 0 : lot.getFirstQty() == null ? lot.getQty() : lot.getFirstQty());
             material.setFrBox(1);
             material.setUser1(scannerVo.getUserId());
             material.setKeyUser(scannerVo.getUserId());

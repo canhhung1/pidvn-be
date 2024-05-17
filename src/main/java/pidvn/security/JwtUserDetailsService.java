@@ -40,22 +40,25 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        Users user = this.usersRepo.findByUsername(username);
-
-        if (user.getStatus() != 1) {
-            throw new UsernameNotFoundException("Nhân viên: " + username + " đã nghỉ việc !");
-        }
-
-        logger.debug("LOGGER ===>: User Login: "  + user.toString());
+        /**
+         * Lấy thông tin user (user info, roles, permissions)
+         */
 
         List<AuthVo> authVoList = this.authMapper.getRoleAndPermissionByUsername(username);
 
-        AuthVo result = authVoList.get(0);
+        if (authVoList.size() == 0) {
+            throw new UsernameNotFoundException("User chưa được đăng ky!");
+        }
+
+        AuthVo auth = authVoList.get(0);
+
+        if (auth.getStatus() == 0) {
+            throw new UsernameNotFoundException("Tài khoản: " + username + " đã bị khóa !");
+        }
 
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
 
-        Set<String> permissions = Sets.newHashSet(result.getPermissions().split(","));
+        Set<String> permissions = Sets.newHashSet(auth.getPermissions().split(","));
 
         for (String permission: permissions) {
             if (permission.equals("")) {
@@ -64,11 +67,11 @@ public class JwtUserDetailsService implements UserDetailsService {
             grantedAuthorities.add(new SimpleGrantedAuthority(permission));
         }
 
-        if (user == null) {
+        if (auth == null) {
             logger.debug("LOGGER ===>: User chưa được đăng ký");
             throw new UsernameNotFoundException("Nhân viên: " + username + " chưa được đăng ký !");
         }
 
-        return new User(user.getUsername(), user.getPassword(), grantedAuthorities);
+        return new User(auth.getUsername(), auth.getPassword(), grantedAuthorities);
     }
 }

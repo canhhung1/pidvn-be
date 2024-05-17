@@ -29,11 +29,13 @@
                 WHEN A.type = 'INPUT' then A.qty
                 WHEN A.type = 'OUTPUT' then A.qty
                 WHEN A.type = 'OK_RETURN' then A.qty*(-1)
+                WHEN A.type = 'NG_RETURN' then A.qty*(-1)
             END as qty,
             CASE
                 WHEN A.type = 'INPUT' then 'Nhập kho'
                 WHEN A.type = 'OUTPUT' then 'Xuất kho'
                 WHEN A.type = 'OK_RETURN' then 'Trả về (OK)'
+                WHEN A.type = 'NG_RETURN' then 'Trả VỀ (NG)'
             END as type
         from spare_part_records A
         left join spare_parts B on A.part_number = B.part_number

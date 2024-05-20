@@ -136,8 +136,12 @@ public class PihInventorySvc implements IPihInventorySvc {
     }
 
     @Override
-    public Lots scanLabel(String lotNo) {
-        return this.lotsRepo.findByLotNo(lotNo);
+    public Lots scanLabel(String lotNo) throws Exception {
+        Lots result = this.lotsRepo.findByLotNo(lotNo);
+        if (result == null) {
+            throw new Exception("Lot: " + lotNo + " không tồn tại");
+        }
+        return result;
     }
 
     /**

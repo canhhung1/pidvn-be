@@ -25,7 +25,7 @@ public interface IPihInventorySvc {
 
     List<InventoryVo> getInventoryDataByRequestId(Integer requestId);
 
-    Lots scanLabel(String lotNo);
+    Lots scanLabel(String lotNo) throws Exception;
 
     List<InventoryVo> balance(Integer requestId, List<Integer> inventoryArea);
 

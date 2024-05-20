@@ -66,7 +66,7 @@ public class PihInventoryCtrl {
     }
 
     @GetMapping("ScanLabel")
-    public ResponseEntity<?> scanLabel(@RequestParam String lotNo) {
+    public ResponseEntity<?> scanLabel(@RequestParam String lotNo) throws Exception {
         return new ResponseEntity<>(this.pihInventorySvc.scanLabel(lotNo), HttpStatus.OK);
     }
 

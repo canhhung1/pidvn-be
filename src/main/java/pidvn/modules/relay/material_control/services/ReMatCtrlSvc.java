@@ -51,6 +51,9 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
     @Autowired
     private UsersRepo usersRepo;
 
+    @Autowired
+    private LotsRepo lotsRepo;
+
     @Override
     public List<Line> getLines(Integer productId) {
         return this.lineRepo.findByProductIdOrderByName(productId);
@@ -510,6 +513,7 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
         /**
          * Check thêm trường hợp trả kho (recordType = MRTW)
          * Update lại các lot trong material_control (recordType = CDL)
+         * Update la qty trong bảng lots (qty bảng lots = qty trả về)
          */
 
         if (materialVos.get(0).getRecordType().equals("MRTW")) {
@@ -526,7 +530,20 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
 
             // Thực hiện update dữ liệu
             for (MaterialVo item : data) {
-                this.reMatCtrlMapper.updateActualQtyUsedInLine(item.getId(), item.getQty());
+                try {
+                    this.reMatCtrlMapper.updateActualQtyUsedInLine(item.getId(), item.getQty());
+                } catch (Exception e) {
+                    logger.debug("ERR UPDATE ACTUAL QTY USING IN LINE : " + e);
+                }
+            }
+
+            // Thực hiện update lại qty ở bảng lot.
+            for (MaterialVo item: materialVos) {
+                Lots lot = this.lotsRepo.findByLotNo(item.getLotNo());
+                lot.setQty(item.getQty());
+                lot.setRemark("Update qty khi trả về từ RELAY");
+                lotsRepo.save(lot);
+                logger.debug("UPDATE LOT QTY");
             }
         }
 

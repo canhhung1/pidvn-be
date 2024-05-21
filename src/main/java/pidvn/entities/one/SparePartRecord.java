@@ -73,6 +73,12 @@ public class SparePartRecord {
     @Column(name = "goods_type")
     private String goodsType;
 
+    @Column(name = "po")
+    private String po;
+
+    @Column(name = "supplier")
+    private String supplier;
+
 
     public Integer getId() {
         return id;
@@ -224,5 +230,21 @@ public class SparePartRecord {
 
     public void setGoodsType(String goodsType) {
         this.goodsType = goodsType;
+    }
+
+    public String getPo() {
+        return po;
+    }
+
+    public void setPo(String po) {
+        this.po = po;
+    }
+
+    public String getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(String supplier) {
+        this.supplier = supplier;
     }
 }

@@ -59,12 +59,14 @@ public class PackingOqcRequestSvc implements IPackingOqcRequest {
              * 1. Update lại request cũ thành NG, remark lại do hàng sorting
              */
             List<OqcRequest> oqcReqList = this.oqcRequestRepo.findByQaCard(oqcRequestVo.getQaCard());
-            OqcRequest oldOqcReq = oqcReqList.get(oqcReqList.size()-1);
-            oldOqcReq.setJudgment("NG");
-            oldOqcReq.setRemark("System: NG do hàng sorting");
-            oldOqcReq.setOqcDate(new Date());
-            oldOqcReq.setOqcRequestStatus(3);
-            this.oqcRequestRepo.save(oldOqcReq);
+            if (oqcReqList.size() > 0) {
+                OqcRequest oldOqcReq = oqcReqList.get(oqcReqList.size()-1);
+                oldOqcReq.setJudgment("NG");
+                oldOqcReq.setRemark("System: NG do hàng sorting");
+                oldOqcReq.setOqcDate(new Date());
+                oldOqcReq.setOqcRequestStatus(3);
+                this.oqcRequestRepo.save(oldOqcReq);
+            }
 
             /**
              * 2. Tạo request mới

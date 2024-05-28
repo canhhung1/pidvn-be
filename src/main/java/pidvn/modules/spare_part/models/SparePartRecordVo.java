@@ -29,8 +29,9 @@ public class SparePartRecordVo {
     private String currencyCode;
     private String unit;
     private Float totalPrice;
-
     private String goodsType;
+    private String po;
+    private String supplier;
 
     public Integer getId() {
         return id;
@@ -222,5 +223,21 @@ public class SparePartRecordVo {
 
     public void setGoodsType(String goodsType) {
         this.goodsType = goodsType;
+    }
+
+    public String getPo() {
+        return po;
+    }
+
+    public void setPo(String po) {
+        this.po = po;
+    }
+
+    public String getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(String supplier) {
+        this.supplier = supplier;
     }
 }

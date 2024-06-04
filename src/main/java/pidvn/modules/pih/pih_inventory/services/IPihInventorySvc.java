@@ -19,7 +19,7 @@ public interface IPihInventorySvc {
 
     PihInventoryRequest createInventoryRequest(PihInventoryRequest ivtReq) throws Exception;
 
-    Map saveListInventoryData(List<PihInventoryData> inventoryDataList, Integer requestId, Integer inventoryArea);
+    Map saveListInventoryData(List<PihInventoryData> inventoryDataList, Integer requestId, Integer inventoryArea, String goodsType);
 
     PihInventoryData saveInventoryData(PihInventoryData inventoryData);
 

@@ -50,6 +50,9 @@ public class PihInventoryData {
     @Transient
     private String outerLotNo;
 
+    @Column(name = "goods_type")
+    private String goodsType;
+
     public Integer getId() {
         return id;
     }
@@ -136,5 +139,13 @@ public class PihInventoryData {
 
     public void setOuterLotNo(String outerLotNo) {
         this.outerLotNo = outerLotNo;
+    }
+
+    public String getGoodsType() {
+        return goodsType;
+    }
+
+    public void setGoodsType(String goodsType) {
+        this.goodsType = goodsType;
     }
 }

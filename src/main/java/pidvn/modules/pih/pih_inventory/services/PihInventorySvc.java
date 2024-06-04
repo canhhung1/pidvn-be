@@ -71,7 +71,7 @@ public class PihInventorySvc implements IPihInventorySvc {
     }
 
     @Override
-    public Map saveListInventoryData(List<PihInventoryData> inventoryData, Integer requestId, Integer inventoryArea) {
+    public Map saveListInventoryData(List<PihInventoryData> inventoryData, Integer requestId, Integer inventoryArea, String goodsType) {
 
         List<PihInventoryData> resultOK = new ArrayList<>();
         List<PihInventoryData> resultNG = new ArrayList<>();
@@ -99,7 +99,7 @@ public class PihInventorySvc implements IPihInventorySvc {
          * Sau đó lưu lại vào bảng pih_inventory_data
          */
         if (outerLotNo.size() > 0) {
-            List<PihInventoryData> data = this.pihInventoryMapper.getLotNoByInOutLabel(requestId, inventoryArea, outerLotNo);
+            List<PihInventoryData> data = this.pihInventoryMapper.getLotNoByInOutLabel(requestId, inventoryArea, outerLotNo, goodsType);
 
             for (PihInventoryData item : data) {
                 try {

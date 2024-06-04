@@ -6,6 +6,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -19,6 +22,7 @@ import pidvn.modules.spare_part.models.SparePartRecordVo;
 import pidvn.repositories.one.*;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -48,6 +52,17 @@ public class SparePartSvc implements ISparePartSvc {
 
     @Autowired
     private SparePartMachineStandardRepo sparePartMachineStandardRepo;
+
+    @Autowired
+    private SectionRepo sectionRepo;
+
+    @Autowired
+    private SparePartRequestMasterRepo sparePartRequestMasterRepo;
+
+    @Autowired
+    private SparePartRequestDetailRepo sparePartRequestDetailRepo;
+
+
 
     @Override
     public List<Users> getUsers() {
@@ -213,6 +228,60 @@ public class SparePartSvc implements ISparePartSvc {
 
 
         return this.sparePartMapper.getSparePartRecordsByStandardPrice(searchVo);
+    }
+
+    /**
+     * Tạo request yêu cầu xuất hàng M4/M8
+     * B1: tạo record insert vào bảng spare_part_request_master
+     * B2: thêm dữ liệu vào M4/M8 vào bảng spare_part_request_detail
+     * @param spareParts
+     * @return
+     */
+    @Override
+    public List<SparePartRequestDetail> createRequestSparePart(List<SparePartRequestDetail> spareParts, Integer sectionId) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) auth.getPrincipal();
+        String createdBy = userDetails.getUsername();
+
+        // TODO
+        // B1: tạo request
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+        String date = formatter.format(new Date());
+
+
+        Integer reqAmount = this.sparePartRequestMasterRepo.getTotalRequestInMonth() + 1;
+        SparePartRequestMaster obj = new SparePartRequestMaster();
+        obj.setRequestNo("RQ-" + date + "-" + reqAmount);
+        obj.setCreatedBy(createdBy);
+        obj.setSectionId(sectionId);
+        obj.setDate(new Date());
+        obj.setActive(true);
+        SparePartRequestMaster master = this.sparePartRequestMasterRepo.save(obj);
+
+
+        for (SparePartRequestDetail item: spareParts) {
+            item.setId(null);
+            item.setRequestId(master.getId());
+        }
+
+        return  this.sparePartRequestDetailRepo.saveAll(spareParts);
+    }
+
+    @Override
+    public List<Section> getSections() {
+        return this.sectionRepo.findAll();
+    }
+
+    @Override
+    public List<SparePartRequestMaster> getSparePartRequestMaster() {
+        return this.sparePartRequestMasterRepo.findAll();
+    }
+
+    @Override
+    public List<SparePartRequestDetail> getSparePartRequestDetailByRequestId(Integer requestId) {
+        return this.sparePartRequestDetailRepo.findByRequestId(requestId);
     }
 
 

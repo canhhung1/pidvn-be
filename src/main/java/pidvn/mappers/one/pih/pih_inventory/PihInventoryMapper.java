@@ -36,6 +36,6 @@ public interface PihInventoryMapper {
      * @param outerLotNoList: danh sách tem to
      * @return
      */
-    List<PihInventoryData> getLotNoByInOutLabel(Integer requestId, Integer inventoryArea, List<String> outerLotNoList);
+    List<PihInventoryData> getLotNoByInOutLabel(Integer requestId, Integer inventoryArea, List<String> outerLotNoList, String goodsType);
 
 }

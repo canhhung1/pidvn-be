@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pidvn.entities.one.SparePart;
 import pidvn.entities.one.SparePartRecord;
+import pidvn.entities.one.SparePartRequestDetail;
 import pidvn.modules.spare_part.models.SearchVo;
 import pidvn.modules.spare_part.services.SparePartSvc;
 
@@ -102,5 +103,41 @@ public class SparePartCtrl {
     }
 
 
+    /**
+     * Các API liên quan đến tạo request
+     */
+
+    @PostMapping("CreateRequest")
+    public ResponseEntity<?> createRequestSparePart(@RequestBody List<SparePartRequestDetail> spareParts, @RequestParam Integer sectionId) {
+        return new ResponseEntity<>(this.sparePartSvc.createRequestSparePart(spareParts, sectionId), HttpStatus.OK);
+    }
+
+    /**
+     * Lấy bộ phận
+     * @return
+     */
+    @GetMapping("Sections")
+    public ResponseEntity<?> getSections() {
+        return new ResponseEntity<>(this.sparePartSvc.getSections(), HttpStatus.OK);
+    }
+
+    /**
+     * Lấy danh sách
+     * @return
+     */
+    @GetMapping("SparePartRequestMasters")
+    public ResponseEntity<?> getSparePartRequestMaster() {
+        return new ResponseEntity<>(this.sparePartSvc.getSparePartRequestMaster(), HttpStatus.OK);
+    }
+
+    /**
+     * Lấy thông tin chi tiết của request
+     * @param requestId
+     * @return
+     */
+    @GetMapping("SparePartRequestDetail/{requestId}")
+    public ResponseEntity<?> getSparePartRequestDetailByRequestId(@PathVariable Integer requestId) {
+        return new ResponseEntity<>(this.sparePartSvc.getSparePartRequestDetailByRequestId(requestId), HttpStatus.OK);
+    }
 
 }

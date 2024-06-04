@@ -3,7 +3,6 @@ package pidvn.modules.spare_part.services;
 import org.springframework.web.multipart.MultipartFile;
 import pidvn.entities.one.*;
 import pidvn.modules.spare_part.models.SearchVo;
-import pidvn.modules.spare_part.models.SparePartDataChartVo;
 import pidvn.modules.spare_part.models.SparePartRecordVo;
 
 import java.io.IOException;
@@ -45,4 +44,16 @@ public interface ISparePartSvc {
 
     List<SparePartRecordVo> getSparePartRecordsByStandardPrice(SearchVo searchVo);
 
+
+    /**
+     * Các Api liên quan đến tạo request
+     */
+
+    List<SparePartRequestDetail> createRequestSparePart(List<SparePartRequestDetail> spareParts, Integer sectionId);
+
+    List<Section> getSections();
+
+    List<SparePartRequestMaster> getSparePartRequestMaster();
+
+    List<SparePartRequestDetail> getSparePartRequestDetailByRequestId(Integer requestId);
 }

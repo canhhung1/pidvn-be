@@ -191,10 +191,12 @@
         <result column="lot_no" property="lotNo" javaType="String"/>
         <result column="part_no" property="partNo" javaType="String"/>
         <result column="inventory_area" property="inventoryArea" javaType="Integer"/>
+        <result column="goods_type" property="goodsType" javaType="String"/>
+
     </resultMap>
     <select id="getLotNoByInOutLabel" resultMap="getLotNoByInOutLabel-result">
         SELECT
-            #{requestId} as request_id, A.inner_lot_no lot_no, A.model part_no, B.qty, #{inventoryArea} as inventory_area, sysdate() date
+            #{requestId} as request_id, A.inner_lot_no lot_no, A.model part_no, B.qty, #{inventoryArea} as inventory_area, sysdate() date, #{goodsType} as goods_type
         FROM inout_labels A
         left join lots B on A.inner_lot_no = B.lot_no
         where 1 = 1

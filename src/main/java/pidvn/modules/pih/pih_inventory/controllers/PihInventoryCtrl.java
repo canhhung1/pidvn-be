@@ -48,11 +48,13 @@ public class PihInventoryCtrl {
     }
 
     @PostMapping("SaveListInventoryData")
-    public ResponseEntity<?> saveListInventoryData(@RequestBody List<PihInventoryData> inventoryDataList,
-                                                   @RequestParam Integer requestId,
-                                                   @RequestParam Integer inventoryArea
+    public ResponseEntity<?> saveListInventoryData(
+            @RequestBody List<PihInventoryData> inventoryDataList,
+            @RequestParam Integer requestId,
+            @RequestParam Integer inventoryArea,
+            @RequestParam String goodsType
     ) {
-        return new ResponseEntity<>(this.pihInventorySvc.saveListInventoryData(inventoryDataList,requestId,inventoryArea), HttpStatus.OK);
+        return new ResponseEntity<>(this.pihInventorySvc.saveListInventoryData(inventoryDataList, requestId, inventoryArea, goodsType), HttpStatus.OK);
     }
 
     @PostMapping("InventoryData")

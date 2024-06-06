@@ -281,6 +281,7 @@ public class MaterialReceiptService implements IMaterialReceiptService {
 
     /**
      * Kiểm tra dữ liệu bị trùng lặp
+     * Một lot chỉ được có trong 1 SlipNo và 1 Invoice
      *
      * @return
      */
@@ -298,7 +299,12 @@ public class MaterialReceiptService implements IMaterialReceiptService {
             searchVo.setSerial(null);
         }
         searchVo.setLotNo(materialVo.getLotNo());
+        searchVo.setInvoice(materialVo.getInvoiceNo());
+        searchVo.setSlipNo(materialVo.getSlipNo());
+
+
         List<PurWhRecordsVo> result = this.materialReceiptMapper.getPurWhRecords(searchVo);
+
         return result.size() > 0 ? true : false;
     }
 }

@@ -24,7 +24,7 @@
         </if>
 
         <if test="lotNo != null">
-            and PWR.lot_no like '%' #{lotNo} '%'
+            and PWR.lot_no = #{lotNo}
         </if>
 
         <if test="model != null and model != ''">
@@ -36,11 +36,11 @@
         </if>
 
         <if test="slipNo != null and slipNo != ''">
-            and PWR.slip_no like '%' #{slipNo} '%'
+            and PWR.slip_no = #{slipNo}
         </if>
 
         <if test="invoice != null and invoice != ''">
-            and PWR.invoice like '%' #{invoice} '%'
+            and PWR.invoice = #{invoice}
         </if>
 
         <if test="fromDate != null and toDate != null">

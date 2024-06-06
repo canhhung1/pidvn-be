@@ -29,6 +29,7 @@ public class MaterialVo {
     private String whUserCode;
     private String username;
     private Date createdAt;
+    private Float remainingQty;
 
     public Integer getId() {
         return id;
@@ -236,5 +237,13 @@ public class MaterialVo {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Float getRemainingQty() {
+        return remainingQty;
+    }
+
+    public void setRemainingQty(Float remainingQty) {
+        this.remainingQty = remainingQty;
     }
 }

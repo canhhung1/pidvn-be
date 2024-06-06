@@ -416,16 +416,16 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
         MaterialVo recordLatest = materialHistories.get(0);
 
         // TH đã nhập hết vào LINE
-        if (recordLatest.getRecordType().equals("CDL")) {
-            if (recordLatest.getQty().floatValue() == materialVo.getQty().floatValue()) {
-                message = "Lot: " + materialVo.getLotNo() + " đã được nhập vào LINE lúc: "
-                        + new SimpleDateFormat("yyyy-MM-dd HH:mm").format(recordLatest.getCreatedAt());
-                result.put("status", "ERROR");
-                result.put("message", message);
-                result.put("data", materialVo);
-                return result;
-            }
-        }
+//        if (recordLatest.getRecordType().equals("CDL")) {
+//            if (recordLatest.getQty().floatValue() == materialVo.getQty().floatValue()) {
+//                message = "Lot: " + materialVo.getLotNo() + " đã được nhập vào LINE lúc: "
+//                        + new SimpleDateFormat("yyyy-MM-dd HH:mm").format(recordLatest.getCreatedAt());
+//                result.put("status", "ERROR");
+//                result.put("message", message);
+//                result.put("data", materialVo);
+//                return result;
+//            }
+//        }
 
         if (recordLatest.getRecordType().equals("MRTW")) {
             message = "Lot: " + materialVo.getLotNo() + " đã trả về kho (PUR-WH) lúc: "
@@ -435,6 +435,13 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
             result.put("data", materialVo);
             return result;
         }
+
+
+        Lots lot = this.lotsRepo.findByLotNo(materialVo.getLotNo());
+
+        materialVo.setQty(0F);
+//        materialVo.setRemainingQty(lot.getQty());
+        materialVo.setRemainingQty(500F);
 
         // TH: RecordType = "RNP", "CTL (dư)","CTR"
         message = "Có thể trả lại kho (PUR-WH)";

@@ -39,6 +39,7 @@
         from pur_wh_records R
         where 1 = 1
         and R.record_type = 'MRTW'
+        and R.date between DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND CURDATE()
         group by R.slip_no
         order by R.id desc
     </select>

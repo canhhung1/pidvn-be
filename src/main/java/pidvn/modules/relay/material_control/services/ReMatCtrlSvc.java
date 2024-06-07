@@ -439,9 +439,8 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
 
         Lots lot = this.lotsRepo.findByLotNo(materialVo.getLotNo());
 
-        materialVo.setQty(0F);
-//        materialVo.setRemainingQty(lot.getQty());
-        materialVo.setRemainingQty(500F);
+        materialVo.setQty(lot.getQty());
+        materialVo.setRemainingQty(lot.getQty());
 
         // TH: RecordType = "RNP", "CTL (dư)","CTR"
         message = "Có thể trả lại kho (PUR-WH)";

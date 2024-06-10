@@ -294,9 +294,9 @@ public class SparePartSvc implements ISparePartSvc {
         List<SparePartRequestVo> data = this.sparePartMapper.getSparePartRequestDetail(requestId);
 
 
-        String tempName = "temp-" + new Random().nextInt(1000) + ".xlsx";
+        String tempName = "temp-" + new Random().nextInt(1000) + ".xlsm";
         String rootFolder = "P:\\IS\\(C) Save File FDCS\\FDCS-Server-2\\M4M8\\";
-        String sourcePath = rootFolder + "MaterialRequest.xlsx";
+        String sourcePath = rootFolder + "MaterialRequest.xlsm";
         String targetPath = rootFolder + tempName;
 
         String pathFile = this.createTempFile(sourcePath, targetPath);

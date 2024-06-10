@@ -1,6 +1,8 @@
 package pidvn.modules.spare_part.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +12,8 @@ import pidvn.entities.one.SparePartRequestDetail;
 import pidvn.modules.spare_part.models.SearchVo;
 import pidvn.modules.spare_part.services.SparePartSvc;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -140,4 +144,11 @@ public class SparePartCtrl {
         return new ResponseEntity<>(this.sparePartSvc.getSparePartRequestDetailByRequestId(requestId), HttpStatus.OK);
     }
 
+    @PostMapping("DownloadM4M8Request")
+    public ResponseEntity downloadM4M8Request(@RequestParam Integer requestId) throws IOException {
+        ByteArrayInputStream inputStream  = this.sparePartSvc.downloadQaCard(requestId);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename=Export.xlsx");
+        return ResponseEntity.ok().headers(headers).body(new InputStreamResource(inputStream));
+    }
 }

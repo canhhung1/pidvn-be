@@ -1,5 +1,7 @@
 package pidvn.modules.spare_part.services;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -15,13 +17,12 @@ import org.springframework.web.server.ResponseStatusException;
 import pidvn.entities.one.*;
 import pidvn.exceptions.ConflictException;
 import pidvn.mappers.one.spare_part.SparePartMapper;
-import pidvn.modules.spare_part.models.RowExcelErrorVo;
-import pidvn.modules.spare_part.models.SearchVo;
-import pidvn.modules.spare_part.models.SparePartDataChartVo;
-import pidvn.modules.spare_part.models.SparePartRecordVo;
+import pidvn.modules.spare_part.models.*;
 import pidvn.repositories.one.*;
 
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -61,7 +62,6 @@ public class SparePartSvc implements ISparePartSvc {
 
     @Autowired
     private SparePartRequestDetailRepo sparePartRequestDetailRepo;
-
 
 
     @Override
@@ -216,7 +216,7 @@ public class SparePartSvc implements ISparePartSvc {
         param1.setChartType(2);
 //        List<SparePartDataChartVo> data2 = this.sparePartMapper.getSparePartDataChart(param2);
 
-        result.put("data1" , data1);
+        result.put("data1", data1);
 //        result.put("data2" , data2);
 
         return result;
@@ -234,6 +234,7 @@ public class SparePartSvc implements ISparePartSvc {
      * Tạo request yêu cầu xuất hàng M4/M8
      * B1: tạo record insert vào bảng spare_part_request_master
      * B2: thêm dữ liệu vào M4/M8 vào bảng spare_part_request_detail
+     *
      * @param spareParts
      * @return
      */
@@ -261,12 +262,12 @@ public class SparePartSvc implements ISparePartSvc {
         SparePartRequestMaster master = this.sparePartRequestMasterRepo.save(obj);
 
 
-        for (SparePartRequestDetail item: spareParts) {
+        for (SparePartRequestDetail item : spareParts) {
             item.setId(null);
             item.setRequestId(master.getId());
         }
 
-        return  this.sparePartRequestDetailRepo.saveAll(spareParts);
+        return this.sparePartRequestDetailRepo.saveAll(spareParts);
     }
 
     @Override
@@ -282,6 +283,88 @@ public class SparePartSvc implements ISparePartSvc {
     @Override
     public List<SparePartRequestDetail> getSparePartRequestDetailByRequestId(Integer requestId) {
         return this.sparePartRequestDetailRepo.findByRequestId(requestId);
+    }
+
+    @Override
+    public ByteArrayInputStream downloadQaCard(Integer requestId) throws IOException {
+
+//        SparePartRequestMaster request = this.sparePartRequestMasterRepo.findById(requestId).get();
+//        List<SparePartRequestDetail> requestDetail = this.sparePartRequestDetailRepo.findByRequestId(requestId);
+
+        List<SparePartRequestVo> data = this.sparePartMapper.getSparePartRequestDetail(requestId);
+
+
+        String tempName = "temp-" + new Random().nextInt(1000) + ".xlsx";
+        String rootFolder = "P:\\IS\\(C) Save File FDCS\\FDCS-Server-2\\M4M8\\";
+        String sourcePath = rootFolder + "MaterialRequest.xlsx";
+        String targetPath = rootFolder + tempName;
+
+        String pathFile = this.createTempFile(sourcePath, targetPath);
+
+        Workbook workbook = null;
+        FileInputStream inputStream = null;
+        ByteArrayOutputStream out = null;
+        ByteArrayInputStream result = null;
+
+        try {
+            File file = new File(pathFile);
+            inputStream = new FileInputStream(file);
+
+            // Tạo workbook từ input stream
+            workbook = new XSSFWorkbook(inputStream);
+
+            // Đọc sheet đầu tiên của file excel
+            Sheet sheet = workbook.getSheetAt(0);
+
+            // Cập nhật các ô với dữ liệu từ request
+            Cell requestNoCell = sheet.getRow(4).getCell(1);
+            requestNoCell.setCellValue(data.get(0).getRequestNo());
+
+            Cell requestDateCell = sheet.getRow(5).getCell(1);
+            requestDateCell.setCellValue(data.get(0).getDate());
+
+            Cell requestSectionCell = sheet.getRow(6).getCell(1);
+            requestSectionCell.setCellValue(data.get(0).getSectionName());
+
+            // Cập nhật dữ liệu từ requestDetail
+            int rowNum = 9;
+            for (SparePartRequestVo item : data) {
+                Row row = sheet.getRow(rowNum++);
+                if (row == null) {
+                    row = sheet.createRow(rowNum - 1);
+                }
+                row.getCell(2).setCellValue(item.getPartNumber());
+                row.getCell(3).setCellValue(item.getQty());
+            }
+
+            // Ghi dữ liệu vào ByteArrayOutputStream
+            out = new ByteArrayOutputStream();
+            workbook.write(out);
+            result = new ByteArrayInputStream(out.toByteArray());
+
+        } finally {
+            // Đảm bảo tài nguyên được đóng
+            if (workbook != null) {
+                workbook.close();
+            }
+            if (inputStream != null) {
+                inputStream.close();
+            }
+            if (out != null) {
+                out.close();
+            }
+            // Xóa tệp tạm thời
+            Files.deleteIfExists(Paths.get(pathFile));
+        }
+
+        return result;
+    }
+
+    private String createTempFile(String sourcePath, String targetPath) throws IOException {
+        File source = new File(sourcePath);
+        File target = new File(targetPath);
+        FileUtils.copyFile(source, target);
+        return targetPath;
     }
 
 
@@ -316,13 +399,13 @@ public class SparePartSvc implements ISparePartSvc {
                         || row.getCell(2).getStringCellValue() == null
                 ) {
                     Integer rowNum = i + 1;
-                    rowNG.add(new RowExcelErrorVo(rowNum,"Không có PartNumber"));
+                    rowNG.add(new RowExcelErrorVo(rowNum, "Không có PartNumber"));
                     continue;
                 }
 
                 if ((int) row.getCell(4).getNumericCellValue() <= 0) {
                     Integer rowNum = i + 1;
-                    rowNG.add(new RowExcelErrorVo(rowNum,"Qty <= 0"));
+                    rowNG.add(new RowExcelErrorVo(rowNum, "Qty <= 0"));
                     continue;
                 }
 

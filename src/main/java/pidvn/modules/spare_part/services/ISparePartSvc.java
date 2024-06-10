@@ -5,6 +5,7 @@ import pidvn.entities.one.*;
 import pidvn.modules.spare_part.models.SearchVo;
 import pidvn.modules.spare_part.models.SparePartRecordVo;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -56,4 +57,6 @@ public interface ISparePartSvc {
     List<SparePartRequestMaster> getSparePartRequestMaster();
 
     List<SparePartRequestDetail> getSparePartRequestDetailByRequestId(Integer requestId);
+
+    ByteArrayInputStream downloadQaCard(Integer requestId) throws IOException;
 }

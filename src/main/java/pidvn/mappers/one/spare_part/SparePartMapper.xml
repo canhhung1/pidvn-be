@@ -190,14 +190,22 @@
                 group by T03.line, T03.machine
                 order by T03.line asc
             </if>
+    </select>
 
 
 
 
-
-
-
-
+    <resultMap id="getSparePartRequestDetail-result"
+               type="pidvn.modules.spare_part.models.SparePartRequestVo">
+        <result column="request_no" property="requestNo" javaType="String"/>
+        <result column="section_name" property="sectionName" javaType="String"/>
+        <result column="part_number" property="partNumber" javaType="String"/>
+    </resultMap>
+    <select id="getSparePartRequestDetail" resultMap="getSparePartRequestDetail-result">
+        select M.request_no, M.`date`, S.name section_name, D.part_number, D.qty from spare_part_request_master M
+        inner join spare_part_request_detail D on M.id = D.request_id
+        inner join section S on M.section_id = S.id
+        where M.id = #{requestId}
     </select>
 
 </mapper>

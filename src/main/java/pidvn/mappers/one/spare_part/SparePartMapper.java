@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Mapper;
 import pidvn.modules.spare_part.models.SearchVo;
 import pidvn.modules.spare_part.models.SparePartDataChartVo;
 import pidvn.modules.spare_part.models.SparePartRecordVo;
+import pidvn.modules.spare_part.models.SparePartRequestVo;
 
 import java.util.Date;
 import java.util.List;
@@ -16,7 +17,9 @@ public interface SparePartMapper {
 
     List<SparePartRecordVo> getSparePartInventory(Integer requestId);
 
-
     List<SparePartDataChartVo> getSparePartDataChart(SearchVo searchVo);
+
+    List<SparePartRequestVo> getSparePartRequestDetail(Integer requestId);
+
 
 }

@@ -33,6 +33,7 @@
         SELECT D.*, U.name employee_name FROM relay_date_code D
         inner join users U on D.user_code = U.id
         where 1 = 1
+        and D.date between DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND CURDATE()
         order by D.id desc
     </select>
 
@@ -45,7 +46,7 @@
     <select id="getQaCards" resultMap="getQaCards-result">
         select L.lot_no, L.created_at from lots L
         where L.label_type = 'QA'
-        and L.date >  date(now()) - interval 250 day
+        and L.date between DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND CURDATE()
         order by L.date desc
     </select>
 </mapper>

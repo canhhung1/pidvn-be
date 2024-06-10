@@ -277,20 +277,21 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
 
         MaterialVo recordLatest = materialHistories.get(0);
 
-        if (recordLatest.getRecordType().equals("CDL")) {
 
-            /**
-             * Kiểm tra lượng nhập vào: Nếu đã nhập đủ số lượng trên tem thì ko đc nhập nữa
-             */
-            float lineQty = this.getActualQtyInLine(materialHistories);
-            if (lineQty >= materialVo.getQty()) {
-                message = "Lot: " + materialVo.getLotNo() + " đã được nhập hết vào LINE: ";
-                result.put("status", "ERROR");
-                result.put("message", message);
-                result.put("data", materialVo);
-                return result;
-            }
-        }
+//        if (recordLatest.getRecordType().equals("CDL")) {
+//
+//            /**
+//             * Kiểm tra lượng nhập vào: Nếu đã nhập đủ số lượng trên tem thì ko đc nhập nữa
+//             */
+//            float lineQty = this.getActualQtyInLine(materialHistories);
+//            if (lineQty >= materialVo.getQty()) {
+//                message = "Lot: " + materialVo.getLotNo() + " đã được nhập hết vào LINE: ";
+//                result.put("status", "ERROR");
+//                result.put("message", message);
+//                result.put("data", materialVo);
+//                return result;
+//            }
+//        }
 
         if (recordLatest.getRecordType().equals("CTR")) {
             message = "Lot: " + materialVo.getLotNo() + " đã trả về kho trung chuyển (RE-WH); lúc: "
@@ -309,6 +310,11 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
             result.put("data", materialVo);
             return result;
         }
+
+        Lots lot = this.lotsRepo.findByLotNo(materialVo.getLotNo());
+        materialVo.setQty(lot.getQty());
+        materialVo.setRemainingQty(lot.getQty());
+
 
         message = "Có thể nhập NVL vào LINE";
         result.put("status", "OK");

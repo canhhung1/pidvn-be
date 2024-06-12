@@ -31,6 +31,9 @@ public class SparePart {
     @Column(name = "image")
     private String image;
 
+    @Column(name = "type")
+    private String type;
+
     @CreatedDate
     @Column(name = "created_at")
     private Date createdAt;
@@ -85,6 +88,14 @@ public class SparePart {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Date getCreatedAt() {

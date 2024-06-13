@@ -225,8 +225,6 @@ public class SparePartSvc implements ISparePartSvc {
 
     @Override
     public List<SparePartRecordVo> getSparePartRecordsByStandardPrice(SearchVo searchVo) {
-
-
         return this.sparePartMapper.getSparePartRecordsByStandardPrice(searchVo);
     }
 
@@ -245,6 +243,8 @@ public class SparePartSvc implements ISparePartSvc {
         UserDetails userDetails = (UserDetails) auth.getPrincipal();
         String createdBy = userDetails.getUsername();
 
+        Section section = this.sectionRepo.findById(sectionId).get();
+
         // TODO
         // B1: tạo request
 
@@ -252,9 +252,9 @@ public class SparePartSvc implements ISparePartSvc {
         String date = formatter.format(new Date());
 
 
-        Integer reqAmount = this.sparePartRequestMasterRepo.getTotalRequestInMonth() + 1;
+        Integer reqAmount = this.sparePartRequestMasterRepo.getTotalRequestInDay() + 1;
         SparePartRequestMaster obj = new SparePartRequestMaster();
-        obj.setRequestNo("RQ-" + date + "-" + reqAmount);
+        obj.setRequestNo(section.getCode() + "-RQ-" + date + "-" + reqAmount);
         obj.setCreatedBy(createdBy);
         obj.setSectionId(sectionId);
         obj.setDate(new Date());
@@ -276,18 +276,17 @@ public class SparePartSvc implements ISparePartSvc {
     }
 
     @Override
-    public List<SparePartRequestMaster> getSparePartRequestMaster() {
-        return this.sparePartRequestMasterRepo.findAll();
+    public List<SparePartRequestVo> getSparePartRequestMaster() {
+        return this.sparePartMapper.getSparePartRequestMasters();
     }
 
     @Override
-    public List<SparePartRequestDetail> getSparePartRequestDetailByRequestId(Integer requestId) {
-        return this.sparePartRequestDetailRepo.findByRequestId(requestId);
+    public List<SparePartRequestVo> getSparePartRequestDetailByRequestId(Integer requestId) {
+        return this.sparePartMapper.getSparePartRequestDetailByRequestId(requestId);
     }
 
     @Override
     public ByteArrayInputStream downloadQaCard(Integer requestId) throws IOException {
-
 //        SparePartRequestMaster request = this.sparePartRequestMasterRepo.findById(requestId).get();
 //        List<SparePartRequestDetail> requestDetail = this.sparePartRequestDetailRepo.findByRequestId(requestId);
 

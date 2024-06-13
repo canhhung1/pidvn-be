@@ -4,6 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 import pidvn.entities.one.*;
 import pidvn.modules.spare_part.models.SearchVo;
 import pidvn.modules.spare_part.models.SparePartRecordVo;
+import pidvn.modules.spare_part.models.SparePartRequestVo;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -54,9 +55,9 @@ public interface ISparePartSvc {
 
     List<Section> getSections();
 
-    List<SparePartRequestMaster> getSparePartRequestMaster();
+    List<SparePartRequestVo> getSparePartRequestMaster();
 
-    List<SparePartRequestDetail> getSparePartRequestDetailByRequestId(Integer requestId);
+    List<SparePartRequestVo> getSparePartRequestDetailByRequestId(Integer requestId);
 
     ByteArrayInputStream downloadQaCard(Integer requestId) throws IOException;
 }

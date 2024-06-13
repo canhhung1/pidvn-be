@@ -193,6 +193,21 @@
     </select>
 
 
+    <resultMap id="getSparePartRequestMasters-result"
+               type="pidvn.modules.spare_part.models.SparePartRequestVo">
+        <result column="request_no" property="requestNo" javaType="String"/>
+        <result column="created_by_name" property="createdByName" javaType="String"/>
+        <result column="section_name" property="sectionName" javaType="String"/>
+    </resultMap>
+    <select id="getSparePartRequestMasters" resultMap="getSparePartRequestMasters-result">
+        SELECT M.*, U.name created_by_name, S.name section_name
+        FROM spare_part_request_master M
+        left join users U on M.created_by = U.username
+        left join section S on M.section_id = S.id
+        where 1 = 1
+        and M.is_active = 1
+        order by id desc
+    </select>
 
 
     <resultMap id="getSparePartRequestDetail-result"
@@ -208,4 +223,21 @@
         where M.id = #{requestId}
     </select>
 
+
+
+    <resultMap id="getSparePartRequestDetailByRequestId-result"
+               type="pidvn.modules.spare_part.models.SparePartRequestVo">
+        <result column="part_number" property="partNumber" javaType="String"/>
+        <result column="request_qty" property="requestQty" javaType="Float"/>
+        <result column="kitting_qty" property="kittingQty" javaType="Float"/>
+    </resultMap>
+    <select id="getSparePartRequestDetailByRequestId" resultMap="getSparePartRequestDetailByRequestId-result">
+        with
+        T01 as (
+            SELECT D.*, M.request_no FROM spare_part_request_detail D
+            inner join spare_part_request_master M on (D.request_id = M.id and D.request_id = #{requestId})
+        )
+        select T01.id, T01.part_number, T01.qty request_qty, R.qty kitting_qty from T01
+        left join spare_part_records R on (T01.request_no = R.request_no and T01.part_number = R.part_number)
+    </select>
 </mapper>

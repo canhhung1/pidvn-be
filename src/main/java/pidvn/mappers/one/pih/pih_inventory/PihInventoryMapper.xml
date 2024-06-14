@@ -11,13 +11,15 @@
         <result column="part_no" property="partNo" javaType="String"/>
         <result column="inventory_area" property="inventoryArea" javaType="String"/>
         <result column="record_type" property="recordType" javaType="String"/>
+        <result column="goods_type" property="goodsType" javaType="String"/>
+
     </resultMap>
     <select id="getInventoryData" resultMap="getInventoryData-result">
         <![CDATA[
             with
              T01 as (
                 SELECT
-                    D.id, D.request_id, D.lot_no, ifnull(L.model, D.part_no) part_no,
+                    D.id, D.request_id, D.lot_no, ifnull(L.model, D.part_no) part_no, D.goods_type,
                     D.qty, D.created_at, D.updated_at, P.name inventory_area, M.classified, D.record_type
                 FROM pih_inventory_data D
                 left join lots L on D.lot_no = L.lot_no
@@ -28,7 +30,7 @@
             ),
             T02 as (
                 SELECT
-                    D.id, null as request_id, null as lot_no, D.model part_no, sum(D.qty) qty,
+                    D.id, null as request_id, null as lot_no, D.model part_no, '' as goods_type, sum(D.qty) qty,
                     D.created_at, D.updated_at, null as inventory_area, M.classified, null as record_type
                 FROM pidvn.defect_records D
                 left join model M on D.model = M.name

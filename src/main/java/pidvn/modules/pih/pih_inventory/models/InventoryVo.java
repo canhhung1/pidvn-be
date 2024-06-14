@@ -16,8 +16,9 @@ public class InventoryVo {
     private Date updatedAt;
     private String inventoryArea;
     private Float balance;
-
     private String recordType;
+
+    private String goodsType;
 
     public Integer getId() {
         return id;
@@ -121,5 +122,13 @@ public class InventoryVo {
 
     public void setRecordType(String recordType) {
         this.recordType = recordType;
+    }
+
+    public String getGoodsType() {
+        return goodsType;
+    }
+
+    public void setGoodsType(String goodsType) {
+        this.goodsType = goodsType;
     }
 }

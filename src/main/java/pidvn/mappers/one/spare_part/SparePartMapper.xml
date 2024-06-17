@@ -228,16 +228,18 @@
     <resultMap id="getSparePartRequestDetailByRequestId-result"
                type="pidvn.modules.spare_part.models.SparePartRequestVo">
         <result column="part_number" property="partNumber" javaType="String"/>
+        <result column="part_name" property="partName" javaType="String"/>
         <result column="request_qty" property="requestQty" javaType="Float"/>
         <result column="kitting_qty" property="kittingQty" javaType="Float"/>
     </resultMap>
     <select id="getSparePartRequestDetailByRequestId" resultMap="getSparePartRequestDetailByRequestId-result">
         with
         T01 as (
-            SELECT D.*, M.request_no FROM spare_part_request_detail D
+            SELECT D.*, M.request_no, S.name part_name FROM spare_part_request_detail D
             inner join spare_part_request_master M on (D.request_id = M.id and D.request_id = #{requestId})
+            left join spare_parts S on  S.part_number = D.part_number
         )
-        select T01.id, T01.part_number, T01.qty request_qty, R.qty kitting_qty from T01
+        select T01.id, T01.part_number, T01.part_name, T01.qty request_qty, R.qty kitting_qty from T01
         left join spare_part_records R on (T01.request_no = R.request_no and T01.part_number = R.part_number)
     </select>
 </mapper>

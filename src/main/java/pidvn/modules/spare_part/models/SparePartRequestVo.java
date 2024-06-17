@@ -9,10 +9,10 @@ public class SparePartRequestVo {
     private Integer sectionId;
     private String sectionName;
     private String partNumber;
+    private String partName;
     private Float qty;
     private String createdBy;
     private String createdByName;
-
     private Float requestQty;
     private Float kittingQty;
 
@@ -62,6 +62,14 @@ public class SparePartRequestVo {
 
     public void setPartNumber(String partNumber) {
         this.partNumber = partNumber;
+    }
+
+    public String getPartName() {
+        return partName;
+    }
+
+    public void setPartName(String partName) {
+        this.partName = partName;
     }
 
     public Float getQty() {

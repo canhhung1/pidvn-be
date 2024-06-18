@@ -38,7 +38,7 @@
                 WHEN A.type = 'NG_RETURN' then 'Trả VỀ (NG)'
             END as type
         from spare_part_records A
-        left join spare_parts B on A.part_number = B.part_number
+        left join spare_parts B on (A.part_number = B.part_number and A.goods_type = B.type)
         where 1 = 1
         <if test="dateRange != null and dateRange.size != 0">
             and A.date between #{dateRange[0]} and #{dateRange[1]}
@@ -198,12 +198,24 @@
         <result column="request_no" property="requestNo" javaType="String"/>
         <result column="created_by_name" property="createdByName" javaType="String"/>
         <result column="section_name" property="sectionName" javaType="String"/>
+        <result column="factory_code" property="factoryCode" javaType="String"/>
+        <result column="factory_name" property="factoryName" javaType="String"/>
     </resultMap>
     <select id="getSparePartRequestMasters" resultMap="getSparePartRequestMasters-result">
-        SELECT M.*, U.name created_by_name, S.name section_name
+        SELECT
+            M.*, U.name created_by_name,
+            case
+                when M.factory_code = 'RE' then 'RELAY FACTORY'
+                when M.factory_code = 'EM' then 'EMC FACTORY'
+                when M.factory_code = 'PN' then 'PIH ENC FACTORY'
+                when M.factory_code = 'PR' then 'PIH RE FACTOR'
+                when M.factory_code = 'SP' then 'SPEAKER'
+                when M.factory_code = 'TN' then 'HFC FACTORY'
+                when M.factory_code = 'HO' then 'HEAD OFFICE'
+                when M.factory_code = 'PC' then 'PCB FACTORY'
+            end factory_name
         FROM spare_part_request_master M
         left join users U on M.created_by = U.username
-        left join section S on M.section_id = S.id
         where 1 = 1
         and M.is_active = 1
         order by id desc

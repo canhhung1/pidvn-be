@@ -40,6 +40,9 @@ public class SparePartRequestMaster {
     @Column(name = "is_active")
     private boolean isActive;
 
+    @Column(name = "factory_code")
+    private String factoryCode;
+
     public Integer getId() {
         return id;
     }
@@ -102,5 +105,13 @@ public class SparePartRequestMaster {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public String getFactoryCode() {
+        return factoryCode;
+    }
+
+    public void setFactoryCode(String factoryCode) {
+        this.factoryCode = factoryCode;
     }
 }

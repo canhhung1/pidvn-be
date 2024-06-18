@@ -112,8 +112,8 @@ public class SparePartCtrl {
      */
 
     @PostMapping("CreateRequest")
-    public ResponseEntity<?> createRequestSparePart(@RequestBody List<SparePartRequestDetail> spareParts, @RequestParam Integer sectionId) {
-        return new ResponseEntity<>(this.sparePartSvc.createRequestSparePart(spareParts, sectionId), HttpStatus.OK);
+    public ResponseEntity<?> createRequestSparePart(@RequestBody List<SparePartRequestDetail> spareParts, @RequestParam String factoryCode) {
+        return new ResponseEntity<>(this.sparePartSvc.createRequestSparePart(spareParts, factoryCode), HttpStatus.OK);
     }
 
     /**

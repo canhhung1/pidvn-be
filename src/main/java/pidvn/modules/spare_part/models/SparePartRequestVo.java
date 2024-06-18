@@ -15,6 +15,8 @@ public class SparePartRequestVo {
     private String createdByName;
     private Float requestQty;
     private Float kittingQty;
+    private String factoryCode;
+    private String factoryName;
 
     public Integer getId() {
         return id;
@@ -110,5 +112,21 @@ public class SparePartRequestVo {
 
     public void setKittingQty(Float kittingQty) {
         this.kittingQty = kittingQty;
+    }
+
+    public String getFactoryCode() {
+        return factoryCode;
+    }
+
+    public void setFactoryCode(String factoryCode) {
+        this.factoryCode = factoryCode;
+    }
+
+    public String getFactoryName() {
+        return factoryName;
+    }
+
+    public void setFactoryName(String factoryName) {
+        this.factoryName = factoryName;
     }
 }

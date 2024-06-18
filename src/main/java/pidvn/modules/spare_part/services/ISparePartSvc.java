@@ -51,7 +51,7 @@ public interface ISparePartSvc {
      * Các Api liên quan đến tạo request
      */
 
-    List<SparePartRequestDetail> createRequestSparePart(List<SparePartRequestDetail> spareParts, Integer sectionId);
+    List<SparePartRequestDetail> createRequestSparePart(List<SparePartRequestDetail> spareParts, String factoryCode);
 
     List<Section> getSections();
 

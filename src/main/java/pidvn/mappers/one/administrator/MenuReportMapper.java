@@ -7,5 +7,5 @@ import java.util.List;
 
 @Mapper
 public interface MenuReportMapper {
-    List<MenuReportVo> getMenuReport();
+    List<MenuReportVo> getMenuReport(String dept);
 }

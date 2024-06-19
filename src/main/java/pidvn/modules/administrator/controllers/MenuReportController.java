@@ -14,7 +14,13 @@ public class MenuReportController {
     private MenuReportService menuReportService;
 
     @GetMapping("Report")
-    public ResponseEntity<?> getMenu() {
-        return new ResponseEntity<>(this.menuReportService.getMenuReport(), HttpStatus.OK);
+    public ResponseEntity<?> getMenu(@RequestParam String dept) {
+        return new ResponseEntity<>(this.menuReportService.getMenuReport(dept), HttpStatus.OK);
     }
+
+    @GetMapping("Sections")
+    public ResponseEntity<?> getSections() {
+        return new ResponseEntity<>(this.menuReportService.getSections(), HttpStatus.OK);
+    }
+
 }

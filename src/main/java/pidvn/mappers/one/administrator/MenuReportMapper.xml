@@ -6,13 +6,18 @@
                type="pidvn.modules.administrator.models.MenuReportVo">
 
         <result column="code" property="code" javaType="String"/>
+        <result column="Dept" property="dept" javaType="String"/>
         <result column="name_function" property="nameFunction" javaType="String"/>
+
 
     </resultMap>
     <select id="getMenuReport"
             resultMap="getMenuReport-result">
-        <![CDATA[
-            select * from pidvn_report_procedures$ where is_active = 1
-        ]]>
+            select * from pidvn_report_procedures$
+            where 1 = 1
+            and is_active = 1
+            <if test="dept != null">
+                and dept = #{dept}
+            </if>
     </select>
 </mapper>

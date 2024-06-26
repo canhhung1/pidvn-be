@@ -58,6 +58,9 @@ public class SparePartSvc implements ISparePartSvc {
     private SectionRepo sectionRepo;
 
     @Autowired
+    private SubsectionRepo subsectionRepo;
+
+    @Autowired
     private SparePartRequestMasterRepo sparePartRequestMasterRepo;
 
     @Autowired
@@ -237,7 +240,7 @@ public class SparePartSvc implements ISparePartSvc {
      * @return
      */
     @Override
-    public List<SparePartRequestDetail> createRequestSparePart(List<SparePartRequestDetail> spareParts, String factoryCode) {
+    public List<SparePartRequestDetail> createRequestSparePart(List<SparePartRequestDetail> spareParts, String factoryCode, Integer subsectionId) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) auth.getPrincipal();
@@ -252,11 +255,12 @@ public class SparePartSvc implements ISparePartSvc {
         String date = formatter.format(new Date());
 
 
-        Integer reqAmount = this.sparePartRequestMasterRepo.getTotalRequestInDay() + 1;
+        Integer sequence = this.sparePartRequestMasterRepo.getTotalRequestInDay() + 1;
         SparePartRequestMaster obj = new SparePartRequestMaster();
-        obj.setRequestNo(factoryCode + "-RQ-" + date + "-" + reqAmount);
+        obj.setRequestNo("RQ-" + date + "-" + sequence);
         obj.setCreatedBy(createdBy);
         obj.setFactoryCode(factoryCode);
+        obj.setSubsectionId(subsectionId);
         obj.setDate(new Date());
         obj.setActive(true);
         SparePartRequestMaster master = this.sparePartRequestMasterRepo.save(obj);
@@ -273,6 +277,11 @@ public class SparePartSvc implements ISparePartSvc {
     @Override
     public List<Section> getSections() {
         return this.sectionRepo.findAll();
+    }
+
+    @Override
+    public List<Subsection> getSubsections() {
+        return this.subsectionRepo.findAll();
     }
 
     @Override

@@ -30,9 +30,8 @@
             <if test="empCode != null">
                 and A.CodeEmp = #{empCode}
             </if>
-<!--            <if test="timeLogRange != null and timeLogRange.size != 0">-->
-<!--                and (convert(date, A.TimeLog) <![CDATA[>=]]> convert(date, #{timeLogRange[0]}) and convert(date, A.TimeLog) <![CDATA[<=]]> convert(date,#{timeLogRange[1]}))-->
-<!--            </if>-->
+            GROUP BY A.CodeEmp, A.ProfileName, A.DateHire, A.WorkDay, A.TimeLog, A.MachineCode, A.Amount, A.CanteenCode, A.CanteenName, A.CanteenName, A.LineCode, A.LineName, A.Code, A.CateringCode, A.CateringName, A.OrgStructureName
+
         )
         SELECT * from T01
         WHERE 1 = 1
@@ -64,12 +63,10 @@
                 END as Date
             FROM PIDVN_MealRecord A
             WHERE 1 = 1
-<!--            <if test="timeLogRange != null and timeLogRange.size != 0">-->
-<!--                AND convert(date, A.TimeLog) between convert(date,#{timeLogRange[0]}) and convert(date,#{timeLogRange[1]})-->
-<!--            </if>-->
             <if test="empCode != null">
                 and A.CodeEmp = #{empCode}
             </if>
+            GROUP BY A.CodeEmp, A.ProfileName, A.DateHire, A.WorkDay, A.TimeLog, A.MachineCode, A.Amount, A.CanteenCode, A.CanteenName, A.CanteenName, A.LineCode, A.LineName, A.Code, A.CateringCode, A.CateringName, A.OrgStructureName
         ),
         T02 as (
             SELECT T01.CodeEmp, T01.ProfileName, T01.TicketType, COUNT(*) as Total FROM T01
@@ -379,18 +376,21 @@
 
     </resultMap>
     <select id="getAttendanceDetails" resultMap="getAttendanceDetails-result">
-        SELECT
-             A.CodeEmp
-            ,A.ProfileName
-            ,A.NgayCong
-            ,A.CaLamViec
-            ,A.FirstInTime
-            ,A.LastOutTime
-            ,A.TrangThaiTinhCong
-            ,A.LeaveCode
-        FROM View_PIDVN_AttendanceDetail A
-        where 1 = 1
-        AND FORMAT(NgayCong, 'yyyy-MM') = FORMAT(CAST(DATEADD(month, -1, GETDATE()) AS DATE), 'yyyy-MM')
+        <![CDATA[
+            SELECT
+                 A.CodeEmp
+                ,A.ProfileName
+                ,A.NgayCong
+                ,A.CaLamViec
+                ,A.FirstInTime
+                ,A.LastOutTime
+                ,A.TrangThaiTinhCong
+                ,A.LeaveCode
+            FROM View_PIDVN_AttendanceDetail A
+            where
+                A.NgayCong >= DATEADD(month, DATEDIFF(month, 0, GETDATE()) - 1, 0)
+            AND A.NgayCong <= GETDATE()
+        ]]>
     </select>
 
 

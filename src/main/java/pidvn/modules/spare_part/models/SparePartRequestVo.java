@@ -8,6 +8,8 @@ public class SparePartRequestVo {
     private Date date;
     private Integer sectionId;
     private String sectionName;
+    private Integer subsectionId;
+    private String subsectionName;
     private String partNumber;
     private String partName;
     private Float qty;
@@ -56,6 +58,22 @@ public class SparePartRequestVo {
 
     public void setSectionName(String sectionName) {
         this.sectionName = sectionName;
+    }
+
+    public Integer getSubsectionId() {
+        return subsectionId;
+    }
+
+    public void setSubsectionId(Integer subsectionId) {
+        this.subsectionId = subsectionId;
+    }
+
+    public String getSubsectionName() {
+        return subsectionName;
+    }
+
+    public void setSubsectionName(String subsectionName) {
+        this.subsectionName = subsectionName;
     }
 
     public String getPartNumber() {

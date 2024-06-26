@@ -112,8 +112,12 @@ public class SparePartCtrl {
      */
 
     @PostMapping("CreateRequest")
-    public ResponseEntity<?> createRequestSparePart(@RequestBody List<SparePartRequestDetail> spareParts, @RequestParam String factoryCode) {
-        return new ResponseEntity<>(this.sparePartSvc.createRequestSparePart(spareParts, factoryCode), HttpStatus.OK);
+    public ResponseEntity<?> createRequestSparePart(
+            @RequestBody List<SparePartRequestDetail> spareParts,
+            @RequestParam String factoryCode,
+            @RequestParam Integer subsectionId
+    ) {
+        return new ResponseEntity<>(this.sparePartSvc.createRequestSparePart(spareParts, factoryCode, subsectionId), HttpStatus.OK);
     }
 
     /**
@@ -123,6 +127,11 @@ public class SparePartCtrl {
     @GetMapping("Sections")
     public ResponseEntity<?> getSections() {
         return new ResponseEntity<>(this.sparePartSvc.getSections(), HttpStatus.OK);
+    }
+
+    @GetMapping("Subsections")
+    public ResponseEntity<?> getSubsection() {
+        return new ResponseEntity<>(this.sparePartSvc.getSubsections(), HttpStatus.OK);
     }
 
     /**

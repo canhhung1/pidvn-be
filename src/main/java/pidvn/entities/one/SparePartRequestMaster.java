@@ -26,8 +26,8 @@ public class SparePartRequestMaster {
     @Column(name = "created_by")
     private String createdBy;
 
-    @Column(name = "section_id")
-    private Integer sectionId;
+    @Column(name = "subsection_id")
+    private Integer subsectionId;
 
     @CreatedDate
     @Column(name = "created_at")
@@ -75,12 +75,12 @@ public class SparePartRequestMaster {
         this.createdBy = createdBy;
     }
 
-    public Integer getSectionId() {
-        return sectionId;
+    public Integer getSubsectionId() {
+        return subsectionId;
     }
 
-    public void setSectionId(Integer sectionId) {
-        this.sectionId = sectionId;
+    public void setSubsectionId(Integer subsectionId) {
+        this.subsectionId = subsectionId;
     }
 
     public Date getCreatedAt() {

@@ -8,6 +8,6 @@ import pidvn.entities.one.SparePartRequestMaster;
 @Repository
 public interface SparePartRequestMasterRepo extends JpaRepository<SparePartRequestMaster, Integer> {
 
-    @Query(value = "select count(R.id) from spare_part_request_master R where DATE_FORMAT(R.created_at, '%Y-%m-%d') = DATE_FORMAT(CURDATE(), '%Y-%m')", nativeQuery = true)
+    @Query(value = "select count(R.id) from spare_part_request_master R where DATE_FORMAT(R.created_at, '%Y-%m-%d') = DATE_FORMAT(CURDATE(), '%Y-%m-%d')", nativeQuery = true)
     Integer getTotalRequestInDay();
 }

@@ -37,6 +37,9 @@ public class Subsection {
     @Column(name = "updated_at")
     private Date updatedAt;
 
+    @Column(name = "parent_id")
+    private Integer parentId;
+
     public Integer getId() {
         return id;
     }
@@ -91,5 +94,13 @@ public class Subsection {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
     }
 }

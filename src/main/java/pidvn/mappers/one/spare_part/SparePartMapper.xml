@@ -196,6 +196,7 @@
     <resultMap id="getSparePartRequestMasters-result"
                type="pidvn.modules.spare_part.models.SparePartRequestVo">
         <result column="request_no" property="requestNo" javaType="String"/>
+        <result column="created_by" property="createdBy" javaType="String"/>
         <result column="created_by_name" property="createdByName" javaType="String"/>
         <result column="subsection_name" property="subsectionName" javaType="String"/>
         <result column="factory_code" property="factoryCode" javaType="String"/>

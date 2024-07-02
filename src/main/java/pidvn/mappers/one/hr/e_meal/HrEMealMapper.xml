@@ -222,4 +222,31 @@
 
 
 
+
+    <insert id="insertAttendanceDetails" parameterType="java.util.List">
+        INSERT INTO hr_attendance_detail (username, profile_name, ngay_cong, ca_lam_viec, first_in_time, last_out_time, trang_thai_tinh_cong, leave_code, created_at, updated_at)
+        VALUES
+        <foreach collection="listAttendanceDetail" item="item" separator=",">
+            (#{item.username}, #{item.profileName}, #{item.ngayCong}, #{item.caLamViec},#{item.firstInTime},#{item.lastOutTime},#{item.trangThaiTinhCong},#{item.leaveCode}, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() )
+        </foreach>
+    </insert>
+
+    <insert id="insertOvertimeData" parameterType="java.util.List">
+        INSERT INTO hr_overtime_data (username, profile_name, ngay_cong, register_hours, confirm_hours, status, method_payment, overtime_type_name, code_statistic, created_at, updated_at)
+        VALUES
+        <foreach collection="listOvertimeData" item="item" separator=",">
+            (#{item.username}, #{item.profileName}, #{item.ngayCong}, #{item.registerHours},#{item.confirmHours},#{item.status},#{item.methodPayment},#{item.overtimeTypeName}, #{item.codeStatistic}, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() )
+        </foreach>
+    </insert>
+
+    <insert id="insertHrMealRecord" parameterType="java.util.List">
+        INSERT INTO hr_meal_record (username, profile_name, ngay_cong, time_log, machine_code, amount, canteen_code, canteen_name, line_code, line_name, created_at, updated_at)
+        VALUES
+        <foreach collection="listOvertimeData" item="item" separator=",">
+            (#{item.username}, #{item.profileName}, #{item.ngayCong},#{item.timeLog},#{item.machineCode}, #{item.amount}, #{item.canteenCode}, #{item.canteenName},#{item.lineCode},#{item.lineName}, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() )
+        </foreach>
+    </insert>
+
+
+
 </mapper>

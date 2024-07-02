@@ -8,6 +8,7 @@ import pidvn.modules.hr.meal.models.SearchVo;
 import pidvn.modules.hr.meal.services.HrMealSvc;
 
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("HR/Meal")
@@ -21,7 +22,7 @@ public class HrMealCtl {
      * @return
      */
     @PostMapping("TimesheetConfirm")
-    public ResponseEntity<?> timesheetConfirm() {
+    public ResponseEntity<?> timesheetConfirm() throws ExecutionException, InterruptedException {
         return new ResponseEntity<>(this.hrMealSvc.timesheetConfirm(), HttpStatus.OK);
     }
 

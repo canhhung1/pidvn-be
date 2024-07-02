@@ -408,19 +408,22 @@
     </resultMap>
 
     <select id="getOvertimeData" resultMap="getOvertimeData-result">
-        SELECT [CodeEmp]
-            ,[ProfileName]
-            ,[WorkDateRoot]
-            ,[StatusVN]
-            ,[MethodPaymentVN]
-            ,[RegisterHours]
-            ,[ConfirmHours]
-            ,[OvertimeTypeName]
-            ,[CodeStatistic]
-        FROM [PVG].[dbo].[View_ThongTinOT_PIDVN]
-        WHERE 1 = 1
-        AND FORMAT(WorkDateRoot, 'yyyy-MM') = FORMAT(CAST(DATEADD(month, -1, GETDATE()) AS DATE), 'yyyy-MM')
 
+        <![CDATA[
+            SELECT [CodeEmp]
+                ,[ProfileName]
+                ,[WorkDateRoot]
+                ,[StatusVN]
+                ,[MethodPaymentVN]
+                ,[RegisterHours]
+                ,[ConfirmHours]
+                ,[OvertimeTypeName]
+                ,[CodeStatistic]
+            FROM [PVG].[dbo].[View_ThongTinOT_PIDVN]
+            WHERE
+                WorkDateRoot >= DATEADD(month, DATEDIFF(month, 0, GETDATE()) - 1, 0)
+            AND WorkDateRoot <= GETDATE()
+        ]]>
     </select>
 
     <resultMap id="getHrMealRecord-result"
@@ -438,25 +441,32 @@
         <result column="LineName" property="lineName" javaType="String"/>
     </resultMap>
     <select id="getHrMealRecord" resultMap="getHrMealRecord-result">
-        SELECT [CodeEmp]
-            ,[ProfileName]
-            ,[DateHire]
-            ,[WorkDay]
-            ,[TimeLog]
-            ,[MachineCode]
-            ,[Amount]
-            ,[CanteenCode]
-            ,[CanteenName]
-            ,[CateringCode]
-            ,[CateringName]
-            ,[LineCode]
-            ,[LineName]
-            ,[OrgStructureName]
-            ,[Code]
-        FROM [PVG].[dbo].[PIDVN_MealRecord]
-        WHERE 1 = 1
-        AND FORMAT(WorkDay, 'yyyy-MM') >= FORMAT(CAST(DATEADD(month, -1, GETDATE()) AS DATE), 'yyyy-MM')
+        <![CDATA[
+            SELECT [CodeEmp]
+                ,[ProfileName]
+                ,[DateHire]
+                ,[WorkDay]
+                ,[TimeLog]
+                ,[MachineCode]
+                ,[Amount]
+                ,[CanteenCode]
+                ,[CanteenName]
+                ,[CateringCode]
+                ,[CateringName]
+                ,[LineCode]
+                ,[LineName]
+                ,[OrgStructureName]
+                ,[Code]
+            FROM [PVG].[dbo].[PIDVN_MealRecord]
+            WHERE
+                WorkDay >= DATEADD(month, DATEDIFF(month, 0, GETDATE()) - 1, 0)
+            AND WorkDay <= GETDATE()
+
+        ]]>
     </select>
-    
+
+
+
+
 
 </mapper>

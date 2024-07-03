@@ -20,6 +20,8 @@ public class SparePartRequestVo {
     private String factoryCode;
     private String factoryName;
 
+    private String unit;
+
     public Integer getId() {
         return id;
     }
@@ -146,5 +148,13 @@ public class SparePartRequestVo {
 
     public void setFactoryName(String factoryName) {
         this.factoryName = factoryName;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 }

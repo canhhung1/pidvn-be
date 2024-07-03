@@ -249,11 +249,11 @@
     <select id="getSparePartRequestDetailByRequestId" resultMap="getSparePartRequestDetailByRequestId-result">
         with
         T01 as (
-            SELECT D.*, M.request_no, S.name part_name FROM spare_part_request_detail D
+            SELECT D.*, M.request_no, S.name part_name, S.unit FROM spare_part_request_detail D
             inner join spare_part_request_master M on (D.request_id = M.id and D.request_id = #{requestId})
             left join spare_parts S on  (S.part_number = D.part_number and S.type = 'M4')
         )
-        select T01.id, T01.part_number, T01.part_name, T01.qty request_qty, R.qty kitting_qty from T01
+        select T01.id, T01.part_number, T01.part_name, T01.qty request_qty, T01.unit, R.qty kitting_qty from T01
         left join spare_part_records R on (T01.request_no = R.request_no and T01.part_number = R.part_number)
     </select>
 </mapper>

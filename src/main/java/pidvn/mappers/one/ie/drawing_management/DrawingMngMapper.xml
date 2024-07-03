@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.ie.drawing_management.DrawingMngMapper">
+
+    <resultMap id="getProjects-result"
+               type="pidvn.modules.ie.drawing_management.models.ProjectVo">
+        <result column="control_no" property="controlNo" javaType="String"/>
+        <result column="project_type_id" property="projectTypeId" javaType="Integer"/>
+        <result column="project_type_name" property="projectTypeName" javaType="String"/>
+        <result column="created_by" property="createdBy" javaType="String"/>
+        <result column="created_by_name" property="createdByName" javaType="String"/>
+    </resultMap>
+    <select id="getProjects" resultMap="getProjects-result">
+        SELECT A.*, B.name as project_type_name
+        FROM ie_project A left join ie_project_type B on A.project_type_id = B.id
+    </select>
+
+
+
+
+</mapper>

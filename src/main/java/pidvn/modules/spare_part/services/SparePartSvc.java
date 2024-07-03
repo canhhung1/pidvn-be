@@ -296,10 +296,21 @@ public class SparePartSvc implements ISparePartSvc {
 
     @Override
     public ByteArrayInputStream downloadQaCard(Integer requestId) throws IOException {
-//        SparePartRequestMaster request = this.sparePartRequestMasterRepo.findById(requestId).get();
-//        List<SparePartRequestDetail> requestDetail = this.sparePartRequestDetailRepo.findByRequestId(requestId);
 
-        List<SparePartRequestVo> data = this.sparePartMapper.getSparePartRequestDetail(requestId);
+        List<SparePartRequestVo> requests = this.sparePartMapper.getSparePartRequestMasters();
+
+
+        SparePartRequestVo request = null;
+        for (SparePartRequestVo req: requests) {
+            if (req.getId() == requestId) {
+                request = req;
+                break;
+            }
+        }
+
+
+
+        List<SparePartRequestVo> data = this.sparePartMapper.getSparePartRequestDetailByRequestId(requestId);
 
 
         String tempName = "temp-" + new Random().nextInt(1000) + ".xlsm";
@@ -326,13 +337,13 @@ public class SparePartSvc implements ISparePartSvc {
 
             // Cập nhật các ô với dữ liệu từ request
             Cell requestNoCell = sheet.getRow(4).getCell(1);
-            requestNoCell.setCellValue(data.get(0).getRequestNo());
+            requestNoCell.setCellValue(request.getRequestNo());
 
             Cell requestDateCell = sheet.getRow(5).getCell(1);
-            requestDateCell.setCellValue(data.get(0).getDate());
+            requestDateCell.setCellValue(request.getDate());
 
             Cell requestSectionCell = sheet.getRow(6).getCell(1);
-            requestSectionCell.setCellValue(data.get(0).getSectionName());
+            requestSectionCell.setCellValue(request.getSubsectionName());
 
             // Cập nhật dữ liệu từ requestDetail
             int rowNum = 9;
@@ -341,8 +352,10 @@ public class SparePartSvc implements ISparePartSvc {
                 if (row == null) {
                     row = sheet.createRow(rowNum - 1);
                 }
+                row.getCell(1).setCellValue(item.getPartName());
                 row.getCell(2).setCellValue(item.getPartNumber());
-                row.getCell(3).setCellValue(item.getQty());
+                row.getCell(3).setCellValue(item.getRequestQty());
+                row.getCell(4).setCellValue(item.getUnit());
             }
 
             // Ghi dữ liệu vào ByteArrayOutputStream
@@ -350,6 +363,8 @@ public class SparePartSvc implements ISparePartSvc {
             workbook.write(out);
             result = new ByteArrayInputStream(out.toByteArray());
 
+        } catch (Exception e) {
+            System.out.println("Exception: " + e);
         } finally {
             // Đảm bảo tài nguyên được đóng
             if (workbook != null) {
@@ -436,6 +451,9 @@ public class SparePartSvc implements ISparePartSvc {
                 Integer rowNum = i + 1;
                 RowExcelErrorVo item = new RowExcelErrorVo(rowNum, e.toString());
                 rowNG.add(item);
+
+
+                System.out.println("AAAAA");
             }
         }
 

@@ -17,7 +17,7 @@
             where 1 = 1
             and is_active = 1
             <if test="dept != null">
-                and dept = #{dept}
+                AND dept LIKE CONCAT('%', #{dept}, '%')
             </if>
     </select>
 </mapper>

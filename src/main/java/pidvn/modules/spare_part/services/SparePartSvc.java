@@ -285,8 +285,8 @@ public class SparePartSvc implements ISparePartSvc {
     }
 
     @Override
-    public List<SparePartRequestVo> getSparePartRequestMaster() {
-        return this.sparePartMapper.getSparePartRequestMasters();
+    public List<SparePartRequestVo> getSparePartRequestMaster(SearchVo searchVo) {
+        return this.sparePartMapper.getSparePartRequestMasters(searchVo);
     }
 
     @Override
@@ -297,7 +297,7 @@ public class SparePartSvc implements ISparePartSvc {
     @Override
     public ByteArrayInputStream downloadQaCard(Integer requestId) throws IOException {
 
-        List<SparePartRequestVo> requests = this.sparePartMapper.getSparePartRequestMasters();
+        List<SparePartRequestVo> requests = this.sparePartMapper.getSparePartRequestMasters(null);
 
 
         SparePartRequestVo request = null;

@@ -138,9 +138,9 @@ public class SparePartCtrl {
      * Lấy danh sách
      * @return
      */
-    @GetMapping("SparePartRequestMasters")
-    public ResponseEntity<?> getSparePartRequestMaster() {
-        return new ResponseEntity<>(this.sparePartSvc.getSparePartRequestMaster(), HttpStatus.OK);
+    @PostMapping("SparePartRequestMasters")
+    public ResponseEntity<?> getSparePartRequestMaster(@RequestBody SearchVo searchVo) {
+        return new ResponseEntity<>(this.sparePartSvc.getSparePartRequestMaster(searchVo), HttpStatus.OK);
     }
 
     /**

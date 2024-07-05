@@ -57,7 +57,7 @@ public interface ISparePartSvc {
 
     List<Subsection> getSubsections();
 
-    List<SparePartRequestVo> getSparePartRequestMaster();
+    List<SparePartRequestVo> getSparePartRequestMaster(SearchVo searchVo);
 
     List<SparePartRequestVo> getSparePartRequestDetailByRequestId(Integer requestId);
 

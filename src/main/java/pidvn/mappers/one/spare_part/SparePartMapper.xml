@@ -220,6 +220,9 @@
         left join subsection S on M.subsection_id = S.id
         where 1 = 1
         and M.is_active = 1
+        <if test="date != null">
+            and M.date = DATE_FORMAT(#{date}, '%Y-%m-%d')
+        </if>
         order by id desc
     </select>
 

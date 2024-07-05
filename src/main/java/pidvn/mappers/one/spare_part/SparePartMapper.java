@@ -17,7 +17,7 @@ public interface SparePartMapper {
     List<SparePartDataChartVo> getSparePartDataChart(SearchVo searchVo);
     List<SparePartRequestVo> getSparePartRequestDetail(Integer requestId);
 
-    List<SparePartRequestVo> getSparePartRequestMasters();
+    List<SparePartRequestVo> getSparePartRequestMasters(SearchVo searchVo);
     List<SparePartRequestVo> getSparePartRequestDetailByRequestId(Integer requestId);
 
 

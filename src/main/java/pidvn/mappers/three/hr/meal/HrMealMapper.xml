@@ -465,6 +465,29 @@
         ]]>
     </select>
 
+    <resultMap id="getHrLeaveDay-result"
+               type="pidvn.entities.one.HrLeaveDay">
+        <result column="CodeEmp" property="codeEmp" javaType="String"/>
+        <result column="LeaveDayTypeName" property="leaveDayTypeName" javaType="String"/>
+        <result column="DateStart" property="dateStart" javaType="Date"/>
+        <result column="DateEnd" property="dateEnd" javaType="Date"/>
+        <result column="LeaveDays" property="leaveDays" javaType="Float"/>
+        <result column="LeaveHours" property="leaveHours" javaType="Float"/>
+        <result column="DateCreate" property="dateCreate" javaType="Date"/>
+    </resultMap>
+    <select id="getHrLeaveDay" resultMap="getHrLeaveDay-result">
+        <![CDATA[
+            SELECT
+                CodeEmp,Code,LeaveDayTypeName,LeaveDays,LeaveHours,
+                CONVERT(DATE, DateStart, 103) AS DateStart,
+                CONVERT(DATE, DateEnd, 103) AS DateEnd,
+                CONVERT(DATE, DateCreate, 103) AS DateCreate
+            FROM PIDVN_LeaveDay
+            WHERE CONVERT(DATE, DateStart, 103) >= DATEADD(month, -1, DATEADD(day, 1-DAY(GETDATE()), GETDATE()))
+            AND CONVERT(DATE, DateStart, 103) < DATEADD(month, 1, DATEADD(day, 1-DAY(GETDATE()), GETDATE()))
+        ]]>
+    </select>
+
 
 
 

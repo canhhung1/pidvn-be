@@ -22,8 +22,8 @@ public class HrMealCtl {
      * @return
      */
     @PostMapping("TimesheetConfirm")
-    public ResponseEntity<?> timesheetConfirm() throws ExecutionException, InterruptedException {
-        return new ResponseEntity<>(this.hrMealSvc.timesheetConfirm(), HttpStatus.OK);
+    public ResponseEntity<?> timesheetConfirm(@RequestParam String table) throws ExecutionException, InterruptedException {
+        return new ResponseEntity<>(this.hrMealSvc.timesheetConfirm(table), HttpStatus.OK);
     }
 
     @PostMapping("MealRecords")

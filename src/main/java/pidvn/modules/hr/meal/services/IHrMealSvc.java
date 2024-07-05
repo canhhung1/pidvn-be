@@ -15,6 +15,6 @@ public interface IHrMealSvc {
 
     List<MealCouponVo> getBalance(Date month);
 
-    Map timesheetConfirm();
+    Map timesheetConfirm(String table);
 
 }

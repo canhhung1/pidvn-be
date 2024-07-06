@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      .wapper {
+        background: #f3f3f3;
+        padding: 25px;
+        display: flex;
+        justify-content: center;
+      }
+      .content {
+        width: 100%;
+        background: white;
+        border-top: 3px solid #2366af;
+      }
+      .header {
+        padding: 10px 10px; 
+        background: #fdfdfe;
+        border-bottom: 1px solid #F5F5F6;
+      }
+      .main {
+        padding: 10px 10px; 
+        background: white;
+      }
+
+      .main h1 {
+        font-size:22px;
+        line-height:28px;
+        letter-spacing:-.20px;
+        margin:10px 0 16px 0;
+        
+        color: #2366af;
+        text-align:left
+      }
+      table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 3px 5px;
+      }
+
+      td.value {
+        text-align: right;
+      }
+      td.value > span {
+        font-weight: bold;
+      }
+      tr:hover {
+        background-color: #f1f1f1;
+        cursor: pointer;
+      }
+
+    </style>
+  </head>
+  <body style="font:small / 1.5 Arial, Helvetica, sans-serif;">
+    <div class="wapper">
+      <div class="content">
+        <div class="header">
+            <img src="https://seeklogo.com/images/P/Panasonic-logo-3FF2D6EBDF-seeklogo.com.png" alt="" width="135px">
+        </div>
+        <div class="main">
+            <h1>Thông tin vé ăn tháng 07-2024</h1>
+            <b>Dear anh/chị: </b><b th:text="${name}"></b>
+            <p>Phòng Nhân sự gửi dữ liệu vé ăn chi tiết như sau:</p>
+
+            <table style="font-size: 15px; width: 100%;">
+                <tr>
+                    <td>Vé chính (Time sheet): </td>
+                    <td class="value"><span>22</span> (coupon)</td>
+                </tr>
+                <tr>
+                    <td>Vé phụ (Time sheet): </td>
+                    <td class="value"><span>0</span> (coupon)</td>
+                </tr>
+                <tr>
+                    <td>Vé chính (Thực tế): </td>
+                    <td class="value"><span>22</span> (coupon)</td>
+                </tr>
+                <tr>
+                    <td>Vé phụ (Thực tế): </td>
+                    <td class="value"><span>0</span> (coupon)</td>
+                </tr>
+                <tr>
+                    <td>Chênh lệch vé chính: </td>
+                    <td class="value"><span>0</span> (coupon)</td>
+                </tr>
+                <tr>
+                    <td>Chênh lệch vé phụ: </td>
+                    <td class="value"><span>0</span> (coupon)</td>
+                </tr>
+            </table>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <hr />
+
+            <div class="sign" style="width: 100%;">
+                <p>Trân trọng !</p>
+                <p>Phòng Nhân sự</p>
+                <p>Đây là email gửi từ hệ thống, vui lòng không phản hồi lại !</p>
+
+            </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

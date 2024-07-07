@@ -8,6 +8,7 @@ import pidvn.config.mail.DataMailDTO;
 import pidvn.config.mail.MailService;
 import pidvn.modules.ie.drawing_management.models.SearchVo;
 import pidvn.modules.ie.drawing_management.services.DrawingMngSvc;
+import reactor.util.annotation.Nullable;
 
 import javax.mail.MessagingException;
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public class DrawingMngCtl {
     private DrawingMngSvc drawingMngSvc;
 
     @PostMapping("Projects")
-    public ResponseEntity<?> getProjects(@RequestBody SearchVo searchVo) {
+    public ResponseEntity<?> getProjects(@RequestBody @Nullable SearchVo searchVo) {
         return new ResponseEntity<>(this.drawingMngSvc.getProjects(searchVo), HttpStatus.OK);
     }
 

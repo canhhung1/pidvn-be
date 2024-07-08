@@ -10,7 +10,7 @@ import pidvn.entities.one.HrAttendanceDetail;
 public interface HrAttendanceDetailRepo extends JpaRepository<HrAttendanceDetail, Integer> {
 
     @Modifying
-    @Query(value = "delete from hr_attendance_detail where ngay_cong >= DATE_ADD(CURDATE(), INTERVAL -1 MONTH)  AND ngay_cong <= CURDATE()", nativeQuery = true)
+    @Query(value = "delete FROM hr_attendance_detail WHERE ngay_cong BETWEEN DATE_SUB(CURDATE(), INTERVAL (DAY(CURDATE()) - 1) DAY) - INTERVAL 1 month AND CURDATE()", nativeQuery = true)
     void deleteAttendanceDetailsPreviousMonth();
 
 

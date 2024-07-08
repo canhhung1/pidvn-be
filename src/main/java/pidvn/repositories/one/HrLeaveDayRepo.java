@@ -10,6 +10,6 @@ import pidvn.entities.one.HrLeaveDay;
 public interface HrLeaveDayRepo extends JpaRepository<HrLeaveDay, Integer> {
 
     @Modifying
-    @Query(value = "delete from hr_leaveday where date_start >= DATE_ADD(CURDATE(), INTERVAL -1 MONTH)  AND date_start <= CURDATE()", nativeQuery = true)
+    @Query(value = "delete FROM hr_leaveday WHERE date_start BETWEEN DATE_SUB(CURDATE(), INTERVAL (DAY(CURDATE()) - 1) DAY) - INTERVAL 1 month AND CURDATE()", nativeQuery = true)
     void deleteLeaveDayPreviousMonth();
 }

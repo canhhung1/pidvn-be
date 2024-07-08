@@ -10,6 +10,6 @@ import pidvn.entities.one.HrMealRecord;
 public interface HrMealRecordRepo extends JpaRepository<HrMealRecord, Integer> {
 
     @Modifying
-    @Query(value = "delete from hr_meal_record where DATE_FORMAT(ngay_cong, '%Y-%m') = DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y-%m')", nativeQuery = true)
+    @Query(value = "delete FROM hr_meal_record WHERE ngay_cong BETWEEN DATE_SUB(CURDATE(), INTERVAL (DAY(CURDATE()) - 1) DAY) - INTERVAL 1 month AND CURDATE()", nativeQuery = true)
     void deleteMealRecordsPreviousMonth();
 }

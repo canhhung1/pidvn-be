@@ -30,7 +30,12 @@ public class DrawingMngCtl {
         return new ResponseEntity<>(this.drawingMngSvc.getProjects(searchVo), HttpStatus.OK);
     }
 
-    @GetMapping("Mail")
+    @PostMapping("Processes/{projectId}")
+    public ResponseEntity<?> getProgress(@PathVariable Integer projectId) {
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
+
+    /*@GetMapping("Mail")
     public ResponseEntity<?> testEmail() {
         Map result = new HashMap();
         try {
@@ -54,7 +59,7 @@ public class DrawingMngCtl {
 
 
         return new ResponseEntity<>(result, HttpStatus.OK);
-    }
+    }*/
 
 
 }

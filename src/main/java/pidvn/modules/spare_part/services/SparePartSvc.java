@@ -308,14 +308,12 @@ public class SparePartSvc implements ISparePartSvc {
             }
         }
 
-
-
         List<SparePartRequestVo> data = this.sparePartMapper.getSparePartRequestDetailByRequestId(requestId);
 
 
-        String tempName = "temp-" + new Random().nextInt(1000) + ".xlsm";
+        String tempName = "temp-" + new Random().nextInt(1000) + ".xlsx";
         String rootFolder = "P:\\IS\\(C) Save File FDCS\\FDCS-Server-2\\M4M8\\";
-        String sourcePath = rootFolder + "MaterialRequest.xlsm";
+        String sourcePath = rootFolder + "MaterialRequest.xlsx";
         String targetPath = rootFolder + tempName;
 
         String pathFile = this.createTempFile(sourcePath, targetPath);
@@ -336,17 +334,17 @@ public class SparePartSvc implements ISparePartSvc {
             Sheet sheet = workbook.getSheetAt(0);
 
             // Cập nhật các ô với dữ liệu từ request
-            Cell requestNoCell = sheet.getRow(4).getCell(1);
+            Cell requestNoCell = sheet.getRow(7).getCell(5);
             requestNoCell.setCellValue(request.getRequestNo());
 
-            Cell requestDateCell = sheet.getRow(5).getCell(1);
+            Cell requestDateCell = sheet.getRow(8).getCell(5);
             requestDateCell.setCellValue(request.getDate());
 
-            Cell requestSectionCell = sheet.getRow(6).getCell(1);
-            requestSectionCell.setCellValue(request.getSubsectionName());
+            Cell requestSectionCell = sheet.getRow(7).getCell(0);
+            requestSectionCell.setCellValue("From/Từ:" + request.getSubsectionName());
 
             // Cập nhật dữ liệu từ requestDetail
-            int rowNum = 9;
+            int rowNum = 12;
             for (SparePartRequestVo item : data) {
                 Row row = sheet.getRow(rowNum++);
                 if (row == null) {
@@ -354,8 +352,9 @@ public class SparePartSvc implements ISparePartSvc {
                 }
                 row.getCell(1).setCellValue(item.getPartName());
                 row.getCell(2).setCellValue(item.getPartNumber());
-                row.getCell(3).setCellValue(item.getRequestQty());
-                row.getCell(4).setCellValue(item.getUnit());
+                row.getCell(3).setCellValue(item.getUnit());
+                row.getCell(4).setCellValue(item.getRequestQty());
+                row.getCell(5).setCellValue(item.getKittingQty() == null ? 0 : item.getKittingQty());
             }
 
             // Ghi dữ liệu vào ByteArrayOutputStream

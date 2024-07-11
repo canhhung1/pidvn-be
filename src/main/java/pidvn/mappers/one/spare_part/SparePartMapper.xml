@@ -201,6 +201,7 @@
         <result column="subsection_name" property="subsectionName" javaType="String"/>
         <result column="factory_code" property="factoryCode" javaType="String"/>
         <result column="factory_name" property="factoryName" javaType="String"/>
+        <result column="issued_qty" property="issuedQty" javaType="String"/>
     </resultMap>
     <select id="getSparePartRequestMasters" resultMap="getSparePartRequestMasters-result">
         SELECT
@@ -223,9 +224,8 @@
         <if test="date != null">
             and M.date = DATE_FORMAT(#{date}, '%Y-%m-%d')
         </if>
-        order by id desc
+        order by T01.id desc
     </select>
-
 
     <resultMap id="getSparePartRequestDetail-result"
                type="pidvn.modules.spare_part.models.SparePartRequestVo">
@@ -240,14 +240,12 @@
         where M.id = #{requestId}
     </select>
 
-
-
     <resultMap id="getSparePartRequestDetailByRequestId-result"
                type="pidvn.modules.spare_part.models.SparePartRequestVo">
         <result column="part_number" property="partNumber" javaType="String"/>
         <result column="part_name" property="partName" javaType="String"/>
         <result column="request_qty" property="requestQty" javaType="Float"/>
-        <result column="kitting_qty" property="kittingQty" javaType="Float"/>
+        <result column="issued_qty" property="issuedQty" javaType="Float"/>
     </resultMap>
     <select id="getSparePartRequestDetailByRequestId" resultMap="getSparePartRequestDetailByRequestId-result">
         with
@@ -256,7 +254,7 @@
             inner join spare_part_request_master M on (D.request_id = M.id and D.request_id = #{requestId})
             left join spare_parts S on  (S.part_number = D.part_number and S.type = 'M4')
         )
-        select T01.id, T01.part_number, T01.part_name, T01.qty request_qty, T01.unit, R.qty kitting_qty from T01
+        select T01.id, T01.part_number, T01.part_name, T01.qty request_qty, T01.unit, R.qty issued_qty from T01
         left join spare_part_records R on (T01.request_no = R.request_no and T01.part_number = R.part_number)
     </select>
 </mapper>

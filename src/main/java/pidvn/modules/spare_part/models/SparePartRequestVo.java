@@ -16,9 +16,10 @@ public class SparePartRequestVo {
     private String createdBy;
     private String createdByName;
     private Float requestQty;
-    private Float kittingQty;
+    private Float issuedQty;
     private String factoryCode;
     private String factoryName;
+    private String status;
 
     private String unit;
 
@@ -126,12 +127,12 @@ public class SparePartRequestVo {
         this.requestQty = requestQty;
     }
 
-    public Float getKittingQty() {
-        return kittingQty;
+    public Float getIssuedQty() {
+        return issuedQty;
     }
 
-    public void setKittingQty(Float kittingQty) {
-        this.kittingQty = kittingQty;
+    public void setIssuedQty(Float issuedQty) {
+        this.issuedQty = issuedQty;
     }
 
     public String getFactoryCode() {
@@ -156,5 +157,13 @@ public class SparePartRequestVo {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

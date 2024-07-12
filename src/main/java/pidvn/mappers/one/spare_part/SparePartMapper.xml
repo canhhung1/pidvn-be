@@ -224,7 +224,7 @@
         <if test="date != null">
             and M.date = DATE_FORMAT(#{date}, '%Y-%m-%d')
         </if>
-        order by T01.id desc
+        order by M.id desc
     </select>
 
     <resultMap id="getSparePartRequestDetail-result"

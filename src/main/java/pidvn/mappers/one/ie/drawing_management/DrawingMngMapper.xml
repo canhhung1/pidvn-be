@@ -5,6 +5,7 @@
     <resultMap id="getProjects-result"
                type="pidvn.modules.ie.drawing_management.models.ProjectVo">
         <result column="control_no" property="controlNo" javaType="String"/>
+        <result column="project_name" property="projectName" javaType="String"/>
         <result column="project_type_id" property="projectTypeId" javaType="Integer"/>
         <result column="project_type_name" property="projectTypeName" javaType="String"/>
         <result column="created_by" property="createdBy" javaType="String"/>

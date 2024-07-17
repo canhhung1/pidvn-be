@@ -20,8 +20,8 @@ public class IeProject {
     @Column(name = "control_no")
     private String controlNo;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "project_name")
+    private String projectName;
 
     @Column(name = "project_type_id")
     private Integer projectTypeId;
@@ -53,12 +53,12 @@ public class IeProject {
         this.controlNo = controlNo;
     }
 
-    public String getName() {
-        return name;
+    public String getProjectName() {
+        return projectName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 
     public Integer getProjectTypeId() {

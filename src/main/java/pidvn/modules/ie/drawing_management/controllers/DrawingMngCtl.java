@@ -1,10 +1,10 @@
 package pidvn.modules.ie.drawing_management.controllers;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pidvn.config.mail.DataMailDTO;
 import pidvn.config.mail.MailService;
 import pidvn.entities.one.IeDrawing;
 import pidvn.entities.one.IeProject;
@@ -12,9 +12,9 @@ import pidvn.modules.ie.drawing_management.models.SearchVo;
 import pidvn.modules.ie.drawing_management.services.DrawingMngSvc;
 import reactor.util.annotation.Nullable;
 
-import javax.mail.MessagingException;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("IE/DrawingManagement")
@@ -41,8 +41,8 @@ public class DrawingMngCtl {
      * Api create project
      */
     @PostMapping("Project")
-    public ResponseEntity<?> createProject() {
-        return new ResponseEntity<>(null, HttpStatus.OK);
+    public ResponseEntity<?> createProject(@RequestBody IeProject ieProject) {
+        return new ResponseEntity<>(this.drawingMngSvc.saveIeProject(ieProject), HttpStatus.OK);
     }
 
     /**
@@ -66,6 +66,31 @@ public class DrawingMngCtl {
     public ResponseEntity<?> getIeDrawings(@RequestParam Integer projectId, @RequestParam Integer progressId) {
         return new ResponseEntity<>(this.drawingMngSvc.getIeDrawings(projectId,progressId), HttpStatus.OK);
     }
+
+
+    @PostMapping(value = "DrawingPreview")
+    public Object previewFile(@RequestBody SearchVo searchVo) {
+
+        File file = new File(searchVo.getUrl());
+        try {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            return IOUtils.toByteArray(fileInputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @GetMapping("ProjectType")
+    public ResponseEntity<?> getIeProjectType() {
+        return new ResponseEntity<>(this.drawingMngSvc.getIeProjectTypes(), HttpStatus.OK);
+    }
+
+
+
+
+
+
 
 
 

@@ -4,7 +4,7 @@ public class ProjectVo {
 
     private Integer id;
     private String controlNo;
-    private String name;
+    private String projectName;
     private Integer projectTypeId;
     private String projectTypeName;
     private String createdBy;
@@ -26,12 +26,12 @@ public class ProjectVo {
         this.controlNo = controlNo;
     }
 
-    public String getName() {
-        return name;
+    public String getProjectName() {
+        return projectName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 
     public Integer getProjectTypeId() {

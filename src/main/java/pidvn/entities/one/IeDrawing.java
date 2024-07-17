@@ -1,8 +1,11 @@
 package pidvn.entities.one;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "ie_drawing")
@@ -38,6 +41,14 @@ public class IeDrawing {
     private Integer projectId;
     @Column(name = "progress_id")
     private Integer progressId;
+
+    @CreatedDate
+    @Column(name = "created_at")
+    private Date createdAt;
+
+    @LastModifiedDate
+    @Column(name = "updated_at")
+    private Date updatedAt;
 
     public String getId() {
         return id;
@@ -149,5 +160,21 @@ public class IeDrawing {
 
     public void setProgressId(Integer progressId) {
         this.progressId = progressId;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

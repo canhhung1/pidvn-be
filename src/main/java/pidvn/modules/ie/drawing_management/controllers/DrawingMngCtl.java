@@ -68,6 +68,11 @@ public class DrawingMngCtl {
     }
 
 
+    /**
+     * Preview nếu là file pdf
+     * @param searchVo
+     * @return
+     */
     @PostMapping(value = "DrawingPreview")
     public Object previewFile(@RequestBody SearchVo searchVo) {
 
@@ -81,6 +86,10 @@ public class DrawingMngCtl {
         return null;
     }
 
+    /**
+     * Lấy danh sách ProjectType
+     * @return
+     */
     @GetMapping("ProjectType")
     public ResponseEntity<?> getIeProjectType() {
         return new ResponseEntity<>(this.drawingMngSvc.getIeProjectTypes(), HttpStatus.OK);

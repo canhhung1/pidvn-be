@@ -14,6 +14,7 @@ import pidvn.repositories.one.IeProjectProgressRepo;
 import pidvn.repositories.one.IeProjectRepo;
 import pidvn.repositories.one.IeProjectTypeRepo;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
@@ -45,6 +46,24 @@ public class DrawingMngSvc implements IDrawingMngSvc {
 
     @Override
     public IeProject saveIeProject(IeProject ieProject) {
+
+        // Tạo folder
+
+        String rootPath = "D:\\Work\\PIDVN\\WorkSpace\\IE-Project\\" + ieProject.getControlNo() + "\\Drawing";
+
+        File nestedDirectory = new File(rootPath);
+
+        if (!nestedDirectory.exists()) {
+            // Tạo các thư mục lồng nhau
+            if (nestedDirectory.mkdirs()) {
+                System.out.println("Các thư mục lồng nhau đã được tạo thành công!");
+            } else {
+                System.out.println("Không thể tạo các thư mục lồng nhau.");
+            }
+        } else {
+            System.out.println("Các thư mục lồng nhau đã tồn tại.");
+        }
+
         return this.ieProjectRepo.save(ieProject);
     }
 

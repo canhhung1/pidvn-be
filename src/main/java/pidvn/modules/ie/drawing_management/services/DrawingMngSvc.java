@@ -7,6 +7,7 @@ import pidvn.entities.one.IeProject;
 import pidvn.entities.one.IeProjectProgress;
 import pidvn.entities.one.IeProjectType;
 import pidvn.mappers.one.ie.drawing_management.DrawingMngMapper;
+import pidvn.modules.ie.drawing_management.models.ProgressVo;
 import pidvn.modules.ie.drawing_management.models.ProjectVo;
 import pidvn.modules.ie.drawing_management.models.SearchVo;
 import pidvn.repositories.one.IeDrawingRepo;
@@ -37,7 +38,10 @@ public class DrawingMngSvc implements IDrawingMngSvc {
     @Autowired
     private IeProjectRepo ieProjectRepo;
 
-
+    @Override
+    public IeProject getIeProjectById(Integer id) {
+        return this.ieProjectRepo.findById(id).get();
+    }
 
     @Override
     public List<ProjectVo> getProjects(SearchVo searchVo) {
@@ -85,5 +89,10 @@ public class DrawingMngSvc implements IDrawingMngSvc {
     @Override
     public List<IeProjectType> getIeProjectTypes() {
         return this.ieProjectTypeRepo.findAll();
+    }
+
+    @Override
+    public List<ProgressVo> getProgressByProject(SearchVo searchVo) {
+        return this.drawingMngMapper.getProgressByProject(searchVo);
     }
 }

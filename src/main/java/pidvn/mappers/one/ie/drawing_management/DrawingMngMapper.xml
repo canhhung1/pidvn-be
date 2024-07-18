@@ -17,6 +17,31 @@
     </select>
 
 
+    <resultMap id="getProgressByProject-result"
+               type="pidvn.modules.ie.drawing_management.models.ProgressVo">
+        <result column="progress_id" property="progressId" javaType="Integer"/>
+        <result column="progress_name" property="progressName" javaType="String"/>
+        <result column="start_plan" property="startPlan" javaType="Date"/>
+        <result column="end_plan" property="endPlan" javaType="Date"/>
+    </resultMap>
+    <select id="getProgressByProject" resultMap="getProgressByProject-result">
+        with
+        T01 as (
+            select
+                A.project_type_id, A.project_progress_id as progress_id,
+                B.name as project_type_name, C.name as progress_name
+            from ie_project_type_progress A
+            left join ie_project_type B on A.project_type_id = B.id
+            left join ie_project_progress C on A.project_progress_id = C.id
+            where 1 = 1 and A.project_type_id = #{projectTypeId}
+        ),
+        T02 as (
+            select T01.*, A.project_id,  A.progress, A.start_plan, A.end_plan from T01
+            left join ie_project_progress_record A on (T01.progress_id = A.id and A.project_id = #{projectId})
+        )
+        select * from T02
 
+
+    </select>
 
 </mapper>

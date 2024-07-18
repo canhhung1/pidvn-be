@@ -20,8 +20,8 @@ import java.io.IOException;
 @RequestMapping("IE/DrawingManagement")
 public class DrawingMngCtl {
 
-    @Autowired
-    private MailService mailService;
+//    @Autowired
+//    private MailService mailService;
 
 
     @Autowired
@@ -35,6 +35,11 @@ public class DrawingMngCtl {
     @PostMapping("Projects")
     public ResponseEntity<?> getProjects(@RequestBody @Nullable SearchVo searchVo) {
         return new ResponseEntity<>(this.drawingMngSvc.getProjects(searchVo), HttpStatus.OK);
+    }
+
+    @GetMapping("Project/{id}")
+    public ResponseEntity<?> getProjectById(@PathVariable Integer id) {
+        return new ResponseEntity<>(this.drawingMngSvc.getIeProjectById(id), HttpStatus.OK);
     }
 
     /**
@@ -96,17 +101,14 @@ public class DrawingMngCtl {
     }
 
 
-
-
-
-
-
-
-
-
-    @PostMapping("Processes/{projectId}")
-    public ResponseEntity<?> getProgress(@PathVariable Integer projectId) {
-        return new ResponseEntity<>(null, HttpStatus.OK);
+    /**
+     * Lấy danh sách các Progress theo Project
+     * @param projectId
+     * @return
+     */
+    @PostMapping("ProgressByProject")
+    public ResponseEntity<?> getProcessByProject(@RequestBody SearchVo searchVo) {
+        return new ResponseEntity<>(this.drawingMngSvc.getProgressByProject(searchVo), HttpStatus.OK);
     }
 
 

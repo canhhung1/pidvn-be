@@ -5,11 +5,21 @@ import java.util.List;
 
 public class SearchVo {
 
+    private Integer requestMasterId;
+
     private List<Date> dateRange;
 
     private Date date;
 
     private Integer chartType;
+
+    public Integer getRequestMasterId() {
+        return requestMasterId;
+    }
+
+    public void setRequestMasterId(Integer requestMasterId) {
+        this.requestMasterId = requestMasterId;
+    }
 
     public List<Date> getDateRange() {
         return dateRange;

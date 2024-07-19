@@ -224,6 +224,9 @@
         <if test="date != null">
             and M.date = DATE_FORMAT(#{date}, '%Y-%m-%d')
         </if>
+        <if test="requestMasterId != null">
+            and M.id = #{requestMasterId}
+        </if>
         order by M.id desc
     </select>
 

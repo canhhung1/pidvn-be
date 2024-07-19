@@ -297,16 +297,21 @@ public class SparePartSvc implements ISparePartSvc {
     @Override
     public ByteArrayInputStream downloadQaCard(Integer requestId) throws IOException {
 
-        List<SparePartRequestVo> requests = this.sparePartMapper.getSparePartRequestMasters(null);
+        SearchVo searchVo = new SearchVo();
+        searchVo.setRequestMasterId(requestId);
+
+        List<SparePartRequestVo> requests = this.sparePartMapper.getSparePartRequestMasters(searchVo);
 
 
-        SparePartRequestVo request = null;
-        for (SparePartRequestVo req: requests) {
-            if (req.getId() == requestId) {
-                request = req;
-                break;
-            }
-        }
+
+
+        SparePartRequestVo request = requests.get(0);
+//        for (SparePartRequestVo req: requests) {
+//            if (req.getId() == requestId) {
+//                request = req;
+//                break;
+//            }
+//        }
 
         List<SparePartRequestVo> data = this.sparePartMapper.getSparePartRequestDetailByRequestId(requestId);
 
@@ -316,7 +321,9 @@ public class SparePartSvc implements ISparePartSvc {
         String sourcePath = rootFolder + "MaterialRequest.xlsx";
         String targetPath = rootFolder + tempName;
 
-        String pathFile = this.createTempFile(sourcePath, targetPath);
+
+
+        String pathFile = null;
 
         Workbook workbook = null;
         FileInputStream inputStream = null;
@@ -324,6 +331,7 @@ public class SparePartSvc implements ISparePartSvc {
         ByteArrayInputStream result = null;
 
         try {
+            pathFile = this.createTempFile(sourcePath, targetPath);
             File file = new File(pathFile);
             inputStream = new FileInputStream(file);
 

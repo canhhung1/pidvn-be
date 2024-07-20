@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.ie.drawing_control.IeDcMapper">
+
+    <resultMap id="getProjects-result"
+               type="pidvn.modules.ie.drawing_control.models.ProjectDto">
+
+        <result column="project_no" property="projectNo" javaType="String"/>
+        <result column="project_name" property="projectName" javaType="String"/>
+        <result column="project_type_id" property="projectTypeId" javaType="Integer"/>
+        <result column="project_type_name" property="projectTypeName" javaType="String"/>
+        <result column="created_by" property="createdBy" javaType="String"/>
+        <result column="created_by_name" property="createdByName" javaType="String"/>
+    </resultMap>
+    <select id="getProjects" resultMap="getProjects-result">
+        SELECT A.*, B.name as project_type_name
+        FROM ie_dc_001 A left join ie_dc_004 B on A.project_type_id = B.id
+    </select>
+
+
+    <resultMap id="getProjectById-result"
+               type="pidvn.modules.ie.drawing_control.models.ProjectDto">
+        <result column="project_no" property="projectNo" javaType="String"/>
+        <result column="project_name" property="projectName" javaType="String"/>
+        <result column="project_type_id" property="projectTypeId" javaType="Integer"/>
+        <result column="project_type_name" property="projectTypeName" javaType="String"/>
+        <result column="created_by" property="createdBy" javaType="String"/>
+        <result column="created_by_name" property="createdByName" javaType="String"/>
+        <result column="tact_time" property="tactTime" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+    </resultMap>
+    <select id="getProjectById" resultMap="getProjectById-result">
+        SELECT A.*, B.name as project_type_name, C.name created_by_name
+        FROM ie_dc_001 A
+        left join ie_dc_004 B on A.project_type_id = B.id
+        left join users C on A.created_by = C.username
+        where 1 = 1
+        and A.id = #{projectId}
+    </select>
+
+
+    <resultMap id="getProjectProgresses-result"
+               type="pidvn.modules.ie.drawing_control.models.ProjectProgressDto">
+        <result column="project_progress_id" property="projectProgressId" javaType="Integer"/>
+        <result column="project_progress_name" property="projectProgressName" javaType="String"/>
+        <result column="start_plan" property="startPlan" javaType="Date"/>
+        <result column="end_plan" property="endPlan" javaType="Date"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="updated_at" property="updatedAt" javaType="Date"/>
+    </resultMap>
+    <select id="getProjectProgresses" resultMap="getProjectProgresses-result">
+        WITH
+        T01 AS (
+            SELECT *
+            FROM ie_dc_001 A
+            WHERE A.id = #{projectId}
+        ),
+        T02 AS (
+            SELECT
+                B.id AS project_type_id,
+                B.name AS project_type_name,
+                C.id AS project_progress_id,
+                C.name AS project_progress_name
+            FROM ie_dc_006 A
+            LEFT JOIN ie_dc_004 B ON A.project_type_id = B.id
+            LEFT JOIN ie_dc_005 C ON A.project_progress_id = C.id
+            INNER JOIN T01 ON A.project_type_id = T01.project_type_id
+        )
+        SELECT * FROM T02
+        LEFT JOIN ie_dc_007 A on (T02.project_progress_id = A.project_progress_id and A.project_id = 1)
+    </select>
+
+
+</mapper>

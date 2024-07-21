@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pidvn.entities.one.IeDc001;
 import pidvn.entities.one.IeDc004;
+import pidvn.entities.one.IeDc007;
 import pidvn.mappers.one.ie.drawing_control.IeDcMapper;
 import pidvn.modules.ie.drawing_control.models.ProjectDto;
 import pidvn.modules.ie.drawing_control.models.ProjectProgressDto;
@@ -12,6 +13,7 @@ import pidvn.modules.ie.drawing_control.models.ProjectTypeDto;
 import pidvn.modules.ie.drawing_control.models.SearchDto;
 import pidvn.repositories.one.IeDc001Repo;
 import pidvn.repositories.one.IeDc004Repo;
+import pidvn.repositories.one.IeDc007Repo;
 
 import java.io.File;
 import java.util.List;
@@ -31,6 +33,9 @@ public class IeDcSvcImpl implements IeDcSvc {
 
     @Autowired
     private IeDc004Repo ieDc004Repo;
+
+    @Autowired
+    private IeDc007Repo ieDc007Repo;
 
     @Override
     public List<ProjectDto> getProjects(SearchDto searchDto) {
@@ -86,4 +91,16 @@ public class IeDcSvcImpl implements IeDcSvc {
     public List<ProjectProgressDto> getProjectProgresses(Integer projectId) {
         return this.ieDcMapper.getProjectProgresses(projectId);
     }
+
+    @Override
+    public ProjectProgressDto updateProjectProgress(ProjectProgressDto projectProgressDto) {
+        IeDc007 ieDc007 = modelMapper.map(projectProgressDto, IeDc007.class);
+        ieDc007 = this.ieDc007Repo.save(ieDc007);
+        return this.modelMapper.map(ieDc007, ProjectProgressDto.class);
+    }
+
+//    @Override
+//    public ProjectProgressDto getProjectProgressDetail(Integer projectId, Integer projectProgressId) {
+//        return this.ieDcMapper.getProjectProgressDetail(projectId, projectProgressId);
+//    }
 }

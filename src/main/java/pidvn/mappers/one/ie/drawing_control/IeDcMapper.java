@@ -12,4 +12,5 @@ public interface IeDcMapper {
     List<ProjectDto> getProjects(SearchDto searchDto);
     ProjectDto getProjectById(Integer projectId);
     List<ProjectProgressDto> getProjectProgresses(Integer projectId);
+//    ProjectProgressDto getProjectProgressDetail(Integer projectId, Integer projectProgressId);
 }

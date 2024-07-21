@@ -1,10 +1,12 @@
 package pidvn.modules.ie.drawing_control.controllers;
 
+import org.apache.commons.collections4.Get;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pidvn.modules.ie.drawing_control.models.ProjectDto;
+import pidvn.modules.ie.drawing_control.models.ProjectProgressDto;
 import pidvn.modules.ie.drawing_control.models.SearchDto;
 import pidvn.modules.ie.drawing_control.services.IeDcSvc;
 
@@ -55,5 +57,15 @@ public class IeDcCtl {
     public ResponseEntity<?> getProjectProgresses(@RequestParam Integer projectId) {
         return new ResponseEntity<>(this.ieDcSvc.getProjectProgresses(projectId), HttpStatus.OK);
     }
+
+    @PutMapping("ProjectProgress")
+    public ResponseEntity<?> updateProjectProgress(@RequestBody ProjectProgressDto projectProgressDto) {
+        return new ResponseEntity<>(this.ieDcSvc.updateProjectProgress(projectProgressDto), HttpStatus.OK);
+    }
+
+//    @GetMapping("ProjectProgressDetail")
+//    public ResponseEntity<?> getProjectProgressDetail(@RequestParam Integer projectId, @RequestParam Integer projectProgressId) {
+//        return new ResponseEntity<>(this.ieDcSvc.getProjectProgressDetail(projectId,projectProgressId), HttpStatus.OK);
+//    }
 
 }

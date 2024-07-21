@@ -43,6 +43,7 @@
                type="pidvn.modules.ie.drawing_control.models.ProjectProgressDto">
         <result column="project_progress_id" property="projectProgressId" javaType="Integer"/>
         <result column="project_progress_name" property="projectProgressName" javaType="String"/>
+        <result column="project_id" property="projectId" javaType="Integer"/>
         <result column="start_plan" property="startPlan" javaType="Date"/>
         <result column="end_plan" property="endPlan" javaType="Date"/>
         <result column="created_at" property="createdAt" javaType="Date"/>
@@ -67,8 +68,26 @@
             INNER JOIN T01 ON A.project_type_id = T01.project_type_id
         )
         SELECT * FROM T02
-        LEFT JOIN ie_dc_007 A on (T02.project_progress_id = A.project_progress_id and A.project_id = 1)
+        LEFT JOIN ie_dc_007 A on (T02.project_progress_id = A.project_progress_id and A.project_id = #{projectId})
     </select>
+
+
+<!--    <resultMap id="getProjectProgressDetail-result"-->
+<!--               type="pidvn.modules.ie.drawing_control.models.ProjectProgressDto">-->
+<!--        <result column="project_progress_id" property="projectProgressId" javaType="Integer"/>-->
+<!--        <result column="start_plan" property="startPlan" javaType="Date"/>-->
+<!--        <result column="end_plan" property="endPlan" javaType="Date"/>-->
+<!--        <result column="created_at" property="createdAt" javaType="Date"/>-->
+<!--        <result column="updated_at" property="updatedAt" javaType="Date"/>-->
+<!--    </resultMap>-->
+<!--    <select id="getProjectProgressDetail" resultMap="getProjectProgressDetail-result">-->
+<!--        select * from ie_dc_007 A-->
+<!--        where 1 = 1-->
+<!--        and A.project_id = #{projectId} and project_progress_id = #{projectProgressId}-->
+<!--    </select>-->
+
+
+
 
 
 </mapper>

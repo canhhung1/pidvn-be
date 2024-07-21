@@ -15,4 +15,7 @@ public interface IeDcSvc {
     List<ProjectTypeDto> getProjectTypes();
     ProjectDto getProjectById(Integer projectId);
     List<ProjectProgressDto> getProjectProgresses(Integer projectId);
+
+    ProjectProgressDto updateProjectProgress(ProjectProgressDto projectProgressDto);
+//    ProjectProgressDto getProjectProgressDetail(Integer projectId, Integer projectProgressId);
 }

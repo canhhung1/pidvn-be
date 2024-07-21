@@ -1,17 +1,43 @@
-package pidvn.modules.ie.drawing_control.models;
+package pidvn.entities.one;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import javax.persistence.*;
 import java.util.Date;
 
-public class ProjectProgressDto {
+@Entity
+@Table(name = "ie_dc_007")
+@EntityListeners(AuditingEntityListener.class)
+public class IeDc007 {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
-    private Integer projectProgressId;
-    private String projectProgressName;
+
+    @Column(name = "project_id")
     private Integer projectId;
+
+    @Column(name = "project_progress_id")
+    private Integer projectProgressId;
+
+    @Column(name = "progress")
     private Integer progress;
+
+    @Column(name = "start_plan")
     private Date startPlan;
+
+    @Column(name = "end_plan")
     private Date endPlan;
+
+    @CreatedDate
+    @Column(name = "created_at")
     private Date createdAt;
+
+    @LastModifiedDate
+    @Column(name = "updated_at")
     private Date updatedAt;
 
     public Integer getId() {
@@ -22,28 +48,20 @@ public class ProjectProgressDto {
         this.id = id;
     }
 
-    public Integer getProjectProgressId() {
-        return projectProgressId;
-    }
-
-    public void setProjectProgressId(Integer projectProgressId) {
-        this.projectProgressId = projectProgressId;
-    }
-
-    public String getProjectProgressName() {
-        return projectProgressName;
-    }
-
-    public void setProjectProgressName(String projectProgressName) {
-        this.projectProgressName = projectProgressName;
-    }
-
     public Integer getProjectId() {
         return projectId;
     }
 
     public void setProjectId(Integer projectId) {
         this.projectId = projectId;
+    }
+
+    public Integer getProjectProgressId() {
+        return projectProgressId;
+    }
+
+    public void setProjectProgressId(Integer projectProgressId) {
+        this.projectProgressId = projectProgressId;
     }
 
     public Integer getProgress() {

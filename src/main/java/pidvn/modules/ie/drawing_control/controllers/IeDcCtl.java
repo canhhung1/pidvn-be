@@ -5,10 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pidvn.modules.ie.drawing_control.models.DrawingDto;
 import pidvn.modules.ie.drawing_control.models.ProjectDto;
 import pidvn.modules.ie.drawing_control.models.ProjectProgressDto;
 import pidvn.modules.ie.drawing_control.models.SearchDto;
 import pidvn.modules.ie.drawing_control.services.IeDcSvc;
+import reactor.util.annotation.Nullable;
 
 @RestController
 @RequestMapping("IE/DrawingControl")
@@ -63,9 +65,25 @@ public class IeDcCtl {
         return new ResponseEntity<>(this.ieDcSvc.updateProjectProgress(projectProgressDto), HttpStatus.OK);
     }
 
-//    @GetMapping("ProjectProgressDetail")
-//    public ResponseEntity<?> getProjectProgressDetail(@RequestParam Integer projectId, @RequestParam Integer projectProgressId) {
-//        return new ResponseEntity<>(this.ieDcSvc.getProjectProgressDetail(projectId,projectProgressId), HttpStatus.OK);
-//    }
+    @GetMapping("Drawings")
+    public ResponseEntity<?> getDrawings(@RequestParam @Nullable Integer projectId) {
+        return new ResponseEntity<>(this.ieDcSvc.getDrawings(projectId), HttpStatus.OK);
+    }
+
+    @PostMapping("Drawing")
+    public ResponseEntity<?> insertDrawing(@RequestBody DrawingDto drawingDto) {
+        return new ResponseEntity<>(this.ieDcSvc.saveDrawing(drawingDto), HttpStatus.OK);
+    }
+
+    @PutMapping("Drawing")
+    public ResponseEntity<?> updateDrawing(@RequestBody DrawingDto drawingDto) {
+        return new ResponseEntity<>(this.ieDcSvc.saveDrawing(drawingDto), HttpStatus.OK);
+    }
+
+
+
+
+
+
 
 }

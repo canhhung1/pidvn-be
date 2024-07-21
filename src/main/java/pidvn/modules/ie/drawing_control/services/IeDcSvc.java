@@ -1,9 +1,6 @@
 package pidvn.modules.ie.drawing_control.services;
 
-import pidvn.modules.ie.drawing_control.models.ProjectDto;
-import pidvn.modules.ie.drawing_control.models.ProjectProgressDto;
-import pidvn.modules.ie.drawing_control.models.ProjectTypeDto;
-import pidvn.modules.ie.drawing_control.models.SearchDto;
+import pidvn.modules.ie.drawing_control.models.*;
 
 import java.util.List;
 
@@ -17,5 +14,8 @@ public interface IeDcSvc {
     List<ProjectProgressDto> getProjectProgresses(Integer projectId);
 
     ProjectProgressDto updateProjectProgress(ProjectProgressDto projectProgressDto);
-//    ProjectProgressDto getProjectProgressDetail(Integer projectId, Integer projectProgressId);
+
+    List<DrawingDto> getDrawings(Integer projectId);
+
+    DrawingDto saveDrawing(DrawingDto drawingDto);
 }

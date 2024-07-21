@@ -72,22 +72,24 @@
     </select>
 
 
-<!--    <resultMap id="getProjectProgressDetail-result"-->
-<!--               type="pidvn.modules.ie.drawing_control.models.ProjectProgressDto">-->
-<!--        <result column="project_progress_id" property="projectProgressId" javaType="Integer"/>-->
-<!--        <result column="start_plan" property="startPlan" javaType="Date"/>-->
-<!--        <result column="end_plan" property="endPlan" javaType="Date"/>-->
-<!--        <result column="created_at" property="createdAt" javaType="Date"/>-->
-<!--        <result column="updated_at" property="updatedAt" javaType="Date"/>-->
-<!--    </resultMap>-->
-<!--    <select id="getProjectProgressDetail" resultMap="getProjectProgressDetail-result">-->
-<!--        select * from ie_dc_007 A-->
-<!--        where 1 = 1-->
-<!--        and A.project_id = #{projectId} and project_progress_id = #{projectProgressId}-->
-<!--    </select>-->
 
+    <resultMap id="getDrawings-result"
+               type="pidvn.modules.ie.drawing_control.models.DrawingDto">
+        <result column="parent_id" property="parentId" javaType="String"/>
+        <result column="drawing_no" property="drawingNo" javaType="String"/>
+        <result column="drawing_name" property="drawingName" javaType="String"/>
+        <result column="project_id" property="projectId" javaType="Integer"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="updated_at" property="updatedAt" javaType="Date"/>
+    </resultMap>
+    <select id="getDrawings" resultMap="getDrawings-result">
+        SELECT * FROM pidvn.ie_dc_008 A
+        where 1 = 1
+        <if test="projectId != null">
+            and A.project_id = #{projectId}
+        </if>
 
-
+    </select>
 
 
 </mapper>

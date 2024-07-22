@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import pidvn.config.mail.MailService;
 import pidvn.entities.one.IeDrawing;
 import pidvn.entities.one.IeProject;
@@ -110,6 +111,11 @@ public class DrawingMngCtl {
     public ResponseEntity<?> getProcessByProject(@RequestBody SearchVo searchVo) {
         return new ResponseEntity<>(this.drawingMngSvc.getProgressByProject(searchVo), HttpStatus.OK);
     }
+
+
+
+
+
 
 
 

@@ -3,6 +3,7 @@ package pidvn.modules.ie.drawing_control.services;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import pidvn.entities.one.IeDc001;
 import pidvn.entities.one.IeDc004;
 import pidvn.entities.one.IeDc007;
@@ -15,7 +16,10 @@ import pidvn.repositories.one.IeDc007Repo;
 import pidvn.repositories.one.IeDc008Repo;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -113,8 +117,60 @@ public class IeDcSvcImpl implements IeDcSvc {
         return this.modelMapper.map(ieDc008,DrawingDto.class);
     }
 
-//    @Override
-//    public ProjectProgressDto getProjectProgressDetail(Integer projectId, Integer projectProgressId) {
-//        return this.ieDcMapper.getProjectProgressDetail(projectId, projectProgressId);
-//    }
+    @Override
+    public Map<String, String> uploadDrawing(MultipartFile file, String projectNo, String drawingName) {
+
+        // Đường dẫn lưu trữ file
+        String rootPath = "D:\\Workspace\\ProjectManagement\\Project\\" + projectNo + "\\Drawing\\";
+
+        Map<String, String> result = new HashMap<>();
+
+        if (file.isEmpty()) {
+            result.put("Status", "ERROR");
+            result.put("Message", "Vui lòng chọn một file để upload");
+            return result;
+        }
+
+        try {
+            // Lấy tên file gốc
+            String originalFilename = file.getOriginalFilename();
+            if (originalFilename == null) {
+                result.put("Status", "ERROR");
+                result.put("Message", "Tên file không hợp lệ");
+                return result;
+            }
+
+            // Lấy phần mở rộng của file gốc
+            String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+
+            // Tạo tên file mới
+            String newFilename = drawingName + fileExtension;
+
+            // Tạo file mới với tên mới
+            File newFile = new File(rootPath + newFilename);
+            newFile.getParentFile().mkdirs(); // Tạo thư mục nếu chưa tồn tại
+
+            // Kiểm tra và xóa file cũ nếu tồn tại
+            if (newFile.exists()) {
+                if (!newFile.delete()) {
+                    result.put("Status", "ERROR");
+                    result.put("Message", "Không thể xóa file cũ: " + newFilename);
+                    return result;
+                }
+            }
+
+            // Lưu file mới vào hệ thống
+            file.transferTo(newFile);
+
+            result.put("Status", "OK");
+            result.put("Message", "Bạn đã upload thành công '" + newFilename + "'");
+            return result;
+        } catch (IOException e) {
+            e.printStackTrace();
+            result.put("Status", "ERROR");
+            result.put("Message", "Upload file '" + file.getOriginalFilename() + "' thất bại.");
+            return result;
+        }
+    }
+
 }

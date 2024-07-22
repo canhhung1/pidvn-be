@@ -1,8 +1,10 @@
 package pidvn.modules.ie.drawing_control.services;
 
+import org.springframework.web.multipart.MultipartFile;
 import pidvn.modules.ie.drawing_control.models.*;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IeDcSvc {
 
@@ -18,4 +20,6 @@ public interface IeDcSvc {
     List<DrawingDto> getDrawings(Integer projectId);
 
     DrawingDto saveDrawing(DrawingDto drawingDto);
+
+    Map uploadDrawing(MultipartFile file, String projectNo, String drawingName);
 }

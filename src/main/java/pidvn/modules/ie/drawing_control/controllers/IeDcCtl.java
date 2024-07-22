@@ -1,16 +1,23 @@
 package pidvn.modules.ie.drawing_control.controllers;
 
 import org.apache.commons.collections4.Get;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import pidvn.modules.ie.drawing_control.models.DrawingDto;
 import pidvn.modules.ie.drawing_control.models.ProjectDto;
 import pidvn.modules.ie.drawing_control.models.ProjectProgressDto;
 import pidvn.modules.ie.drawing_control.models.SearchDto;
 import pidvn.modules.ie.drawing_control.services.IeDcSvc;
+import pidvn.modules.ie.drawing_management.models.SearchVo;
 import reactor.util.annotation.Nullable;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("IE/DrawingControl")
@@ -82,8 +89,28 @@ public class IeDcCtl {
 
 
 
+    @PostMapping("UploadDrawing")
+    public ResponseEntity<?> uploadDrawing(@RequestBody MultipartFile file, @RequestParam String projectNo,@RequestParam String drawingName) {
+        return new ResponseEntity<>(this.ieDcSvc.uploadDrawing(file, projectNo,drawingName), HttpStatus.OK);
+    }
 
 
+    /**
+     * Preview nếu là file pdf
+     * @param searchDto
+     * @return
+     */
+    @PostMapping(value = "DrawingPreview")
+    public Object previewFile(@RequestBody SearchDto searchDto) {
 
+        File file = new File(searchDto.getUrl());
+        try {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            return IOUtils.toByteArray(fileInputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }

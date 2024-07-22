@@ -89,6 +89,8 @@
             and A.project_id = #{projectId}
         </if>
 
+        order by A.ordinal_number ASC
+
     </select>
 
 

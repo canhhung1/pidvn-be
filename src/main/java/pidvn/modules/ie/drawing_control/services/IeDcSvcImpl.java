@@ -1,5 +1,8 @@
 package pidvn.modules.ie.drawing_control.services;
 
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,9 +20,7 @@ import pidvn.repositories.one.IeDc008Repo;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -171,6 +172,121 @@ public class IeDcSvcImpl implements IeDcSvc {
             result.put("Message", "Upload file '" + file.getOriginalFilename() + "' thất bại.");
             return result;
         }
+    }
+
+    @Override
+    public Map uploadDrawingTreeList(MultipartFile file, Integer projectId)throws IOException {
+
+        Map result = new HashMap<>();
+
+        XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
+        XSSFSheet sheet = workbook.getSheetAt(0);
+
+        List<IeDc008> data = new ArrayList<>();
+
+        String uuid1 = null;
+        String uuid2 = null;
+        String uuid3 = null;
+        String uuid4 = null;
+        String parentId = null;
+
+
+        for (int i = 2; i < sheet.getPhysicalNumberOfRows(); i++) {
+
+            XSSFRow row = sheet.getRow(i);
+
+            IeDc008 obj = new IeDc008();
+
+            if (!("").equals(row.getCell(8).getStringCellValue())) {
+
+                String drawingNo = row.getCell(8).getStringCellValue();
+
+                uuid1 = UUID.randomUUID().toString();
+                parentId = null;
+                obj.setId(uuid1);
+                obj.setDrawingNo(drawingNo);
+                obj.setParentId(parentId);
+                obj.setDrawingName(row.getCell(12).getStringCellValue());
+                obj.setUnit(row.getCell(14).getStringCellValue());
+                obj.setMaterial(row.getCell(15).getStringCellValue());
+                obj.setHardness(row.getCell(16).getStringCellValue());
+                obj.setPolishing(row.getCell(17).getStringCellValue());
+                obj.setSupplier(row.getCell(18).getStringCellValue());
+                obj.setProjectId(projectId);
+                obj.setProjectProgressId(3);
+                obj.setOrdinalNumber(row.getCell(21).getNumericCellValue());
+                data.add(obj);
+                continue;
+            }
+
+            if (!("").equals(row.getCell(9).getStringCellValue())) {
+                String drawingNo = row.getCell(9).getStringCellValue();
+                uuid2 = UUID.randomUUID().toString();
+                parentId = uuid1;
+                obj.setId(uuid2);
+                obj.setDrawingNo(drawingNo);
+                obj.setParentId(parentId);
+                obj.setDrawingName(row.getCell(12).getStringCellValue());
+                obj.setUnit(row.getCell(14).getStringCellValue());
+                obj.setMaterial(row.getCell(15).getStringCellValue());
+                obj.setHardness(row.getCell(16).getStringCellValue());
+                obj.setPolishing(row.getCell(17).getStringCellValue());
+                obj.setSupplier(row.getCell(18).getStringCellValue());
+                obj.setProjectId(projectId);
+                obj.setProjectProgressId(3);
+                obj.setOrdinalNumber(row.getCell(21).getNumericCellValue());
+                data.add(obj);
+                continue;
+            }
+
+            if (!("").equals(row.getCell(10).getStringCellValue())) {
+                String drawingNo = row.getCell(10).getStringCellValue();
+                uuid3 = UUID.randomUUID().toString();
+                parentId = uuid2;
+                obj.setId(uuid3);
+                obj.setDrawingNo(drawingNo);
+                obj.setParentId(parentId);
+                obj.setDrawingName(row.getCell(12).getStringCellValue());
+                obj.setUnit(row.getCell(14).getStringCellValue());
+                obj.setMaterial(row.getCell(15).getStringCellValue());
+                obj.setHardness(row.getCell(16).getStringCellValue());
+                obj.setPolishing(row.getCell(17).getStringCellValue());
+                obj.setSupplier(row.getCell(18).getStringCellValue());
+                obj.setProjectId(projectId);
+                obj.setProjectProgressId(3);
+                obj.setOrdinalNumber(row.getCell(21).getNumericCellValue());
+                data.add(obj);
+                continue;
+            }
+
+            if (!("").equals(row.getCell(11).getStringCellValue())) {
+                String drawingNo = row.getCell(11).getStringCellValue();
+                uuid4 = UUID.randomUUID().toString();
+                parentId = uuid3;
+                obj.setId(uuid4);
+                obj.setDrawingNo(drawingNo);
+                obj.setParentId(parentId);
+                obj.setDrawingName(row.getCell(12).getStringCellValue());
+                obj.setUnit(row.getCell(14).getStringCellValue());
+                obj.setMaterial(row.getCell(15).getStringCellValue());
+                obj.setHardness(row.getCell(16).getStringCellValue());
+                obj.setPolishing(row.getCell(17).getStringCellValue());
+                obj.setSupplier(row.getCell(18).getStringCellValue());
+                obj.setProjectId(projectId);
+                obj.setProjectProgressId(3);
+                obj.setOrdinalNumber(row.getCell(21).getNumericCellValue());
+                data.add(obj);
+                continue;
+            }
+
+
+        }
+
+        List<IeDc008> saved = ieDc008Repo.saveAll(data);
+
+        result.put("data", saved);
+
+        return result;
     }
 
 }

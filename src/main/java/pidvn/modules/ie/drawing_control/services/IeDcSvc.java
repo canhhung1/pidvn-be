@@ -3,6 +3,7 @@ package pidvn.modules.ie.drawing_control.services;
 import org.springframework.web.multipart.MultipartFile;
 import pidvn.modules.ie.drawing_control.models.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -22,4 +23,6 @@ public interface IeDcSvc {
     DrawingDto saveDrawing(DrawingDto drawingDto);
 
     Map uploadDrawing(MultipartFile file, String projectNo, String drawingName);
+
+    Map uploadDrawingTreeList(MultipartFile file, Integer projectId) throws IOException;
 }

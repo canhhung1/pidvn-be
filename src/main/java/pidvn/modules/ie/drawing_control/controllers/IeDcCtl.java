@@ -1,6 +1,5 @@
 package pidvn.modules.ie.drawing_control.controllers;
 
-import org.apache.commons.collections4.Get;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +11,6 @@ import pidvn.modules.ie.drawing_control.models.ProjectDto;
 import pidvn.modules.ie.drawing_control.models.ProjectProgressDto;
 import pidvn.modules.ie.drawing_control.models.SearchDto;
 import pidvn.modules.ie.drawing_control.services.IeDcSvc;
-import pidvn.modules.ie.drawing_management.models.SearchVo;
 import reactor.util.annotation.Nullable;
 
 import java.io.File;
@@ -93,6 +91,15 @@ public class IeDcCtl {
     public ResponseEntity<?> uploadDrawing(@RequestBody MultipartFile file, @RequestParam String projectNo,@RequestParam String drawingName) {
         return new ResponseEntity<>(this.ieDcSvc.uploadDrawing(file, projectNo,drawingName), HttpStatus.OK);
     }
+
+
+    @PostMapping("UploadDrawingTreeList")
+    public ResponseEntity<?> uploadDrawingTreeList(@RequestBody MultipartFile file, @RequestParam Integer projectId) throws IOException {
+        return new ResponseEntity<>(this.ieDcSvc.uploadDrawingTreeList(file, projectId), HttpStatus.OK);
+    }
+
+
+
 
 
     /**

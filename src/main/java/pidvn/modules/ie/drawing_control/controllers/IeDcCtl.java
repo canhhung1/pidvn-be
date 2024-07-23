@@ -6,10 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import pidvn.modules.ie.drawing_control.models.DrawingDto;
-import pidvn.modules.ie.drawing_control.models.ProjectDto;
-import pidvn.modules.ie.drawing_control.models.ProjectProgressDto;
-import pidvn.modules.ie.drawing_control.models.SearchDto;
+import pidvn.modules.ie.drawing_control.models.*;
 import pidvn.modules.ie.drawing_control.services.IeDcSvc;
 import reactor.util.annotation.Nullable;
 
@@ -118,6 +115,17 @@ public class IeDcCtl {
             e.printStackTrace();
         }
         return null;
+    }
+
+
+    @GetMapping("ProjectActivities")
+    public ResponseEntity<?> getProjectActivities(@RequestParam Integer projectId) {
+        return new ResponseEntity<>(this.ieDcSvc.getProjectActivities(projectId), HttpStatus.OK);
+    }
+
+    @PostMapping("ProjectActivity")
+    public ResponseEntity<?> insertProjectActivity(@RequestParam("file") @Nullable MultipartFile file, @RequestPart("projectActivityDto") ProjectActivityDto projectActivityDto) {
+        return new ResponseEntity<>(this.ieDcSvc.insertProjectActivity(file, projectActivityDto), HttpStatus.OK);
     }
 
 }

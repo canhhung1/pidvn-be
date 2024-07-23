@@ -7,16 +7,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import pidvn.entities.one.IeDc001;
-import pidvn.entities.one.IeDc004;
-import pidvn.entities.one.IeDc007;
-import pidvn.entities.one.IeDc008;
+import pidvn.entities.one.*;
 import pidvn.mappers.one.ie.drawing_control.IeDcMapper;
 import pidvn.modules.ie.drawing_control.models.*;
-import pidvn.repositories.one.IeDc001Repo;
-import pidvn.repositories.one.IeDc004Repo;
-import pidvn.repositories.one.IeDc007Repo;
-import pidvn.repositories.one.IeDc008Repo;
+import pidvn.repositories.one.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +28,9 @@ public class IeDcSvcImpl implements IeDcSvc {
 
     @Autowired
     private IeDc001Repo ieDc001Repo;
+
+    @Autowired
+    private IeDc003Repo ieDc003Repo;
 
     @Autowired
     private IeDc004Repo ieDc004Repo;
@@ -289,6 +286,25 @@ public class IeDcSvcImpl implements IeDcSvc {
         List<IeDc008> saved = ieDc008Repo.saveAll(data);
 
         result.put("data", saved);
+
+        return result;
+    }
+
+    @Override
+    public List<ProjectActivityDto> getProjectActivities(Integer projectId) {
+        List<IeDc003> projectActivities = this.ieDc003Repo.findAllByProjectId(projectId);
+        return projectActivities.stream().map(item -> modelMapper.map(item, ProjectActivityDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public ProjectActivityDto insertProjectActivity(MultipartFile file, ProjectActivityDto projectActivityDto) {
+
+        IeDc003 ieDc003 = modelMapper.map(projectActivityDto, IeDc003.class);
+        ieDc003 = ieDc003Repo.save(ieDc003);
+        ProjectActivityDto result = this.modelMapper.map(ieDc003, ProjectActivityDto.class);
+
+        // TODO upload file
+
 
         return result;
     }

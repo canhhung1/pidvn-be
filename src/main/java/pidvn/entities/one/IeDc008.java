@@ -48,9 +48,8 @@ public class IeDc008 {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-
     @Column(name = "ordinal_number")
-    public Double ordinalNumber;
+    public Integer ordinalNumber;
 
     public String getId() {
         return id;
@@ -180,11 +179,11 @@ public class IeDc008 {
         this.updatedAt = updatedAt;
     }
 
-    public Double getOrdinalNumber() {
+    public Integer getOrdinalNumber() {
         return ordinalNumber;
     }
 
-    public void setOrdinalNumber(Double ordinalNumber) {
+    public void setOrdinalNumber(Integer ordinalNumber) {
         this.ordinalNumber = ordinalNumber;
     }
 }

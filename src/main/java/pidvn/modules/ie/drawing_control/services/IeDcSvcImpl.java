@@ -207,6 +207,7 @@ public class IeDcSvcImpl implements IeDcSvc {
                 obj.setDrawingNo(drawingNo);
                 obj.setParentId(parentId);
                 obj.setDrawingName(row.getCell(12).getStringCellValue());
+                obj.setQty((int) row.getCell(13).getNumericCellValue());
                 obj.setUnit(row.getCell(14).getStringCellValue());
                 obj.setMaterial(row.getCell(15).getStringCellValue());
                 obj.setHardness(row.getCell(16).getStringCellValue());
@@ -214,7 +215,7 @@ public class IeDcSvcImpl implements IeDcSvc {
                 obj.setSupplier(row.getCell(18).getStringCellValue());
                 obj.setProjectId(projectId);
                 obj.setProjectProgressId(3);
-                obj.setOrdinalNumber(row.getCell(21).getNumericCellValue());
+                obj.setOrdinalNumber((int)row.getCell(21).getNumericCellValue());
                 data.add(obj);
                 continue;
             }
@@ -227,6 +228,7 @@ public class IeDcSvcImpl implements IeDcSvc {
                 obj.setDrawingNo(drawingNo);
                 obj.setParentId(parentId);
                 obj.setDrawingName(row.getCell(12).getStringCellValue());
+                obj.setQty((int) row.getCell(13).getNumericCellValue());
                 obj.setUnit(row.getCell(14).getStringCellValue());
                 obj.setMaterial(row.getCell(15).getStringCellValue());
                 obj.setHardness(row.getCell(16).getStringCellValue());
@@ -234,7 +236,7 @@ public class IeDcSvcImpl implements IeDcSvc {
                 obj.setSupplier(row.getCell(18).getStringCellValue());
                 obj.setProjectId(projectId);
                 obj.setProjectProgressId(3);
-                obj.setOrdinalNumber(row.getCell(21).getNumericCellValue());
+                obj.setOrdinalNumber((int) row.getCell(21).getNumericCellValue());
                 data.add(obj);
                 continue;
             }
@@ -247,6 +249,7 @@ public class IeDcSvcImpl implements IeDcSvc {
                 obj.setDrawingNo(drawingNo);
                 obj.setParentId(parentId);
                 obj.setDrawingName(row.getCell(12).getStringCellValue());
+                obj.setQty((int) row.getCell(13).getNumericCellValue());
                 obj.setUnit(row.getCell(14).getStringCellValue());
                 obj.setMaterial(row.getCell(15).getStringCellValue());
                 obj.setHardness(row.getCell(16).getStringCellValue());
@@ -254,7 +257,7 @@ public class IeDcSvcImpl implements IeDcSvc {
                 obj.setSupplier(row.getCell(18).getStringCellValue());
                 obj.setProjectId(projectId);
                 obj.setProjectProgressId(3);
-                obj.setOrdinalNumber(row.getCell(21).getNumericCellValue());
+                obj.setOrdinalNumber((int) row.getCell(21).getNumericCellValue());
                 data.add(obj);
                 continue;
             }
@@ -267,6 +270,7 @@ public class IeDcSvcImpl implements IeDcSvc {
                 obj.setDrawingNo(drawingNo);
                 obj.setParentId(parentId);
                 obj.setDrawingName(row.getCell(12).getStringCellValue());
+                obj.setQty((int) row.getCell(13).getNumericCellValue());
                 obj.setUnit(row.getCell(14).getStringCellValue());
                 obj.setMaterial(row.getCell(15).getStringCellValue());
                 obj.setHardness(row.getCell(16).getStringCellValue());
@@ -274,7 +278,7 @@ public class IeDcSvcImpl implements IeDcSvc {
                 obj.setSupplier(row.getCell(18).getStringCellValue());
                 obj.setProjectId(projectId);
                 obj.setProjectProgressId(3);
-                obj.setOrdinalNumber(row.getCell(21).getNumericCellValue());
+                obj.setOrdinalNumber((int) row.getCell(21).getNumericCellValue());
                 data.add(obj);
                 continue;
             }

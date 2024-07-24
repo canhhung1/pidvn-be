@@ -18,4 +18,7 @@ public interface UsersRepo extends JpaRepository<Users, Integer> {
     Users findByEmail(String email);
 
     List<Users> findAllByOrderByIdDesc();
+
+    @Query("SELECT u FROM Users u WHERE u.subsectionId IN :subsectionIds")
+    List<Users> findAllBySubsectionIds(@Param("subsectionIds") List<Integer> subsectionIds);
 }

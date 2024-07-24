@@ -41,6 +41,17 @@ public class IeDcSvcImpl implements IeDcSvc {
     @Autowired
     private IeDc008Repo ieDc008Repo;
 
+    @Autowired
+    private UsersRepo usersRepo;
+
+    @Autowired
+    private ProductRepo productRepo;
+
+    @Override
+    public List<Users> getPersonInCharges(List<Integer> subsectionIds) {
+        return this.usersRepo.findAllBySubsectionIds(subsectionIds);
+    }
+
     @Override
     public List<ProjectDto> getProjects(SearchDto searchDto) {
         return this.ieDcMapper.getProjects(searchDto);
@@ -307,6 +318,11 @@ public class IeDcSvcImpl implements IeDcSvc {
 
 
         return result;
+    }
+
+    @Override
+    public List<Product> getProducts() {
+        return this.productRepo.findAll();
     }
 
 }

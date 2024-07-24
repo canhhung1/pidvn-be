@@ -11,10 +11,15 @@
         <result column="project_type_name" property="projectTypeName" javaType="String"/>
         <result column="created_by" property="createdBy" javaType="String"/>
         <result column="created_by_name" property="createdByName" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="person_in_charge_id" property="personInChargeId" javaType="String"/>
+        <result column="person_in_charge_name" property="personInChargeName" javaType="String"/>
     </resultMap>
     <select id="getProjects" resultMap="getProjects-result">
-        SELECT A.*, B.name as project_type_name
-        FROM ie_dc_001 A left join ie_dc_004 B on A.project_type_id = B.id
+        SELECT A.*, B.name as project_type_name, C.name person_in_charge_name
+        FROM ie_dc_001 A
+        left join ie_dc_004 B on A.project_type_id = B.id
+        left join users C on A.person_in_charge_id = C.username
     </select>
 
 

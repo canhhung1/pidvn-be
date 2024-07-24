@@ -48,6 +48,8 @@ public class IeDc001 {
     private String tactTime;
     @Column(name = "capacity")
     private String capacity;
+    @Column(name = "person_in_charge_id")
+    private String personInChargeId;
 
     public Integer getId() {
         return id;
@@ -144,4 +146,13 @@ public class IeDc001 {
     public void setCapacity(String capacity) {
         this.capacity = capacity;
     }
+
+    public String getPersonInChargeId() {
+        return personInChargeId;
+    }
+
+    public void setPersonInChargeId(String personInChargeId) {
+        this.personInChargeId = personInChargeId;
+    }
+
 }

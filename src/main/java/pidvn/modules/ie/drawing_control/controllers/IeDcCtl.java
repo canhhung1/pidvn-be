@@ -13,6 +13,9 @@ import reactor.util.annotation.Nullable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("IE/DrawingControl")
@@ -22,6 +25,19 @@ public class IeDcCtl {
     @Autowired
     private IeDcSvc ieDcSvc;
 
+    @GetMapping("PersonInCharges")
+    public ResponseEntity<?> getPersonInCharges() {
+        int[] subsections = {13, 32};
+        List<Integer> subsectionIds = Arrays.stream(subsections)
+                .boxed()
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(this.ieDcSvc.getPersonInCharges(subsectionIds),HttpStatus.OK);
+    }
+
+    @GetMapping("Products")
+    public ResponseEntity<?> getProducts(){
+        return new ResponseEntity<>(this.ieDcSvc.getProducts(), HttpStatus.OK);
+    }
 
     /**
      * Lấy danh sách project

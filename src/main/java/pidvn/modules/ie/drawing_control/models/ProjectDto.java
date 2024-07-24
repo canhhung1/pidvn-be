@@ -18,6 +18,8 @@ public class ProjectDto {
     private String tactTime;
     private String capacity;
     private Date createdAt;
+    private String personInChargeId;
+    private String personInChargeName;
 
     public Integer getId() {
         return id;
@@ -129,5 +131,21 @@ public class ProjectDto {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getPersonInChargeId() {
+        return personInChargeId;
+    }
+
+    public void setPersonInChargeId(String personInChargeId) {
+        this.personInChargeId = personInChargeId;
+    }
+
+    public String getPersonInChargeName() {
+        return personInChargeName;
+    }
+
+    public void setPersonInChargeName(String personInChargeName) {
+        this.personInChargeName = personInChargeName;
     }
 }

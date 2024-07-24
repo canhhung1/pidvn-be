@@ -127,7 +127,7 @@ public class IeDcSvcImpl implements IeDcSvc {
     }
 
     @Override
-    public Map<String, String> uploadDrawingFile(MultipartFile file, String projectNo) {
+    public Map<String, String> uploadDrawingFile(MultipartFile[] files, String projectNo) {
 
         // Đường dẫn lưu trữ file
         String rootPath = "D:\\Workspace\\ProjectManagement\\Project\\" + projectNo + "\\Drawing\\";

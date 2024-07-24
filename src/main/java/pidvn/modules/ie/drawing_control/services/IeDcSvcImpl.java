@@ -127,14 +127,34 @@ public class IeDcSvcImpl implements IeDcSvc {
     }
 
     @Override
-    public Map<String, String> uploadDrawingFile(MultipartFile[] files, String projectNo) {
+    public Map<String, Object> uploadDrawingFile(MultipartFile[] files, String projectNo) {
 
         // Đường dẫn lưu trữ file
-        String rootPath = "D:\\Workspace\\ProjectManagement\\Project\\" + projectNo + "\\Drawing\\";
+        String rootPath = "E:\\Workspace\\Java\\PIDVN\\IE-Project\\" + projectNo + "\\Drawing\\";
 
+//        try {
+//            for (MultipartFile file: files) {
+//                String fileName = file.getOriginalFilename();
+//                String savePath = rootPath + fileName;
+//                File savedFile = new File(savePath);
+//                file.transferTo(savedFile);
+//            }
+//        }catch (Exception e) {
+//            System.out.printf("Exception: ", e.toString());
+//        }
 
-
-        return null;
+        try {
+            String fileName = files[0].getOriginalFilename();
+            String savePath = rootPath + fileName;
+            File savedFile = new File(savePath);
+            savedFile.getParentFile().mkdirs();
+            files[0].transferTo(savedFile);
+        }catch (Exception e) {
+            System.out.printf("Exception: ", e.toString());
+        }
+        Map<String, Object> result = new HashMap<>();
+        result.put("files", files);
+        return result;
     }
 
     @Override

@@ -127,59 +127,14 @@ public class IeDcSvcImpl implements IeDcSvc {
     }
 
     @Override
-    public Map<String, String> uploadDrawing(MultipartFile file, String projectNo, String drawingName) {
+    public Map<String, String> uploadDrawingFile(MultipartFile file, String projectNo) {
 
         // Đường dẫn lưu trữ file
         String rootPath = "D:\\Workspace\\ProjectManagement\\Project\\" + projectNo + "\\Drawing\\";
 
-        Map<String, String> result = new HashMap<>();
 
-        if (file.isEmpty()) {
-            result.put("Status", "ERROR");
-            result.put("Message", "Vui lòng chọn một file để upload");
-            return result;
-        }
 
-        try {
-            // Lấy tên file gốc
-            String originalFilename = file.getOriginalFilename();
-            if (originalFilename == null) {
-                result.put("Status", "ERROR");
-                result.put("Message", "Tên file không hợp lệ");
-                return result;
-            }
-
-            // Lấy phần mở rộng của file gốc
-            String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
-
-            // Tạo tên file mới
-            String newFilename = drawingName + fileExtension;
-
-            // Tạo file mới với tên mới
-            File newFile = new File(rootPath + newFilename);
-            newFile.getParentFile().mkdirs(); // Tạo thư mục nếu chưa tồn tại
-
-            // Kiểm tra và xóa file cũ nếu tồn tại
-            if (newFile.exists()) {
-                if (!newFile.delete()) {
-                    result.put("Status", "ERROR");
-                    result.put("Message", "Không thể xóa file cũ: " + newFilename);
-                    return result;
-                }
-            }
-
-            // Lưu file mới vào hệ thống
-            file.transferTo(newFile);
-
-            result.put("Status", "OK");
-            result.put("Message", "Bạn đã upload thành công '" + newFilename + "'");
-            return result;
-        } catch (IOException e) {
-            e.printStackTrace();
-            result.put("Status", "ERROR");
-            result.put("Message", "Upload file '" + file.getOriginalFilename() + "' thất bại.");
-            return result;
-        }
+        return null;
     }
 
     @Override

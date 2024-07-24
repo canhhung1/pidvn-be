@@ -24,7 +24,7 @@ public interface IeDcSvc {
 
     DrawingDto saveDrawing(DrawingDto drawingDto);
 
-    Map uploadDrawing(MultipartFile file, String projectNo, String drawingName);
+    Map uploadDrawingFile(MultipartFile file, String projectNo);
 
     Map uploadDrawingTreeList(MultipartFile file, Integer projectId) throws IOException;
 

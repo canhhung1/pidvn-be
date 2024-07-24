@@ -100,9 +100,9 @@ public class IeDcCtl {
 
 
 
-    @PostMapping("UploadDrawing")
-    public ResponseEntity<?> uploadDrawing(@RequestBody MultipartFile file, @RequestParam String projectNo,@RequestParam String drawingName) {
-        return new ResponseEntity<>(this.ieDcSvc.uploadDrawing(file, projectNo,drawingName), HttpStatus.OK);
+    @PostMapping("UploadDrawingFile")
+    public ResponseEntity<?> uploadDrawingFile(@RequestBody MultipartFile file, @RequestParam String projectNo) {
+        return new ResponseEntity<>(this.ieDcSvc.uploadDrawingFile(file, projectNo), HttpStatus.OK);
     }
 
 

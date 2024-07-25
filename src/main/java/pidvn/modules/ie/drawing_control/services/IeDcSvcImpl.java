@@ -14,6 +14,9 @@ import pidvn.repositories.one.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -59,9 +62,9 @@ public class IeDcSvcImpl implements IeDcSvc {
 
     @Override
     public ProjectDto insertProject(ProjectDto projectDto) {
-
+        //\\10.92.176.10\DataSharePIDVN\4. IE Drawing\HUNG-IT
         // Tạo folder project
-        String rootPath = "E:\\Workspace\\Java\\PIDVN\\IE-Project\\" + projectDto.getProjectNo() + "\\Drawing";
+        String rootPath = "\\\\10.92.176.10\\DataSharePIDVN\\4. IE Drawing\\HUNG-IT\\IE-Project\\" + projectDto.getProjectNo() + "\\Drawing";
 
         File nestedDirectory = new File(rootPath);
 
@@ -128,32 +131,22 @@ public class IeDcSvcImpl implements IeDcSvc {
 
     @Override
     public Map<String, Object> uploadDrawingFile(MultipartFile[] files, String projectNo) {
-
+        //\\10.92.176.10\DataSharePIDVN\4. IE Drawing\HUNG-IT
         // Đường dẫn lưu trữ file
-        String rootPath = "E:\\Workspace\\Java\\PIDVN\\IE-Project\\" + projectNo + "\\Drawing\\";
-
-//        try {
-//            for (MultipartFile file: files) {
-//                String fileName = file.getOriginalFilename();
-//                String savePath = rootPath + fileName;
-//                File savedFile = new File(savePath);
-//                file.transferTo(savedFile);
-//            }
-//        }catch (Exception e) {
-//            System.out.printf("Exception: ", e.toString());
-//        }
+        String rootPath = "\\\\10.92.176.10\\DataSharePIDVN\\4. IE Drawing\\HUNG-IT\\IE-Project\\" + projectNo + "\\Drawing\\";
 
         try {
-            String fileName = files[0].getOriginalFilename();
-            String savePath = rootPath + fileName;
-            File savedFile = new File(savePath);
-            savedFile.getParentFile().mkdirs();
-            files[0].transferTo(savedFile);
+
+            for (MultipartFile file: files) {
+                byte[] bytes = file.getBytes();
+                Path path = Paths.get(rootPath + file.getOriginalFilename());
+                Files.write(path, bytes);
+            }
         }catch (Exception e) {
-            System.out.printf("Exception: ", e.toString());
+
         }
         Map<String, Object> result = new HashMap<>();
-        result.put("files", files);
+        result.put("files", files.length);
         return result;
     }
 

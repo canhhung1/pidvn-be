@@ -86,6 +86,8 @@ public class PihStopLineSvc implements IPihStopLineSvc {
 
     @Override
     public StopTimes createStopTime(StopTimes stopTime) {
+        // TODO: validate thời gian nếu vượt quá 720p
+
         return this.stopTimesRepo.save(stopTime);
     }
 

@@ -2,7 +2,9 @@ package pidvn.modules.ie.drawing_control.controllers;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -121,16 +123,21 @@ public class IeDcCtl {
      * @return
      */
     @PostMapping(value = "DrawingPreview")
-    public Object previewFile(@RequestBody SearchDto searchDto) {
+    public ResponseEntity<byte[]> previewFile(@RequestBody SearchDto searchDto) {
 
         File file = new File(searchDto.getUrl());
-        try {
-            FileInputStream fileInputStream = new FileInputStream(file);
-            return IOUtils.toByteArray(fileInputStream);
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
+            byte[] fileContent = IOUtils.toByteArray(fileInputStream);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentDispositionFormData("attachment", file.getName());
+
+            return new ResponseEntity<>(fileContent, headers, HttpStatus.OK);
         } catch (IOException e) {
             e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return null;
     }
 
 

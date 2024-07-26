@@ -1,6 +1,7 @@
 package pidvn.modules.ie.drawing_control.services;
 
 import org.springframework.web.multipart.MultipartFile;
+import pidvn.entities.one.IeDc009;
 import pidvn.entities.one.Product;
 import pidvn.entities.one.Users;
 import pidvn.modules.ie.drawing_control.models.*;
@@ -30,7 +31,11 @@ public interface IeDcSvc {
 
     List<ProjectActivityDto> getProjectActivities(Integer projectId);
 
-    ProjectActivityDto insertProjectActivity(MultipartFile file, ProjectActivityDto projectActivityDto);
+    ProjectActivityDto insertProjectActivity(MultipartFile file, ProjectActivityDto projectActivityDto) throws IOException;
 
     List<Product> getProducts();
+
+    Map uploadProgressFiles(MultipartFile[] files, Integer projectId, Integer projectProgressId);
+
+    List<IeDc009> getProgressFiles(Integer projectId, Integer projectProgressId);
 }

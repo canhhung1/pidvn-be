@@ -147,8 +147,22 @@ public class IeDcCtl {
     }
 
     @PostMapping("ProjectActivity")
-    public ResponseEntity<?> insertProjectActivity(@RequestParam("file") @Nullable MultipartFile file, @RequestPart("projectActivityDto") ProjectActivityDto projectActivityDto) {
+    public ResponseEntity<?> insertProjectActivity(@RequestParam("file") MultipartFile file, @RequestPart("projectActivityDto") ProjectActivityDto projectActivityDto) throws IOException {
         return new ResponseEntity<>(this.ieDcSvc.insertProjectActivity(file, projectActivityDto), HttpStatus.OK);
     }
+
+    @GetMapping("ProgressFiles")
+    public ResponseEntity<?> getProgressFiles(@RequestParam Integer projectId, @RequestParam Integer projectProgressId) {
+        return new ResponseEntity<>(this.ieDcSvc.getProgressFiles(projectId,projectProgressId), HttpStatus.OK);
+    }
+
+    @PostMapping("uploadProgressFile")
+    public ResponseEntity<?> uploadProgressFiles(
+            @RequestParam("files") MultipartFile[] files,
+            @RequestParam("projectNo") Integer projectId,
+            @RequestParam("projectProgressId") Integer projectProgressId) {
+        return new ResponseEntity<>(this.ieDcSvc.uploadProgressFiles(files, projectId, projectProgressId), HttpStatus.OK);
+    }
+
 
 }

@@ -45,10 +45,15 @@ public class IeDcSvcImpl implements IeDcSvc {
     private IeDc008Repo ieDc008Repo;
 
     @Autowired
+    private IeDc009Repo ieDc009Repo;
+
+    @Autowired
     private UsersRepo usersRepo;
 
     @Autowired
     private ProductRepo productRepo;
+
+    private final String ROOT_FOLDER = "\\\\10.92.176.10\\DataSharePIDVN\\4. IE Drawing\\HUNG-IT\\IE-Project\\";
 
     @Override
     public List<Users> getPersonInCharges(List<Integer> subsectionIds) {
@@ -64,20 +69,18 @@ public class IeDcSvcImpl implements IeDcSvc {
     public ProjectDto insertProject(ProjectDto projectDto) {
         //\\10.92.176.10\DataSharePIDVN\4. IE Drawing\HUNG-IT
         // Tạo folder project
-        String rootPath = "\\\\10.92.176.10\\DataSharePIDVN\\4. IE Drawing\\HUNG-IT\\IE-Project\\" + projectDto.getProjectNo() + "\\Drawing";
+        String rootPath = this.ROOT_FOLDER + projectDto.getProjectNo();
 
-        File nestedDirectory = new File(rootPath);
-
-        if (!nestedDirectory.exists()) {
-            // Tạo các thư mục lồng nhau
-            if (nestedDirectory.mkdirs()) {
-                System.out.println("Các thư mục lồng nhau đã được tạo thành công!");
-            } else {
-                System.out.println("Không thể tạo các thư mục lồng nhau.");
-            }
-        } else {
-            System.out.println("Các thư mục lồng nhau đã tồn tại.");
+        try {
+            // Tạo thư mục, bao gồm cả các thư mục cha nếu chúng chưa tồn tại
+            Files.createDirectories(Paths.get(rootPath + "\\Drawing"));
+            Files.createDirectories(Paths.get(rootPath + "\\Activity"));
+            Files.createDirectories(Paths.get(rootPath + "\\Progress"));
+        } catch (IOException e) {
+            System.err.println("Failed to create directories: " + e.getMessage());
         }
+
+
 
         // Lưu thông tin vào database
 
@@ -131,9 +134,8 @@ public class IeDcSvcImpl implements IeDcSvc {
 
     @Override
     public Map<String, Object> uploadDrawingFile(MultipartFile[] files, String projectNo) {
-        //\\10.92.176.10\DataSharePIDVN\4. IE Drawing\HUNG-IT
         // Đường dẫn lưu trữ file
-        String rootPath = "\\\\10.92.176.10\\DataSharePIDVN\\4. IE Drawing\\HUNG-IT\\IE-Project\\" + projectNo + "\\Drawing\\";
+        String rootPath = this.ROOT_FOLDER + projectNo + "\\Drawing\\";
 
         try {
 
@@ -276,14 +278,21 @@ public class IeDcSvcImpl implements IeDcSvc {
     }
 
     @Override
-    public ProjectActivityDto insertProjectActivity(MultipartFile file, ProjectActivityDto projectActivityDto) {
+    public ProjectActivityDto insertProjectActivity(MultipartFile file, ProjectActivityDto projectActivityDto) throws IOException {
 
         IeDc003 ieDc003 = modelMapper.map(projectActivityDto, IeDc003.class);
         ieDc003 = ieDc003Repo.save(ieDc003);
         ProjectActivityDto result = this.modelMapper.map(ieDc003, ProjectActivityDto.class);
 
         // TODO upload file
+        if (file != null) {
+            IeDc001 project = this.ieDc001Repo.findById(projectActivityDto.getProjectId()).get();
+            String rootPath = this.ROOT_FOLDER + project.getProjectNo() + "\\Activity\\";
 
+            byte[] bytes = file.getBytes();
+            Path path = Paths.get(rootPath + file.getOriginalFilename());
+            Files.write(path, bytes);
+        }
 
         return result;
     }
@@ -291,6 +300,47 @@ public class IeDcSvcImpl implements IeDcSvc {
     @Override
     public List<Product> getProducts() {
         return this.productRepo.findAll();
+    }
+
+
+
+
+    @Override
+    public Map uploadProgressFiles(MultipartFile[] files, Integer projectId, Integer projectProgressId) {
+        Map result = new HashMap<>();
+        List<IeDc009> arr = new ArrayList<>();
+        IeDc001 ieDc001 = this.ieDc001Repo.findById(projectId).get();
+        String projectNo = ieDc001.getProjectNo();
+        String rootPath = this.ROOT_FOLDER + projectNo + "\\Progress\\";
+
+        try {
+            for (MultipartFile file : files) {
+                byte[] bytes = file.getBytes();
+                Path path = Paths.get(rootPath + file.getOriginalFilename());
+                Files.write(path, bytes);
+
+                IeDc009 obj = new IeDc009();
+                obj.setName(file.getOriginalFilename());
+                obj.setProjectId(projectId);
+                obj.setProjectProgressId(projectProgressId);
+
+                IeDc009 data = this.ieDc009Repo.save(obj);
+                arr.add(data);
+            }
+        } catch (Exception e) {
+
+        }
+
+        result.put("data", arr);
+
+        return result;
+    }
+
+    @Override
+    public List<IeDc009> getProgressFiles(Integer projectId, Integer projectProgressId) {
+
+
+        return Collections.emptyList();
     }
 
 }

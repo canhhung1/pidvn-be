@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "ie_dc_001")
+@Table(name = "ie_dc_009")
 @EntityListeners(AuditingEntityListener.class)
 public class IeDc009 {
 

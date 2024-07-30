@@ -53,7 +53,8 @@ public class IeDcSvcImpl implements IeDcSvc {
     @Autowired
     private ProductRepo productRepo;
 
-    private final String ROOT_FOLDER = "\\\\10.92.176.10\\DataSharePIDVN\\4. IE Drawing\\HUNG-IT\\IE-Project\\";
+//    private final String ROOT_FOLDER = "\\\\10.92.176.10\\DataSharePIDVN\\4. IE Drawing\\HUNG-IT\\IE-Project\\";
+    private final String ROOT_FOLDER = "D:\\DataSharePIDVN\\4. IE Drawing\\HUNG-IT\\IE-Project\\";
 
     @Override
     public List<Users> getPersonInCharges(List<Integer> subsectionIds) {
@@ -319,13 +320,20 @@ public class IeDcSvcImpl implements IeDcSvc {
                 Path path = Paths.get(rootPath + file.getOriginalFilename());
                 Files.write(path, bytes);
 
-                IeDc009 obj = new IeDc009();
-                obj.setName(file.getOriginalFilename());
-                obj.setProjectId(projectId);
-                obj.setProjectProgressId(projectProgressId);
+                IeDc009 ieDc009 = ieDc009Repo.findAllByName(file.getOriginalFilename());
 
-                IeDc009 data = this.ieDc009Repo.save(obj);
-                arr.add(data);
+                if (ieDc009 != null) {
+                    ieDc009.setUpdatedAt(new Date());
+                    IeDc009 data = ieDc009Repo.save(ieDc009);
+                    arr.add(data);
+                } else {
+                    IeDc009 obj = new IeDc009();
+                    obj.setName(file.getOriginalFilename());
+                    obj.setProjectId(projectId);
+                    obj.setProjectProgressId(projectProgressId);
+                    IeDc009 data = this.ieDc009Repo.save(obj);
+                    arr.add(data);
+                }
             }
         } catch (Exception e) {
 
@@ -338,9 +346,7 @@ public class IeDcSvcImpl implements IeDcSvc {
 
     @Override
     public List<IeDc009> getProgressFiles(Integer projectId, Integer projectProgressId) {
-
-
-        return Collections.emptyList();
+        return this.ieDc009Repo.findDistinctByProjectIdAndProjectProgressId(projectId, projectProgressId);
     }
 
 }

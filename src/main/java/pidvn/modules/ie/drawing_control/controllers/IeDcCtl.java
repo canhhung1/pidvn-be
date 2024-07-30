@@ -156,10 +156,10 @@ public class IeDcCtl {
         return new ResponseEntity<>(this.ieDcSvc.getProgressFiles(projectId,projectProgressId), HttpStatus.OK);
     }
 
-    @PostMapping("uploadProgressFile")
+    @PostMapping("UploadProgressFile")
     public ResponseEntity<?> uploadProgressFiles(
             @RequestParam("files") MultipartFile[] files,
-            @RequestParam("projectNo") Integer projectId,
+            @RequestParam("projectId") Integer projectId,
             @RequestParam("projectProgressId") Integer projectProgressId) {
         return new ResponseEntity<>(this.ieDcSvc.uploadProgressFiles(files, projectId, projectProgressId), HttpStatus.OK);
     }

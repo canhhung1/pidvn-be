@@ -32,6 +32,12 @@ public class IeDc007 {
     @Column(name = "end_plan")
     private Date endPlan;
 
+    @Column(name = "start_act")
+    private Date startAct;
+
+    @Column(name = "end_act")
+    private Date endAct;
+
     @CreatedDate
     @Column(name = "created_at")
     private Date createdAt;
@@ -86,6 +92,22 @@ public class IeDc007 {
 
     public void setEndPlan(Date endPlan) {
         this.endPlan = endPlan;
+    }
+
+    public Date getStartAct() {
+        return startAct;
+    }
+
+    public void setStartAct(Date startAct) {
+        this.startAct = startAct;
+    }
+
+    public Date getEndAct() {
+        return endAct;
+    }
+
+    public void setEndAct(Date endAct) {
+        this.endAct = endAct;
     }
 
     public Date getCreatedAt() {

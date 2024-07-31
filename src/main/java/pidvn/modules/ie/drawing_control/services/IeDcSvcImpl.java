@@ -53,8 +53,8 @@ public class IeDcSvcImpl implements IeDcSvc {
     @Autowired
     private ProductRepo productRepo;
 
-//    private final String ROOT_FOLDER = "\\\\10.92.176.10\\DataSharePIDVN\\4. IE Drawing\\HUNG-IT\\IE-Project\\";
-    private final String ROOT_FOLDER = "D:\\DataSharePIDVN\\4. IE Drawing\\HUNG-IT\\IE-Project\\";
+    private final String ROOT_FOLDER = "\\\\10.92.176.10\\DataSharePIDVN\\4. IE Drawing\\HUNG-IT\\IE-Project\\";
+//    private final String ROOT_FOLDER = "D:\\DataSharePIDVN\\4. IE Drawing\\HUNG-IT\\IE-Project\\";
 
     @Override
     public List<Users> getPersonInCharges(List<Integer> subsectionIds) {
@@ -320,7 +320,7 @@ public class IeDcSvcImpl implements IeDcSvc {
                 Path path = Paths.get(rootPath + file.getOriginalFilename());
                 Files.write(path, bytes);
 
-                IeDc009 ieDc009 = ieDc009Repo.findAllByName(file.getOriginalFilename());
+                IeDc009 ieDc009 = ieDc009Repo.findAllByNameAndProjectIdAndProjectProgressId(file.getOriginalFilename(), projectId, projectProgressId);
 
                 if (ieDc009 != null) {
                     ieDc009.setUpdatedAt(new Date());

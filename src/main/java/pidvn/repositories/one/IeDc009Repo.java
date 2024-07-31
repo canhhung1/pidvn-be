@@ -10,6 +10,6 @@ import java.util.List;
 public interface IeDc009Repo extends JpaRepository<IeDc009, Integer> {
     List<IeDc009> findDistinctByProjectIdAndProjectProgressId(Integer projectId, Integer projectProgressId);
 
-    IeDc009 findAllByName(String name);
+    IeDc009 findAllByNameAndProjectIdAndProjectProgressId(String name,Integer projectId,Integer projectProgressId);
 
 }

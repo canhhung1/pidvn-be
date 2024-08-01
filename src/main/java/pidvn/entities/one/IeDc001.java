@@ -50,6 +50,8 @@ public class IeDc001 {
     private String capacity;
     @Column(name = "person_in_charge_id")
     private String personInChargeId;
+    @Column(name = "date")
+    private Date date;
 
     public Integer getId() {
         return id;
@@ -155,4 +157,11 @@ public class IeDc001 {
         this.personInChargeId = personInChargeId;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
 }

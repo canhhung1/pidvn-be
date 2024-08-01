@@ -46,7 +46,7 @@ public class IeDcCtl {
      * @return List
      */
     @PostMapping("Projects")
-    public ResponseEntity<?> getProjects(SearchDto searchDto) {
+    public ResponseEntity<?> getProjects(@RequestBody SearchDto searchDto) {
         return new ResponseEntity<>(this.ieDcSvc.getProjects(searchDto), HttpStatus.OK);
     }
 
@@ -147,7 +147,7 @@ public class IeDcCtl {
     }
 
     @PostMapping("ProjectActivity")
-    public ResponseEntity<?> insertProjectActivity(@RequestParam("file") MultipartFile file, @RequestPart("projectActivityDto") ProjectActivityDto projectActivityDto) throws IOException {
+    public ResponseEntity<?> insertProjectActivity(@RequestParam("file") @Nullable MultipartFile file, @RequestPart("projectActivityDto") ProjectActivityDto projectActivityDto) throws IOException {
         return new ResponseEntity<>(this.ieDcSvc.insertProjectActivity(file, projectActivityDto), HttpStatus.OK);
     }
 

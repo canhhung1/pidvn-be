@@ -4,8 +4,11 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pidvn.entities.one.*;
 import pidvn.mappers.one.ie.drawing_control.IeDcMapper;
@@ -22,6 +25,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class IeDcSvcImpl implements IeDcSvc {
+
+    Logger logger = LoggerFactory.getLogger(IeDcSvcImpl.class);
 
     @Autowired
     private ModelMapper modelMapper;
@@ -53,7 +58,7 @@ public class IeDcSvcImpl implements IeDcSvc {
     @Autowired
     private ProductRepo productRepo;
 
-    private final String ROOT_FOLDER = "\\\\10.92.176.10\\DataSharePIDVN\\4. IE Drawing\\HUNG-IT\\IE-Project\\";
+    private final String ROOT_FOLDER = "\\\\10.92.176.10\\DataSharePIDVN\\4. IE Drawing\\DRAWING-CONTROL\\IE-Project\\";
 //    private final String ROOT_FOLDER = "D:\\DataSharePIDVN\\4. IE Drawing\\HUNG-IT\\IE-Project\\";
 
     @Override
@@ -67,26 +72,28 @@ public class IeDcSvcImpl implements IeDcSvc {
     }
 
     @Override
+    @Transactional(transactionManager = "transactionManagerOne")
     public ProjectDto insertProject(ProjectDto projectDto) {
-        //\\10.92.176.10\DataSharePIDVN\4. IE Drawing\HUNG-IT
+
+        // Lưu thông tin vào database
+        projectDto.setDate(new Date());
+        IeDc001 ieDc001 = modelMapper.map(projectDto, IeDc001.class);
+        ieDc001 = this.ieDc001Repo.save(ieDc001);
+
+
         // Tạo folder project
         String rootPath = this.ROOT_FOLDER + projectDto.getProjectNo();
-
         try {
             // Tạo thư mục, bao gồm cả các thư mục cha nếu chúng chưa tồn tại
             Files.createDirectories(Paths.get(rootPath + "\\Drawing"));
             Files.createDirectories(Paths.get(rootPath + "\\Activity"));
             Files.createDirectories(Paths.get(rootPath + "\\Progress"));
         } catch (IOException e) {
-            System.err.println("Failed to create directories: " + e.getMessage());
+            logger.debug("DRAWING CONTROL (IeDcSvcImpl.insertProject): Failed to create directories: " + e.getMessage());
+            throw new RuntimeException("Failed to create directories: " + e);
         }
 
 
-
-        // Lưu thông tin vào database
-
-        IeDc001 ieDc001 = modelMapper.map(projectDto, IeDc001.class);
-        ieDc001 = this.ieDc001Repo.save(ieDc001);
 
         return this.modelMapper.map(ieDc001, ProjectDto.class);
     }
@@ -146,7 +153,7 @@ public class IeDcSvcImpl implements IeDcSvc {
                 Files.write(path, bytes);
             }
         }catch (Exception e) {
-
+            logger.debug("DRAWING CONTROL (IeDcSvcImpl.uploadDrawingFile): Failed to upload file: " + e.getMessage());
         }
         Map<String, Object> result = new HashMap<>();
         result.put("files", files.length);
@@ -287,12 +294,16 @@ public class IeDcSvcImpl implements IeDcSvc {
 
         // TODO upload file
         if (file != null) {
-            IeDc001 project = this.ieDc001Repo.findById(projectActivityDto.getProjectId()).get();
-            String rootPath = this.ROOT_FOLDER + project.getProjectNo() + "\\Activity\\";
+            try {
+                IeDc001 project = this.ieDc001Repo.findById(projectActivityDto.getProjectId()).get();
+                String rootPath = this.ROOT_FOLDER + project.getProjectNo() + "\\Activity\\";
 
-            byte[] bytes = file.getBytes();
-            Path path = Paths.get(rootPath + file.getOriginalFilename());
-            Files.write(path, bytes);
+                byte[] bytes = file.getBytes();
+                Path path = Paths.get(rootPath + file.getOriginalFilename());
+                Files.write(path, bytes);
+            }catch (Exception e) {
+                logger.debug("DRAWING CONTROL (IeDcSvcImpl.insertProjectActivity): Failed to upload file: " + e.getMessage());
+            }
         }
 
         return result;

@@ -20,6 +20,19 @@
         FROM ie_dc_001 A
         left join ie_dc_004 B on A.project_type_id = B.id
         left join users C on A.person_in_charge_id = C.username
+        where 1 = 1
+        <if test="date != null">
+            and year(A.date) = year(#{date})
+        </if>
+        <if test="projectTypeId != null">
+            and A.project_type_id = #{projectTypeId}
+        </if>
+        <if test="projectTypeId != null">
+
+        </if>
+        <if test="personInChargeId != null">
+            and A.person_in_charge_id = #{personInChargeId}
+        </if>
     </select>
 
 

@@ -20,6 +20,7 @@ public class ProjectDto {
     private Date createdAt;
     private String personInChargeId;
     private String personInChargeName;
+    private Date date;
 
     public Integer getId() {
         return id;
@@ -147,5 +148,13 @@ public class ProjectDto {
 
     public void setPersonInChargeName(String personInChargeName) {
         this.personInChargeName = personInChargeName;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

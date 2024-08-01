@@ -11,6 +11,8 @@ public class ProjectProgressDto {
     private Integer progress;
     private Date startPlan;
     private Date endPlan;
+    private Date startAct;
+    private Date endAct;
     private Date createdAt;
     private Date updatedAt;
 
@@ -68,6 +70,22 @@ public class ProjectProgressDto {
 
     public void setEndPlan(Date endPlan) {
         this.endPlan = endPlan;
+    }
+
+    public Date getStartAct() {
+        return startAct;
+    }
+
+    public void setStartAct(Date startAct) {
+        this.startAct = startAct;
+    }
+
+    public Date getEndAct() {
+        return endAct;
+    }
+
+    public void setEndAct(Date endAct) {
+        this.endAct = endAct;
     }
 
     public Date getCreatedAt() {

@@ -130,9 +130,9 @@ public class PihInventorySvc implements IPihInventorySvc {
     @Override
     public List<InventoryVo> getInventoryDataByRequestId(Integer requestId) {
         PihInventoryRequest request = this.pihInventoryRequestRepo.findById(requestId).get();
-        Date fromDate = request.getCalculateTheoryDataDate();
-        Date toDate = request.getInventoryCloseDate();
-        return this.pihInventoryMapper.getInventoryData(requestId, fromDate, toDate);
+//        Date fromDate = request.getCalculateTheoryDataDate();
+//        Date toDate = request.getInventoryCloseDate();
+        return this.pihInventoryMapper.getInventoryData(requestId);
     }
 
     @Override

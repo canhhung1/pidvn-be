@@ -507,7 +507,7 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
                 materialControl.setNgQty(0);
                 materialControl.setRecordType(material.getRecordType());
                 materialControl.setProcessId(material.getProcessId());
-                // materialControl.setRemark("Hung Test NVL");
+                materialControl.setRemark("Hung Test Ordinal Saved");
                 materialControls.add(materialControl);
             }
         }
@@ -518,8 +518,22 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
             result.put("data", this.purWhRecordsRepo.saveAll(purWhRecords));
         }
         if (materialControls.size() > 0) {
-            result.put("data", this.materialControlsRepo.saveAll(materialControls));
+            // result.put("data", this.materialControlsRepo.saveAll(materialControls));
+
+            // Lưu lần lượt từng item
+            List<MaterialControls> dataSaved = new ArrayList<>();
+            for (MaterialControls item : materialControls) {
+                MaterialControls obj = this.materialControlsRepo.save(item);
+                dataSaved.add(obj);
+            }
+            result.put("data", dataSaved);
         }
+
+
+
+
+
+
 
 
         /**

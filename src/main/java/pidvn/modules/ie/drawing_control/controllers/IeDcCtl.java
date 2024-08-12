@@ -75,6 +75,15 @@ public class IeDcCtl {
         return new ResponseEntity<>(this.ieDcSvc.getProjectTypes(), HttpStatus.OK);
     }
 
+    /**
+     * Lấy danh sách Progress theo ProjectType
+     * @return
+     */
+    @GetMapping("ProgressesByProjectType")
+    public ResponseEntity<?> getProgressesByProjectType(@RequestParam Integer projectTypeId) {
+        return new ResponseEntity<>(this.ieDcSvc.getProgressesByProjectType(projectTypeId), HttpStatus.OK);
+    }
+
     @GetMapping("ProjectProgresses")
     public ResponseEntity<?> getProjectProgresses(@RequestParam Integer projectId) {
         return new ResponseEntity<>(this.ieDcSvc.getProjectProgresses(projectId), HttpStatus.OK);

@@ -38,4 +38,6 @@ public interface IeDcSvc {
     Map uploadProgressFiles(MultipartFile[] files, Integer projectId, Integer projectProgressId);
 
     List<IeDc009> getProgressFiles(Integer projectId, Integer projectProgressId);
+
+    List<ProjectProgressDto> getProgressesByProjectType(Integer projectTypeId);
 }

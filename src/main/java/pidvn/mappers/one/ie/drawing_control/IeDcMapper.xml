@@ -112,4 +112,18 @@
     </select>
 
 
+
+
+    <resultMap id="getProgressesByProjectType-result"
+               type="pidvn.modules.ie.drawing_control.models.ProjectProgressDto">
+        <result column="project_progress_name" property="projectProgressName" javaType="String"/>
+    </resultMap>
+    <select id="getProgressesByProjectType" resultMap="getProgressesByProjectType-result">
+        SELECT B.id, B.name as project_progress_name
+        FROM pidvn.ie_dc_006 A
+        left join ie_dc_005 B on A.project_progress_id = B.id
+        where 1 = 1
+        and project_type_id = #{projectTypeId}
+    </select>
+
 </mapper>

@@ -360,4 +360,9 @@ public class IeDcSvcImpl implements IeDcSvc {
         return this.ieDc009Repo.findDistinctByProjectIdAndProjectProgressId(projectId, projectProgressId);
     }
 
+    @Override
+    public List<ProjectProgressDto> getProgressesByProjectType(Integer projectTypeId) {
+        return this.ieDcMapper.getProgressesByProjectType(projectTypeId);
+    }
+
 }

@@ -80,7 +80,7 @@ public class PihStopLineSvc implements IPihStopLineSvc {
 
     @Override
     public List<StopItems> getStopItems() {
-        return this.stopItemsRepo.findAll();
+        return this.stopItemsRepo.findByDisableNot(1);
     }
 
 

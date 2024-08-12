@@ -17,4 +17,5 @@ public interface IeDcMapper {
     List<DrawingDto> getDrawings(Integer projectId);
 
 
+    List<ProjectProgressDto> getProgressesByProjectType(Integer projectTypeId);
 }

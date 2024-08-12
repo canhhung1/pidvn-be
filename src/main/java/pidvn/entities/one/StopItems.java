@@ -34,6 +34,8 @@ public class StopItems {
     @Column(name = "updated_at")
     private Date updatedAt;
 
+    private Integer disable;
+
     public Integer getId() {
         return id;
     }
@@ -80,5 +82,13 @@ public class StopItems {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Integer getDisable() {
+        return disable;
+    }
+
+    public void setDisable(Integer disable) {
+        this.disable = disable;
     }
 }

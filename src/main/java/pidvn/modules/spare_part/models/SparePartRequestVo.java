@@ -20,8 +20,9 @@ public class SparePartRequestVo {
     private String factoryCode;
     private String factoryName;
     private String status;
-
     private String unit;
+    private Integer amountReq;
+    private Integer amountAct;
 
     public Integer getId() {
         return id;
@@ -165,5 +166,21 @@ public class SparePartRequestVo {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Integer getAmountReq() {
+        return amountReq;
+    }
+
+    public void setAmountReq(Integer amountReq) {
+        this.amountReq = amountReq;
+    }
+
+    public Integer getAmountAct() {
+        return amountAct;
+    }
+
+    public void setAmountAct(Integer amountAct) {
+        this.amountAct = amountAct;
     }
 }

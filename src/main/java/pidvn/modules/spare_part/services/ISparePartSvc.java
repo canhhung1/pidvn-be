@@ -62,4 +62,6 @@ public interface ISparePartSvc {
     List<SparePartRequestVo> getSparePartRequestDetailByRequestId(Integer requestId);
 
     ByteArrayInputStream downloadQaCard(Integer requestId) throws IOException;
+
+    SparePartRequestMaster deleteSparePartRequestMaster(Integer id);
 }

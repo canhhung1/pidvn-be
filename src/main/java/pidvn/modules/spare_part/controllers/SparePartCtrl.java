@@ -143,6 +143,13 @@ public class SparePartCtrl {
         return new ResponseEntity<>(this.sparePartSvc.getSparePartRequestMaster(searchVo), HttpStatus.OK);
     }
 
+    @DeleteMapping("SparePartRequestMasters/{id}")
+    public ResponseEntity<?> deleteSparePartRequestMaster(@PathVariable Integer id) {
+        return new ResponseEntity<>(this.sparePartSvc.deleteSparePartRequestMaster(id), HttpStatus.OK);
+    }
+
+
+
     /**
      * Lấy thông tin chi tiết của request
      * @param requestId

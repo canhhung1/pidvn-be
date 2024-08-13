@@ -390,6 +390,13 @@ public class SparePartSvc implements ISparePartSvc {
         return result;
     }
 
+    @Override
+    public SparePartRequestMaster deleteSparePartRequestMaster(Integer id) {
+        SparePartRequestMaster data = this.sparePartRequestMasterRepo.findById(id).get();
+        data.setActive(false);
+        return this.sparePartRequestMasterRepo.save(data);
+    }
+
     private String createTempFile(String sourcePath, String targetPath) throws IOException {
         File source = new File(sourcePath);
         File target = new File(targetPath);

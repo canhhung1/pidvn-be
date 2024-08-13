@@ -202,32 +202,57 @@
         <result column="factory_code" property="factoryCode" javaType="String"/>
         <result column="factory_name" property="factoryName" javaType="String"/>
         <result column="issued_qty" property="issuedQty" javaType="String"/>
+        <result column="amount_req" property="amountReq" javaType="Integer"/>
+        <result column="amount_act" property="amountAct" javaType="Integer"/>
     </resultMap>
     <select id="getSparePartRequestMasters" resultMap="getSparePartRequestMasters-result">
-        SELECT
-            M.*, U.name created_by_name,S.name subsection_name,
-            case
-                when M.factory_code = 'RE' then 'RELAY FACTORY'
-                when M.factory_code = 'EM' then 'EMC FACTORY'
-                when M.factory_code = 'PN' then 'PIH ENC FACTORY'
-                when M.factory_code = 'PR' then 'PIH RE FACTOR'
-                when M.factory_code = 'SP' then 'SPEAKER'
-                when M.factory_code = 'TN' then 'HFC FACTORY'
-                when M.factory_code = 'HO' then 'HEAD OFFICE'
-                when M.factory_code = 'PC' then 'PCB FACTORY'
-            end factory_name
-        FROM spare_part_request_master M
-        left join users U on M.created_by = U.username
-        left join subsection S on M.subsection_id = S.id
-        where 1 = 1
-        and M.is_active = 1
-        <if test="date != null">
-            and M.date = DATE_FORMAT(#{date}, '%Y-%m-%d')
-        </if>
-        <if test="requestMasterId != null">
-            and M.id = #{requestMasterId}
-        </if>
-        order by M.id desc
+        with
+        T01 as (
+            SELECT
+                M.*, U.name created_by_name,S.name subsection_name,
+                case
+                    when M.factory_code = 'RE' then 'RELAY FACTORY'
+                    when M.factory_code = 'EM' then 'EMC FACTORY'
+                    when M.factory_code = 'PN' then 'PIH ENC FACTORY'
+                    when M.factory_code = 'PR' then 'PIH RE FACTOR'
+                    when M.factory_code = 'SP' then 'SPEAKER'
+                    when M.factory_code = 'TN' then 'HFC FACTORY'
+                    when M.factory_code = 'HO' then 'HEAD OFFICE'
+                    when M.factory_code = 'PC' then 'PCB FACTORY'
+                end factory_name
+            FROM spare_part_request_master M
+            left join users U on M.created_by = U.username
+            left join subsection S on M.subsection_id = S.id
+            where 1 = 1
+            and M.is_active = 1
+            <if test="date != null">
+                and M.date = DATE_FORMAT(#{date}, '%Y-%m-%d')
+            </if>
+            <if test="requestMasterId != null">
+                and M.id = #{requestMasterId}
+            </if>
+            order by M.id desc
+        ),
+        -- Tính toán để biết được số mã đã xuất kho
+        T02 as (
+            select A.request_no, A.amount amount_req , B.amount amount_act from (
+                select B.request_no, count(A.part_number) amount from  spare_part_request_detail A
+                inner join spare_part_request_master B on A.request_id = B.id
+                where B.date = DATE_FORMAT(#{date}, '%Y-%m-%d')
+                group by B.request_no
+            ) A
+            left join (
+                select R.request_no, count(R.part_number) amount from spare_part_records R
+                where 1=1
+                and R.goods_type = 'M4'
+                and R.type = 'OUTPUT'
+                and R.date BETWEEN DATE_FORMAT(#{date}, '%Y-%m-%d') AND DATE_ADD(DATE_FORMAT(#{date}, '%Y-%m-%d'), INTERVAL 8 DAY)
+                group by R.request_no
+                order by id desc
+            ) B
+            on A.request_no = B.request_no
+        )
+        select T01.*, T02.amount_req, T02.amount_act from T01 left join T02 on T01.request_no = T02.request_no
     </select>
 
     <resultMap id="getSparePartRequestDetail-result"

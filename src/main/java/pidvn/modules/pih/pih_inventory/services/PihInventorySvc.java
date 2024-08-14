@@ -45,7 +45,7 @@ public class PihInventorySvc implements IPihInventorySvc {
 
     @Override
     public List<ProductType> getInventoryArea() {
-        List<Integer> productIds = Arrays.asList(4, 6);
+        List<Integer> productIds = Arrays.asList(4, 5, 6);
         return this.productTypeRepo.findByProductIdIn(productIds);
     }
 

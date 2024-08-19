@@ -1,4 +1,4 @@
-package pidvn.modules.ie.drawing_control.models;
+package pidvn.modules.ie.drawing_control.dto;
 
 import java.util.Date;
 

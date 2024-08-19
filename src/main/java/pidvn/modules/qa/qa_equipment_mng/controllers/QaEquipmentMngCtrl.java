@@ -37,7 +37,7 @@ public class QaEquipmentMngCtrl {
     @PostMapping("TemplateCreateLabel")
     public ResponseEntity<byte[]> downloadTemplateCreateLabel() {
 
-        String fileUrl = "P:\\IS\\CanhHung\\FDCS\\QA\\QC\\Template_EquipmentLabelData.xlsx";
+        String fileUrl = "\\\\10.92.152.55\\pvg-data$\\PIDVN-Data\\Public Drive\\IS\\CanhHung\\FDCS\\QA\\QC\\Template_EquipmentLabelData.xlsx";
 
         byte[] file = new byte[0];
 

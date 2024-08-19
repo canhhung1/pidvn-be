@@ -21,7 +21,7 @@ import java.io.IOException;
 public class PersonalController {
 
     //root path for image files
-    private String FILE_PATH_ROOT = "P:\\IS\\CanhHung\\FDCS\\HR & GA\\UserFiles";
+    private String FILE_PATH_ROOT = "\\\\10.92.152.55\\pvg-data$\\PIDVN-Data\\Public Drive\\IS\\CanhHung\\FDCS\\HR & GA\\UserFiles";
 
     @Autowired
     private PersonalService personalSvc;

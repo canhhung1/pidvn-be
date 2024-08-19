@@ -46,7 +46,7 @@ public class QaEquipmentMngSvc implements IQaEquipmentMngSvc {
     @Autowired
     private QaDeviceCalibrationLabelRepo qaDeviceCalibrationLabelRepo;
 
-    private String ROOT_FOLDER = "P:\\IS\\CanhHung\\FDCS\\QA\\QC\\DocumentDevice";
+    private String ROOT_FOLDER = "\\\\10.92.152.55\\pvg-data$\\PIDVN-Data\\Public Drive\\IS\\CanhHung\\FDCS\\QA\\QC\\DocumentDevice";
 
     /**
      * @param file

@@ -30,6 +30,7 @@ public class MaterialVo {
     private String username;
     private Date createdAt;
     private Float remainingQty;
+    private Integer ordinal;
 
     public Integer getId() {
         return id;
@@ -245,5 +246,13 @@ public class MaterialVo {
 
     public void setRemainingQty(Float remainingQty) {
         this.remainingQty = remainingQty;
+    }
+
+    public Integer getOrdinal() {
+        return ordinal;
+    }
+
+    public void setOrdinal(Integer ordinal) {
+        this.ordinal = ordinal;
     }
 }

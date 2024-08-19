@@ -107,7 +107,7 @@ public class PihInventoryCtrl {
     @PostMapping("DownloadTemplateUploadRawMaterialInventory")
     public ResponseEntity<byte[]> downloadTemplateUploadRawMaterialInventory() {
         byte[] file = new byte[0];
-        String url = "P:\\IS\\(C) Save File FDCS\\FDCS-Server-2\\PIH\\PIH-Inventory\\Template_Upload_Raw_Material_Inventory_Data.xlsx";
+        String url = "\\\\10.92.152.55\\pvg-data$\\PIDVN-Data\\Public Drive\\IS\\(C) Save File FDCS\\FDCS-Server-2\\PIH\\PIH-Inventory\\Template_Upload_Raw_Material_Inventory_Data.xlsx";
         try {
             file = FileUtils.readFileToByteArray(new File(url));
         } catch (IOException e) {

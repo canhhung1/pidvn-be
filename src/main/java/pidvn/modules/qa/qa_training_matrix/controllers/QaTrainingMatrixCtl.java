@@ -40,7 +40,7 @@ public class QaTrainingMatrixCtl {
     @PostMapping("TemplateUpload")
     public ResponseEntity<byte[]> downloadTemplateUpload() {
 
-        String fileUrl = "P:\\IS\\(C) Save File FDCS\\FDCS-Server-2\\QA\\TrainingMatrix\\training_matrix_upload_template.xlsx";
+        String fileUrl = "\\\\10.92.152.55\\pvg-data$\\PIDVN-Data\\Public Drive\\IS\\(C) Save File FDCS\\FDCS-Server-2\\QA\\TrainingMatrix\\training_matrix_upload_template.xlsx";
 
         byte[] file = new byte[0];
 

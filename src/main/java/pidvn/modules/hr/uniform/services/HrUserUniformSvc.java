@@ -129,7 +129,7 @@ public class HrUserUniformSvc implements IHrUserUniformSvc {
     @Override
     public ByteArrayInputStream downloadExcelTemplate() throws IOException {
 
-        String sourcePath = "P:\\IS\\CanhHung\\FDCS\\HR & GA\\UserUniform\\UploadTemplate.xlsx";
+        String sourcePath = "\\\\10.92.152.55\\pvg-data$\\PIDVN-Data\\Public Drive\\IS\\CanhHung\\FDCS\\HR & GA\\UserUniform\\UploadTemplate.xlsx";
 
         FileInputStream inputStream = new FileInputStream(sourcePath);
 

@@ -172,7 +172,7 @@ public class WasteMngService implements IWasteMngService {
 
             WasteHandleCompany company = this.handleCompanyRepo.getById(master.getHandleCompany());
 
-            String reportPath = "P:\\IS\\CanhHung\\JasperReport\\HR\\WasteManagement";
+            String reportPath = "\\\\10.92.152.55\\pvg-data$\\PIDVN-Data\\Public Drive\\IS\\CanhHung\\JasperReport\\HR\\WasteManagement";
             WasteSearchVo searchVo = new WasteSearchVo();
             searchVo.setWasteMaster(masterId);
             List<WasteDataVo> dataList = null;
@@ -256,7 +256,7 @@ public class WasteMngService implements IWasteMngService {
         try {
             WasteMasterData master = this.masterDataRepo.getById(masterId);
             WasteHandleCompany company = this.handleCompanyRepo.getById(master.getHandleCompany());
-            String reportPath = "P:\\IS\\CanhHung\\JasperReport\\HR\\WasteManagement";
+            String reportPath = "\\\\10.92.152.55\\pvg-data$\\PIDVN-Data\\Public Drive\\IS\\CanhHung\\JasperReport\\HR\\WasteManagement";
             WasteSearchVo searchVo = new WasteSearchVo();
             searchVo.setWasteMaster(masterId);
             List<WasteDataVo> dataList = this.wasteMngMapper.getWasteDetailDataSummary(searchVo);

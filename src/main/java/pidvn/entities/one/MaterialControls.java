@@ -91,6 +91,9 @@ public class MaterialControls {
     @Column(name = "process_id")
     private Integer processId;
 
+    @Column(name = "ordinal")
+    private Integer ordinal;
+
     public Integer getId() {
         return id;
     }
@@ -289,5 +292,13 @@ public class MaterialControls {
 
     public void setProcessId(Integer processId) {
         this.processId = processId;
+    }
+
+    public Integer getOrdinal() {
+        return ordinal;
+    }
+
+    public void setOrdinal(Integer ordinal) {
+        this.ordinal = ordinal;
     }
 }

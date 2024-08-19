@@ -25,7 +25,7 @@ import java.util.Map;
 @Service
 public class OqcDocumentSvc implements IOqcDocumentSvc {
 
-    private String ROOT_FOLDER = "P:\\IS\\CanhHung\\FDCS\\QA\\OQC\\Document";
+    private String ROOT_FOLDER = "\\\\10.92.152.55\\pvg-data$\\PIDVN-Data\\Public Drive\\IS\\CanhHung\\FDCS\\QA\\OQC\\Document";
 
     @Autowired
     private OqcDocumentMapper oqcDocumentMapper;

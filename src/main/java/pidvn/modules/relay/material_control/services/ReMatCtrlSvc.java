@@ -507,7 +507,8 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
                 materialControl.setNgQty(0);
                 materialControl.setRecordType(material.getRecordType());
                 materialControl.setProcessId(material.getProcessId());
-                //materialControl.setRemark("Hung Test Ordinal Saved");
+                materialControl.setOrdinal(material.getOrdinal());
+                materialControl.setRemark("Hung Test them cot ordinal de check thu tu luu");
                 materialControls.add(materialControl);
             }
         }

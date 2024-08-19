@@ -38,7 +38,7 @@ public class ReadExcelController {
 
         // TODO
 
-        String pathFile = "P:\\IS\\CanhHung\\project IE\\HSSM 2022 v1.xlsx";
+        String pathFile = "\\\\10.92.152.55\\pvg-data$\\PIDVN-Data\\Public Drive\\IS\\CanhHung\\project IE\\HSSM 2022 v1.xlsx";
 
         File file = new File(pathFile);
 
@@ -100,7 +100,7 @@ public class ReadExcelController {
         }
 
 
-        String excelFilePath = "P:\\IS\\CanhHung\\project IE\\DataLink2.xls";
+        String excelFilePath = "\\\\10.92.152.55\\pvg-data$\\PIDVN-Data\\Public Drive\\IS\\CanhHung\\project IE\\DataLink2.xls";
         this.writeExcel(histories,excelFilePath);
 
 

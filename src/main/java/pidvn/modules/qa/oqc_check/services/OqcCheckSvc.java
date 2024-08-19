@@ -27,7 +27,7 @@ import java.util.UUID;
 @Service
 public class OqcCheckSvc implements IOqcCheckSvc {
 
-    private String FILE_PATH_ROOT = "P:\\IS\\CanhHung\\FDCS\\QA\\OQC\\Relay";
+    private String FILE_PATH_ROOT = "\\\\10.92.152.55\\pvg-data$\\PIDVN-Data\\Public Drive\\IS\\CanhHung\\FDCS\\QA\\OQC\\Relay";
 
     @Autowired
     private OqcRequestRepo oqcRequestRepo;

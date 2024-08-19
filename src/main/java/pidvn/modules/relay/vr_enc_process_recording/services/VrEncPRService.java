@@ -193,7 +193,7 @@ public class VrEncPRService implements IVrEncPRService {
 
         String tempName = "temp-" + new Random().nextInt(1000) + "xls";
 
-         String rootFolder = "P:\\IS\\(C) Save File FDCS\\FDCS-Server-2\\VR-EMC-Process-Recording\\";
+         String rootFolder = "\\\\10.92.152.55\\pvg-data$\\PIDVN-Data\\Public Drive\\IS\\(C) Save File FDCS\\FDCS-Server-2\\VR-EMC-Process-Recording\\";
 
 //        String rootFolder = "E:\\(C) Save File FDCS\\FDCS-Server-2\\VR-EMC-Process-Recording\\";
 

@@ -20,7 +20,7 @@ import java.util.Date;
 @RequestMapping("QA/OqcCheck")
 public class OqcCheckController {
 
-    private String FILE_PATH_ROOT = "P:\\IS\\CanhHung\\FDCS\\QA\\OQC\\Relay\\";
+    private String FILE_PATH_ROOT = "\\\\10.92.152.55\\pvg-data$\\PIDVN-Data\\Public Drive\\IS\\CanhHung\\FDCS\\QA\\OQC\\Relay\\";
 
     @Autowired
     private OqcCheckSvc oqcCheckSvc;

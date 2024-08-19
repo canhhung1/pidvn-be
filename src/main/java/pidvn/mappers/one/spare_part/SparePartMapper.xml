@@ -18,7 +18,7 @@
         <result column="goods_type" property="goodsType" javaType="String"/>
     </resultMap>
     <select id="getSparePartRecords" resultMap="getSparePartRecords-result">
-        select
+        select distinct
             A.id, A.request_no, A.part_number, A.date, A.line, A.remark, A.goods_type, A.po, A.supplier,
             (select U.name from users U where U.username = A.wh_user_code) wh_user,
             (select U.name from users U where U.username = A.receive_user_code) other_user,

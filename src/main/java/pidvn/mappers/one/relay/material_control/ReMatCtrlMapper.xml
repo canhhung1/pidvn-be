@@ -176,17 +176,17 @@
         T01 as (
             SELECT
                 R.id, R.lot_no, R.record_type, R.qty, R.model as part_no,
-                R.qa_card, R.slip_no, null as process_id, R.created_at
+                R.qa_card, R.slip_no, null as process_id, R.created_at, null as ordinal
             FROM pur_wh_records R
             UNION ALL
             SELECT
                 M.id, M.clotno as lot_no, M.record_type, M.qty, M.cpn as part_no,
-                M.plotno as qa_card, M.scan_no as slip_no, M.process_id, M.created_at
+                M.plotno as qa_card, M.scan_no as slip_no, M.process_id, M.created_at, M.ordinal
             FROM material_controls M
         )
         select
             T01.id, T01.part_no, T01.lot_no, T01.record_type, T01.qty,
-            T01.qa_card, T01.slip_no, T01.created_at,
+            T01.qa_card, T01.slip_no, T01.created_at, T01.ordinal,
             (select P.name from process P where P.id = T01.process_id) as process_name
         from T01
         where 1 = 1
@@ -205,7 +205,7 @@
                 #{item}
             </foreach>
         </if>
-        order by T01.created_at desc
+        order by T01.created_at asc, T01.ordinal asc
     </select>
 
 

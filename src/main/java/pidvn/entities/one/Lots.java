@@ -92,6 +92,9 @@ public class Lots {
     @Column(name = "first_qty")
     private Float firstQty;
 
+    @Column(name = "expired_date")
+    private Date expiredDate;
+
     public Integer getId() {
         return id;
     }
@@ -290,5 +293,13 @@ public class Lots {
 
     public void setFirstQty(Float firstQty) {
         this.firstQty = firstQty;
+    }
+
+    public Date getExpiredDate() {
+        return expiredDate;
+    }
+
+    public void setExpiredDate(Date expiredDate) {
+        this.expiredDate = expiredDate;
     }
 }

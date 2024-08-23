@@ -31,6 +31,7 @@ public class MaterialVo {
     private Date createdAt;
     private Float remainingQty;
     private Integer ordinal;
+    private String remark;
 
     public Integer getId() {
         return id;
@@ -254,5 +255,13 @@ public class MaterialVo {
 
     public void setOrdinal(Integer ordinal) {
         this.ordinal = ordinal;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

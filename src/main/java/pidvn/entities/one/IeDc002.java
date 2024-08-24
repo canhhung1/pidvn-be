@@ -8,20 +8,17 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "ie_dc_009")
+@Table(name = "ie_dc_002")
 @EntityListeners(AuditingEntityListener.class)
-public class IeDc009 {
+public class IeDc002 {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
+
     @Column(name = "name")
     private String name;
-    @Column(name = "project_id")
-    private Integer projectId;
-    @Column(name = "project_progress_id")
-    private Integer projectProgressId;
 
     @CreatedDate
     @Column(name = "created_at")
@@ -45,22 +42,6 @@ public class IeDc009 {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Integer getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Integer projectId) {
-        this.projectId = projectId;
-    }
-
-    public Integer getProjectProgressId() {
-        return projectProgressId;
-    }
-
-    public void setProjectProgressId(Integer projectProgressId) {
-        this.projectProgressId = projectProgressId;
     }
 
     public Date getCreatedAt() {

@@ -5,22 +5,15 @@ import java.util.Date;
 public class ProjectDto {
 
     private Integer id;
-    private String projectNo;
-    private String projectName;
-    private Integer projectTypeId;
-    private String projectTypeName;
+    private String controlNo;
+    private String name;
+    private Integer typeId;
+    private String typeName;
+    private String picId;
+    private String picName;
     private String createdBy;
-    private String createdByName;
-    private Integer statusId;
-    private String statusName;
-    private String supplier;
-    private String line;
-    private String tactTime;
-    private String capacity;
     private Date createdAt;
-    private String personInChargeId;
-    private String personInChargeName;
-    private Date date;
+    private Date updatedAt;
 
     public Integer getId() {
         return id;
@@ -30,36 +23,52 @@ public class ProjectDto {
         this.id = id;
     }
 
-    public String getProjectNo() {
-        return projectNo;
+    public String getControlNo() {
+        return controlNo;
     }
 
-    public void setProjectNo(String projectNo) {
-        this.projectNo = projectNo;
+    public void setControlNo(String controlNo) {
+        this.controlNo = controlNo;
     }
 
-    public String getProjectName() {
-        return projectName;
+    public String getName() {
+        return name;
     }
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Integer getProjectTypeId() {
-        return projectTypeId;
+    public Integer getTypeId() {
+        return typeId;
     }
 
-    public void setProjectTypeId(Integer projectTypeId) {
-        this.projectTypeId = projectTypeId;
+    public void setTypeId(Integer typeId) {
+        this.typeId = typeId;
     }
 
-    public String getProjectTypeName() {
-        return projectTypeName;
+    public String getTypeName() {
+        return typeName;
     }
 
-    public void setProjectTypeName(String projectTypeName) {
-        this.projectTypeName = projectTypeName;
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
+
+    public String getPicId() {
+        return picId;
+    }
+
+    public void setPicId(String picId) {
+        this.picId = picId;
+    }
+
+    public String getPicName() {
+        return picName;
+    }
+
+    public void setPicName(String picName) {
+        this.picName = picName;
     }
 
     public String getCreatedBy() {
@@ -70,62 +79,6 @@ public class ProjectDto {
         this.createdBy = createdBy;
     }
 
-    public String getCreatedByName() {
-        return createdByName;
-    }
-
-    public void setCreatedByName(String createdByName) {
-        this.createdByName = createdByName;
-    }
-
-    public Integer getStatusId() {
-        return statusId;
-    }
-
-    public void setStatusId(Integer statusId) {
-        this.statusId = statusId;
-    }
-
-    public String getStatusName() {
-        return statusName;
-    }
-
-    public void setStatusName(String statusName) {
-        this.statusName = statusName;
-    }
-
-    public String getSupplier() {
-        return supplier;
-    }
-
-    public void setSupplier(String supplier) {
-        this.supplier = supplier;
-    }
-
-    public String getLine() {
-        return line;
-    }
-
-    public void setLine(String line) {
-        this.line = line;
-    }
-
-    public String getTactTime() {
-        return tactTime;
-    }
-
-    public void setTactTime(String tactTime) {
-        this.tactTime = tactTime;
-    }
-
-    public String getCapacity() {
-        return capacity;
-    }
-
-    public void setCapacity(String capacity) {
-        this.capacity = capacity;
-    }
-
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -134,27 +87,11 @@ public class ProjectDto {
         this.createdAt = createdAt;
     }
 
-    public String getPersonInChargeId() {
-        return personInChargeId;
+    public Date getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setPersonInChargeId(String personInChargeId) {
-        this.personInChargeId = personInChargeId;
-    }
-
-    public String getPersonInChargeName() {
-        return personInChargeName;
-    }
-
-    public void setPersonInChargeName(String personInChargeName) {
-        this.personInChargeName = personInChargeName;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

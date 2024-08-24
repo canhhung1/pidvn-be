@@ -17,20 +17,20 @@ public class IeDc001 {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "project_no")
-    private String projectNo;
+    @Column(name = "control_no")
+    private String controlNo;
 
-    @Column(name = "project_name")
-    private String projectName;
+    @Column(name = "name")
+    private String name;
 
-    @Column(name = "project_type_id")
-    private Integer projectTypeId;
+    @Column(name = "type_id")
+    private Integer typeId;
+
+    @Column(name = "pic_id")
+    private String picId;
 
     @Column(name = "created_by")
     private String createdBy;
-
-    @Column(name = "status_id")
-    private Integer statusId;
 
     @CreatedDate
     @Column(name = "created_at")
@@ -40,19 +40,6 @@ public class IeDc001 {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    @Column(name = "supplier")
-    private String supplier;
-    @Column(name = "line")
-    private String line;
-    @Column(name = "tact_time")
-    private String tactTime;
-    @Column(name = "capacity")
-    private String capacity;
-    @Column(name = "person_in_charge_id")
-    private String personInChargeId;
-    @Column(name = "date")
-    private Date date;
-
     public Integer getId() {
         return id;
     }
@@ -61,28 +48,36 @@ public class IeDc001 {
         this.id = id;
     }
 
-    public String getProjectNo() {
-        return projectNo;
+    public String getControlNo() {
+        return controlNo;
     }
 
-    public void setProjectNo(String projectNo) {
-        this.projectNo = projectNo;
+    public void setControlNo(String controlNo) {
+        this.controlNo = controlNo;
     }
 
-    public String getProjectName() {
-        return projectName;
+    public String getName() {
+        return name;
     }
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Integer getProjectTypeId() {
-        return projectTypeId;
+    public Integer getTypeId() {
+        return typeId;
     }
 
-    public void setProjectTypeId(Integer projectTypeId) {
-        this.projectTypeId = projectTypeId;
+    public void setTypeId(Integer typeId) {
+        this.typeId = typeId;
+    }
+
+    public String getPicId() {
+        return picId;
+    }
+
+    public void setPicId(String picId) {
+        this.picId = picId;
     }
 
     public String getCreatedBy() {
@@ -91,14 +86,6 @@ public class IeDc001 {
 
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
-    }
-
-    public Integer getStatusId() {
-        return statusId;
-    }
-
-    public void setStatusId(Integer statusId) {
-        this.statusId = statusId;
     }
 
     public Date getCreatedAt() {
@@ -115,53 +102,5 @@ public class IeDc001 {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public String getSupplier() {
-        return supplier;
-    }
-
-    public void setSupplier(String supplier) {
-        this.supplier = supplier;
-    }
-
-    public String getLine() {
-        return line;
-    }
-
-    public void setLine(String line) {
-        this.line = line;
-    }
-
-    public String getTactTime() {
-        return tactTime;
-    }
-
-    public void setTactTime(String tactTime) {
-        this.tactTime = tactTime;
-    }
-
-    public String getCapacity() {
-        return capacity;
-    }
-
-    public void setCapacity(String capacity) {
-        this.capacity = capacity;
-    }
-
-    public String getPersonInChargeId() {
-        return personInChargeId;
-    }
-
-    public void setPersonInChargeId(String personInChargeId) {
-        this.personInChargeId = personInChargeId;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
     }
 }

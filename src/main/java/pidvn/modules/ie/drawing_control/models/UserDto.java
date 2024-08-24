@@ -1,8 +1,8 @@
 package pidvn.modules.ie.drawing_control.models;
 
-public class ProjectTypeDto {
-
+public class UserDto {
     private int id;
+    private String username;
     private String name;
 
     public int getId() {
@@ -11,6 +11,14 @@ public class ProjectTypeDto {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getName() {

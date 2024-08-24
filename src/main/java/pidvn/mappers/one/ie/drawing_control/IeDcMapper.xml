@@ -5,125 +5,19 @@
     <resultMap id="getProjects-result"
                type="pidvn.modules.ie.drawing_control.models.ProjectDto">
 
-        <result column="project_no" property="projectNo" javaType="String"/>
-        <result column="project_name" property="projectName" javaType="String"/>
-        <result column="project_type_id" property="projectTypeId" javaType="Integer"/>
-        <result column="project_type_name" property="projectTypeName" javaType="String"/>
+        <result column="control_no" property="controlNo" javaType="String"/>
+        <result column="type_id" property="typeId" javaType="Integer"/>
+        <result column="type_name" property="typeName" javaType="String"/>
+        <result column="pic_id" property="picId" javaType="String"/>
         <result column="created_by" property="createdBy" javaType="String"/>
-        <result column="created_by_name" property="createdByName" javaType="String"/>
         <result column="created_at" property="createdAt" javaType="Date"/>
-        <result column="person_in_charge_id" property="personInChargeId" javaType="String"/>
-        <result column="person_in_charge_name" property="personInChargeName" javaType="String"/>
+
     </resultMap>
     <select id="getProjects" resultMap="getProjects-result">
-        SELECT A.*, B.name as project_type_name, C.name person_in_charge_name
-        FROM ie_dc_001 A
-        left join ie_dc_004 B on A.project_type_id = B.id
-        left join users C on A.person_in_charge_id = C.username
-        where 1 = 1
-        <if test="date != null">
-            and year(A.date) = year(#{date})
-        </if>
-        <if test="projectTypeId != null">
-            and A.project_type_id = #{projectTypeId}
-        </if>
-        <if test="projectTypeId != null">
-
-        </if>
-        <if test="personInChargeId != null">
-            and A.person_in_charge_id = #{personInChargeId}
-        </if>
-    </select>
-
-
-    <resultMap id="getProjectById-result"
-               type="pidvn.modules.ie.drawing_control.models.ProjectDto">
-        <result column="project_no" property="projectNo" javaType="String"/>
-        <result column="project_name" property="projectName" javaType="String"/>
-        <result column="project_type_id" property="projectTypeId" javaType="Integer"/>
-        <result column="project_type_name" property="projectTypeName" javaType="String"/>
-        <result column="created_by" property="createdBy" javaType="String"/>
-        <result column="created_by_name" property="createdByName" javaType="String"/>
-        <result column="tact_time" property="tactTime" javaType="String"/>
-        <result column="created_at" property="createdAt" javaType="Date"/>
-    </resultMap>
-    <select id="getProjectById" resultMap="getProjectById-result">
-        SELECT A.*, B.name as project_type_name, C.name created_by_name
-        FROM ie_dc_001 A
-        left join ie_dc_004 B on A.project_type_id = B.id
-        left join users C on A.created_by = C.username
-        where 1 = 1
-        and A.id = #{projectId}
-    </select>
-
-
-    <resultMap id="getProjectProgresses-result"
-               type="pidvn.modules.ie.drawing_control.models.ProjectProgressDto">
-        <result column="project_progress_id" property="projectProgressId" javaType="Integer"/>
-        <result column="project_progress_name" property="projectProgressName" javaType="String"/>
-        <result column="project_id" property="projectId" javaType="Integer"/>
-        <result column="start_plan" property="startPlan" javaType="Date"/>
-        <result column="end_plan" property="endPlan" javaType="Date"/>
-        <result column="created_at" property="createdAt" javaType="Date"/>
-        <result column="updated_at" property="updatedAt" javaType="Date"/>
-    </resultMap>
-    <select id="getProjectProgresses" resultMap="getProjectProgresses-result">
-        WITH
-        T01 AS (
-            SELECT *
-            FROM ie_dc_001 A
-            WHERE A.id = #{projectId}
-        ),
-        T02 AS (
-            SELECT
-                B.id AS project_type_id,
-                B.name AS project_type_name,
-                C.id AS project_progress_id,
-                C.name AS project_progress_name
-            FROM ie_dc_006 A
-            LEFT JOIN ie_dc_004 B ON A.project_type_id = B.id
-            LEFT JOIN ie_dc_005 C ON A.project_progress_id = C.id
-            INNER JOIN T01 ON A.project_type_id = T01.project_type_id
-        )
-        SELECT * FROM T02
-        LEFT JOIN ie_dc_007 A on (T02.project_progress_id = A.project_progress_id and A.project_id = #{projectId})
+        SELECT * from ie_dc_001
     </select>
 
 
 
-    <resultMap id="getDrawings-result"
-               type="pidvn.modules.ie.drawing_control.models.DrawingDto">
-        <result column="parent_id" property="parentId" javaType="String"/>
-        <result column="drawing_no" property="drawingNo" javaType="String"/>
-        <result column="drawing_name" property="drawingName" javaType="String"/>
-        <result column="project_id" property="projectId" javaType="Integer"/>
-        <result column="created_at" property="createdAt" javaType="Date"/>
-        <result column="updated_at" property="updatedAt" javaType="Date"/>
-    </resultMap>
-    <select id="getDrawings" resultMap="getDrawings-result">
-        SELECT * FROM pidvn.ie_dc_008 A
-        where 1 = 1
-        <if test="projectId != null">
-            and A.project_id = #{projectId}
-        </if>
-
-        order by A.ordinal_number ASC
-
-    </select>
-
-
-
-
-    <resultMap id="getProgressesByProjectType-result"
-               type="pidvn.modules.ie.drawing_control.models.ProjectProgressDto">
-        <result column="project_progress_name" property="projectProgressName" javaType="String"/>
-    </resultMap>
-    <select id="getProgressesByProjectType" resultMap="getProgressesByProjectType-result">
-        SELECT B.id, B.name as project_progress_name
-        FROM pidvn.ie_dc_006 A
-        left join ie_dc_005 B on A.project_progress_id = B.id
-        where 1 = 1
-        and project_type_id = #{projectTypeId}
-    </select>
 
 </mapper>

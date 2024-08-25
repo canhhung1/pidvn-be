@@ -29,8 +29,8 @@ public class IeDc001 {
     @Column(name = "pic_id")
     private String picId;
 
-    @Column(name = "created_by")
-    private String createdBy;
+    @Column(name = "created_id")
+    private String createdId;
 
     @CreatedDate
     @Column(name = "created_at")
@@ -80,12 +80,12 @@ public class IeDc001 {
         this.picId = picId;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
+    public String getCreatedId() {
+        return createdId;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public void setCreatedId(String createdId) {
+        this.createdId = createdId;
     }
 
     public Date getCreatedAt() {

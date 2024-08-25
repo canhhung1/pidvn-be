@@ -11,7 +11,8 @@ public class ProjectDto {
     private String typeName;
     private String picId;
     private String picName;
-    private String createdBy;
+    private String createdId;
+    private String createdName;
     private Date createdAt;
     private Date updatedAt;
 
@@ -71,12 +72,20 @@ public class ProjectDto {
         this.picName = picName;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
+    public String getCreatedId() {
+        return createdId;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public void setCreatedId(String createdId) {
+        this.createdId = createdId;
+    }
+
+    public String getCreatedName() {
+        return createdName;
+    }
+
+    public void setCreatedName(String createdName) {
+        this.createdName = createdName;
     }
 
     public Date getCreatedAt() {

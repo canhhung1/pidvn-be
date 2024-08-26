@@ -8,6 +8,7 @@ public class ProjectActivityDto {
     private Date date;
     private String note;
     private Integer projectId;
+    private String attachFile;
 
     public int getId() {
         return id;
@@ -47,5 +48,13 @@ public class ProjectActivityDto {
 
     public void setProjectId(Integer projectId) {
         this.projectId = projectId;
+    }
+
+    public String getAttachFile() {
+        return attachFile;
+    }
+
+    public void setAttachFile(String attachFile) {
+        this.attachFile = attachFile;
     }
 }

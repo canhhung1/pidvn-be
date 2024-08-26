@@ -20,4 +20,6 @@ public interface IeDcSvc {
 
     Map<String, Object> uploadDrawingFiles(MultipartFile[] files, Integer projectId);
     ProjectActivityDto insertProjectActivity(MultipartFile file, ProjectActivityDto projectActivityDto) throws IOException;
+
+    List<ProjectActivityDto> getProjectActivities(Integer projectId);
 }

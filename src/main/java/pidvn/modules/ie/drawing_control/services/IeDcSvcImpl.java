@@ -294,5 +294,13 @@ public class IeDcSvcImpl implements IeDcSvc {
         return modelMapper.map(result, ProjectActivityDto.class);
     }
 
+    @Override
+    public List<ProjectActivityDto> getProjectActivities(Integer projectId) {
+        List<IeDc007> data = this.ieDc007Repo.findAllByProjectId(projectId);
+        return data.stream()
+                .map(item -> modelMapper.map(item, ProjectActivityDto.class))
+                .collect(Collectors.toList());
+    }
+
 
 }

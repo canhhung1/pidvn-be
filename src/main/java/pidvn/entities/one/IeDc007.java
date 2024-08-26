@@ -23,6 +23,8 @@ public class IeDc007 {
     private Date date;
     @Column(name = "note")
     private String note;
+    @Column(name = "attach_file")
+    private String attachFile;
     @CreatedDate
     @Column(name = "created_at")
     private Date createdAt;
@@ -68,6 +70,14 @@ public class IeDc007 {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public String getAttachFile() {
+        return attachFile;
+    }
+
+    public void setAttachFile(String attachFile) {
+        this.attachFile = attachFile;
     }
 
     public Date getCreatedAt() {

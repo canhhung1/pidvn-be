@@ -19,6 +19,8 @@ public class DrawingDto {
     private Integer ordinal;
     private Integer level;
 
+    private String url;
+
     public String getId() {
         return id;
     }
@@ -137,5 +139,13 @@ public class DrawingDto {
 
     public void setLevel(Integer level) {
         this.level = level;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

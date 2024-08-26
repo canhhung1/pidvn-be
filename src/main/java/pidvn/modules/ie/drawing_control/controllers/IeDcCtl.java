@@ -1,15 +1,21 @@
 package pidvn.modules.ie.drawing_control.controllers;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pidvn.commons.dto.ApiResponse;
+import pidvn.entities.one.IeDc001;
 import pidvn.modules.ie.drawing_control.models.*;
 import pidvn.modules.ie.drawing_control.services.IeDcSvcImpl;
 import reactor.util.annotation.Nullable;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -101,6 +107,42 @@ public class IeDcCtl {
         ApiResponse<List<DrawingDto>> apiResponse = new ApiResponse<>();
         apiResponse.setResult(this.ieDcSvc.getDrawingStructure(projectId));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("DrawingFiles")
+    public ResponseEntity<ApiResponse<?>> uploadDrawingFiles(
+            @RequestParam("files") MultipartFile[] files,
+            @RequestParam Integer projectId) {
+        ApiResponse<Map<String, Object>> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(this.ieDcSvc.uploadDrawingFiles(files, projectId));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    /**
+     * Preview nếu là file pdf
+     * @param drawingDto
+     * @return
+     */
+    @PostMapping(value = "DrawingPreview")
+    public ResponseEntity<byte[]> previewDrawingFile(
+            @RequestBody DrawingDto drawingDto, @RequestParam String controlNo) throws IOException {
+
+        String ROOT_FOLDER = this.ieDcSvc.ROOT_FOLDER;
+        String path = ROOT_FOLDER + controlNo + "\\Drawing\\" + drawingDto.getDrawingNo() + ".pdf";
+
+        File file = new File(path);
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
+            byte[] fileContent = IOUtils.toByteArray(fileInputStream);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentDispositionFormData("attachment", file.getName());
+
+            return new ResponseEntity<>(fileContent, headers, HttpStatus.OK);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }

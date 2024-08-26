@@ -23,6 +23,7 @@ import pidvn.repositories.one.UsersRepo;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -51,7 +52,7 @@ public class IeDcSvcImpl implements IeDcSvc {
     private IeDc006Repo ieDc006Repo;
 
     //    private final String ROOT_FOLDER = "\\\\10.92.176.10\\DataSharePIDVN\\4. IE Drawing\\DRAWING-CONTROL\\IE-Project\\";
-    private final String ROOT_FOLDER = "D:\\DataSharePIDVN\\4. IE Drawing\\HUNG-IT\\IE-Project\\";
+    public final String ROOT_FOLDER = "D:\\DataSharePIDVN\\4. IE Drawing\\HUNG-IT\\IE-Project\\";
 
 
     @Override
@@ -261,6 +262,28 @@ public class IeDcSvcImpl implements IeDcSvc {
         return data.stream()
                 .map(item -> modelMapper.map(item, DrawingDto.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Map<String, Object> uploadDrawingFiles(MultipartFile[] files, Integer projectId) {
+
+        Map<String, Object> result = new HashMap<>();
+
+        IeDc001 data = this.ieDc001Repo.findById(projectId).get();
+
+        String rootPath = this.ROOT_FOLDER + data.getControlNo() + "\\Drawing\\";
+
+        try {
+            for (MultipartFile file : files) {
+                byte[] bytes = file.getBytes();
+                Path path = Paths.get(rootPath + file.getOriginalFilename());
+                Files.write(path, bytes);
+            }
+        }catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+
+        return result;
     }
 
 

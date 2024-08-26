@@ -269,15 +269,15 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
         String[] recordTypes = new String[]{"RNP", "RDC", "CDL", "LTC", "CTR", "MRTW"};
         List<MaterialVo> materialHistories = this.reMatCtrlMapper.getMaterialHistories(materialVo.getLotNo(), Arrays.asList(recordTypes));
 
-//        if (materialHistories.size() <= 0) {
-//            message = "Lot: " + materialVo.getLotNo() + " chưa được nhập kho RE-WH ";
-//            result.put("status", "ERROR");
-//            result.put("message", message);
-//            result.put("data", materialVo);
-//            return result;
-//        }
-//
-//        MaterialVo recordLatest = materialHistories.get(0);
+        if (materialHistories.size() <= 0) {
+            message = "Lot: " + materialVo.getLotNo() + " chưa được nhập kho RE-WH ";
+            result.put("status", "ERROR");
+            result.put("message", message);
+            result.put("data", materialVo);
+            return result;
+        }
+
+        MaterialVo recordLatest = materialHistories.get(0);
 
         /*
         if (recordLatest.getRecordType().equals("CDL")) {
@@ -296,28 +296,27 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
         }
         */
 
-//        if (recordLatest.getRecordType().equals("CTR")) {
-//            message = "Lot: " + materialVo.getLotNo() + " đã trả về kho trung chuyển (RE-WH); lúc: "
-//                    + new SimpleDateFormat("yyyy-MM-dd HH:mm").format(recordLatest.getCreatedAt());
-//            result.put("status", "ERROR");
-//            result.put("message", message);
-//            result.put("data", materialVo);
-//            return result;
-//        }
-//
-//        if (recordLatest.getRecordType().equals("MRTW")) {
-//            message = "Lot: " + materialVo.getLotNo() + " đã trả về kho (PUR-WH); lúc: "
-//                    + new SimpleDateFormat("yyyy-MM-dd HH:mm").format(recordLatest.getCreatedAt());
-//            result.put("status", "ERROR");
-//            result.put("message", message);
-//            result.put("data", materialVo);
-//            return result;
-//        }
+        if (recordLatest.getRecordType().equals("CTR")) {
+            message = "Lot: " + materialVo.getLotNo() + " đã trả về kho trung chuyển (RE-WH); lúc: "
+                    + new SimpleDateFormat("yyyy-MM-dd HH:mm").format(recordLatest.getCreatedAt());
+            result.put("status", "ERROR");
+            result.put("message", message);
+            result.put("data", materialVo);
+            return result;
+        }
+
+        if (recordLatest.getRecordType().equals("MRTW")) {
+            message = "Lot: " + materialVo.getLotNo() + " đã trả về kho (PUR-WH); lúc: "
+                    + new SimpleDateFormat("yyyy-MM-dd HH:mm").format(recordLatest.getCreatedAt());
+            result.put("status", "ERROR");
+            result.put("message", message);
+            result.put("data", materialVo);
+            return result;
+        }
 
         Lots lot = this.lotsRepo.findByLotNo(materialVo.getLotNo());
 
         // Kiểm tra hàng hết hạn
-        // TODO
         if (lot.getExpiredDate() != null) {
 
             Date currentDate = new Date();

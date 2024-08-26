@@ -5,6 +5,7 @@ import pidvn.modules.ie.drawing_control.models.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public interface IeDcSvc {
     List<UserDto> getUsers(List<Integer> subsectionIds);
@@ -16,4 +17,6 @@ public interface IeDcSvc {
     List<DrawingDto> uploadDrawingStructure(MultipartFile file, Integer projectId) throws IOException;
 
     List<DrawingDto> getDrawingStructure(Integer projectId);
+
+    Map<String, Object> uploadDrawingFiles(MultipartFile[] files, Integer projectId);
 }

@@ -10,16 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import pidvn.entities.one.IeDc001;
-import pidvn.entities.one.IeDc002;
-import pidvn.entities.one.IeDc006;
-import pidvn.entities.one.Users;
+import pidvn.entities.one.*;
 import pidvn.mappers.one.ie.drawing_control.IeDcMapper;
 import pidvn.modules.ie.drawing_control.models.*;
-import pidvn.repositories.one.IeDc001Repo;
-import pidvn.repositories.one.IeDc002Repo;
-import pidvn.repositories.one.IeDc006Repo;
-import pidvn.repositories.one.UsersRepo;
+import pidvn.repositories.one.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -50,6 +44,9 @@ public class IeDcSvcImpl implements IeDcSvc {
 
     @Autowired
     private IeDc006Repo ieDc006Repo;
+
+    @Autowired
+    private IeDc007Repo ieDc007Repo;
 
     //    private final String ROOT_FOLDER = "\\\\10.92.176.10\\DataSharePIDVN\\4. IE Drawing\\DRAWING-CONTROL\\IE-Project\\";
     public final String ROOT_FOLDER = "D:\\DataSharePIDVN\\4. IE Drawing\\HUNG-IT\\IE-Project\\";
@@ -284,6 +281,17 @@ public class IeDcSvcImpl implements IeDcSvc {
         }
 
         return result;
+    }
+
+    @Override
+    public ProjectActivityDto insertProjectActivity(MultipartFile file, ProjectActivityDto projectActivityDto) throws IOException {
+        IeDc001 data = this.ieDc001Repo.findById(projectActivityDto.getProjectId()).get();
+        String rootPath = this.ROOT_FOLDER + data.getControlNo() + "\\Activity\\";
+        byte[] bytes = file.getBytes();
+        Path path = Paths.get(rootPath + file.getOriginalFilename());
+        Files.write(path, bytes);
+        IeDc007 result = this.ieDc007Repo.save(this.modelMapper.map(projectActivityDto, IeDc007.class));
+        return modelMapper.map(result, ProjectActivityDto.class);
     }
 
 

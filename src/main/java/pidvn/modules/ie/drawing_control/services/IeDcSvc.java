@@ -19,4 +19,5 @@ public interface IeDcSvc {
     List<DrawingDto> getDrawingStructure(Integer projectId);
 
     Map<String, Object> uploadDrawingFiles(MultipartFile[] files, Integer projectId);
+    ProjectActivityDto insertProjectActivity(MultipartFile file, ProjectActivityDto projectActivityDto) throws IOException;
 }

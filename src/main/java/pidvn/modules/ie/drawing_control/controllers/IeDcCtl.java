@@ -145,4 +145,15 @@ public class IeDcCtl {
         }
     }
 
+    @PostMapping("ProjectActivity")
+    public ResponseEntity<?> insertProjectActivity(
+            @RequestPart("file") MultipartFile file,
+            @RequestPart("projectActivity") ProjectActivityDto projectActivityDto) throws IOException {
+
+        ApiResponse<ProjectActivityDto> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(this.ieDcSvc.insertProjectActivity(file, projectActivityDto));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+
 }

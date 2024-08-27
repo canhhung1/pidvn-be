@@ -54,6 +54,9 @@ public class IeDc006 {
     @Column(name = "level")
     private Integer level;
 
+    @Column(name = "is_has_file")
+    private Boolean isHasFile;
+
     public String getId() {
         return id;
     }
@@ -172,5 +175,13 @@ public class IeDc006 {
 
     public void setLevel(Integer level) {
         this.level = level;
+    }
+
+    public Boolean getHasFile() {
+        return isHasFile;
+    }
+
+    public void setHasFile(Boolean hasFile) {
+        isHasFile = hasFile;
     }
 }

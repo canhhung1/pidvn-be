@@ -266,15 +266,36 @@ public class IeDcSvcImpl implements IeDcSvc {
 
         Map<String, Object> result = new HashMap<>();
 
-        IeDc001 data = this.ieDc001Repo.findById(projectId).get();
+        IeDc001 ieDc001 = this.ieDc001Repo.findById(projectId).get();
 
-        String rootPath = this.ROOT_FOLDER + data.getControlNo() + "\\Drawing\\";
+        String rootPath = this.ROOT_FOLDER + ieDc001.getControlNo() + "\\Drawing\\";
+
+        // TODO
+        // Tìm các record trong bảng IeDc006 theo tên file
+
+        List<String> fileNamesWithoutExtension = Arrays.stream(files)
+                .map(file -> {
+                    String originalFilename = file.getOriginalFilename();
+                    return originalFilename.split("\\.")[0]; // Nếu không có phần mở rộng, trả về tên file gốc
+                })
+                .collect(Collectors.toList());
+
+        List<IeDc006> ieDc006List = this.ieDc006Repo.findAllByProjectIdAndDrawingNoIn(projectId,fileNamesWithoutExtension);
+
+        // Chuyển đổi danh sách sang Map với key là drawingNo
+        Map<String, IeDc006> ieDc006Map = ieDc006List.stream()
+                .collect(Collectors.toMap(IeDc006::getDrawingNo, ieDc006 -> ieDc006));
 
         try {
             for (MultipartFile file : files) {
                 byte[] bytes = file.getBytes();
                 Path path = Paths.get(rootPath + file.getOriginalFilename());
                 Files.write(path, bytes);
+
+                String filename = file.getOriginalFilename().split("\\.")[0];
+                IeDc006 obj = ieDc006Map.get(filename);
+                obj.setHasFile(true);
+                this.ieDc006Repo.save(obj);
             }
         }catch (Exception e) {
             logger.error(e.getMessage());

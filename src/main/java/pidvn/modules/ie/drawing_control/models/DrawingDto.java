@@ -18,6 +18,7 @@ public class DrawingDto {
     private String remark;
     private Integer ordinal;
     private Integer level;
+    private Boolean isHasFile;
 
     private String url;
 
@@ -147,5 +148,13 @@ public class DrawingDto {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Boolean getHasFile() {
+        return isHasFile;
+    }
+
+    public void setHasFile(Boolean hasFile) {
+        isHasFile = hasFile;
     }
 }

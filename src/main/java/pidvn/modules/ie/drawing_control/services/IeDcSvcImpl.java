@@ -48,6 +48,9 @@ public class IeDcSvcImpl implements IeDcSvc {
     @Autowired
     private IeDc007Repo ieDc007Repo;
 
+    @Autowired
+    private IeDc008Repo ieDc008Repo;
+
     public final String ROOT_FOLDER = "\\\\10.92.176.10\\DataSharePIDVN\\4. IE Drawing\\DRAWING-CONTROL\\IE-Project\\";
     // public final String ROOT_FOLDER = "D:\\DataSharePIDVN\\4. IE Drawing\\HUNG-IT\\IE-Project\\";
 
@@ -332,6 +335,18 @@ public class IeDcSvcImpl implements IeDcSvc {
         return data.stream()
                 .map(item -> modelMapper.map(item, ProjectActivityDto.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProcessRecordDto> getProcessRecordByProject(Integer projectId) {
+        return this.ieDcMapper.getProcessRecordByProject(projectId);
+    }
+
+    @Override
+    public ProcessRecordDto saveProcessRecord(ProcessRecordDto processRecordDto) {
+        IeDc008 data = this.modelMapper.map(processRecordDto, IeDc008.class);
+        this.ieDc008Repo.save(data);
+        return this.modelMapper.map(data, ProcessRecordDto.class);
     }
 
 

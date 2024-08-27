@@ -160,4 +160,18 @@ public class IeDcCtl {
         apiResponse.setResult(this.ieDcSvc.getProjectActivities(projectId));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
+
+    @GetMapping("ProcessRecord")
+    public ResponseEntity<?> getProcessRecordByProject(@RequestParam Integer projectId) {
+        ApiResponse<List<ProcessRecordDto>> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(this.ieDcSvc.getProcessRecordByProject(projectId));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("ProcessRecord")
+    public ResponseEntity<?> saveProcessRecord(@RequestBody ProcessRecordDto processRecordDto) {
+        ApiResponse<ProcessRecordDto> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(this.ieDcSvc.saveProcessRecord(processRecordDto));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
 }

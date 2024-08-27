@@ -22,4 +22,6 @@ public interface IeDcSvc {
     ProjectActivityDto insertProjectActivity(MultipartFile file, ProjectActivityDto projectActivityDto) throws IOException;
 
     List<ProjectActivityDto> getProjectActivities(Integer projectId);
+    List<ProcessRecordDto> getProcessRecordByProject(Integer projectId);
+    ProcessRecordDto saveProcessRecord(ProcessRecordDto processRecordDto);
 }

@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface IeDc007Repo extends JpaRepository<IeDc007, Integer> {
-    List<IeDc007> findAllByProjectId(Integer projectId);
+    List<IeDc007> findAllByProjectIdOrderByIdDesc(Integer projectId);
 }

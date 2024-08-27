@@ -48,8 +48,8 @@ public class IeDcSvcImpl implements IeDcSvc {
     @Autowired
     private IeDc007Repo ieDc007Repo;
 
-    //    private final String ROOT_FOLDER = "\\\\10.92.176.10\\DataSharePIDVN\\4. IE Drawing\\DRAWING-CONTROL\\IE-Project\\";
-    public final String ROOT_FOLDER = "D:\\DataSharePIDVN\\4. IE Drawing\\HUNG-IT\\IE-Project\\";
+    public final String ROOT_FOLDER = "\\\\10.92.176.10\\DataSharePIDVN\\4. IE Drawing\\DRAWING-CONTROL\\IE-Project\\";
+    // public final String ROOT_FOLDER = "D:\\DataSharePIDVN\\4. IE Drawing\\HUNG-IT\\IE-Project\\";
 
 
     @Override
@@ -288,13 +288,20 @@ public class IeDcSvcImpl implements IeDcSvc {
 
         try {
             for (MultipartFile file : files) {
+
+                String filename = file.getOriginalFilename().split("\\.")[0];
+                IeDc006 obj = ieDc006Map.get(filename);
+
+                if (obj == null) {
+                    continue;
+                }
+
+                obj.setHasFile(true);
+
                 byte[] bytes = file.getBytes();
                 Path path = Paths.get(rootPath + file.getOriginalFilename());
                 Files.write(path, bytes);
 
-                String filename = file.getOriginalFilename().split("\\.")[0];
-                IeDc006 obj = ieDc006Map.get(filename);
-                obj.setHasFile(true);
                 this.ieDc006Repo.save(obj);
             }
         }catch (Exception e) {
@@ -308,16 +315,20 @@ public class IeDcSvcImpl implements IeDcSvc {
     public ProjectActivityDto insertProjectActivity(MultipartFile file, ProjectActivityDto projectActivityDto) throws IOException {
         IeDc001 data = this.ieDc001Repo.findById(projectActivityDto.getProjectId()).get();
         String rootPath = this.ROOT_FOLDER + data.getControlNo() + "\\Activity\\";
-        byte[] bytes = file.getBytes();
-        Path path = Paths.get(rootPath + file.getOriginalFilename());
-        Files.write(path, bytes);
+        if (file != null && !file.isEmpty()) {
+            byte[] bytes = file.getBytes();
+            Path path = Paths.get(rootPath + file.getOriginalFilename());
+            Files.write(path, bytes);
+        }
+
+
         IeDc007 result = this.ieDc007Repo.save(this.modelMapper.map(projectActivityDto, IeDc007.class));
         return modelMapper.map(result, ProjectActivityDto.class);
     }
 
     @Override
     public List<ProjectActivityDto> getProjectActivities(Integer projectId) {
-        List<IeDc007> data = this.ieDc007Repo.findAllByProjectId(projectId);
+        List<IeDc007> data = this.ieDc007Repo.findAllByProjectIdOrderByIdDesc(projectId);
         return data.stream()
                 .map(item -> modelMapper.map(item, ProjectActivityDto.class))
                 .collect(Collectors.toList());

@@ -9,10 +9,15 @@ public class ProjectDto {
     private String name;
     private Integer typeId;
     private String typeName;
+    private Integer productId;
+    private String productName;
     private String picId;
     private String picName;
     private String createdId;
     private String createdName;
+    private String line;
+    private String supplier;
+    private String tactTime;
     private Date createdAt;
     private Date updatedAt;
 
@@ -56,6 +61,22 @@ public class ProjectDto {
         this.typeName = typeName;
     }
 
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public Integer getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Integer productId) {
+        this.productId = productId;
+    }
+
     public String getPicId() {
         return picId;
     }
@@ -86,6 +107,30 @@ public class ProjectDto {
 
     public void setCreatedName(String createdName) {
         this.createdName = createdName;
+    }
+
+    public String getLine() {
+        return line;
+    }
+
+    public void setLine(String line) {
+        this.line = line;
+    }
+
+    public String getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(String supplier) {
+        this.supplier = supplier;
+    }
+
+    public String getTactTime() {
+        return tactTime;
+    }
+
+    public void setTactTime(String tactTime) {
+        this.tactTime = tactTime;
     }
 
     public Date getCreatedAt() {

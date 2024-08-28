@@ -26,11 +26,23 @@ public class IeDc001 {
     @Column(name = "type_id")
     private Integer typeId;
 
+    @Column(name = "product_id")
+    private Integer productId;
+
     @Column(name = "pic_id")
     private String picId;
 
     @Column(name = "created_id")
     private String createdId;
+
+    @Column(name = "line")
+    private String line;
+
+    @Column(name = "supplier")
+    private String supplier;
+
+    @Column(name = "tact_time")
+    private String tactTime;
 
     @CreatedDate
     @Column(name = "created_at")
@@ -72,6 +84,14 @@ public class IeDc001 {
         this.typeId = typeId;
     }
 
+    public Integer getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Integer productId) {
+        this.productId = productId;
+    }
+
     public String getPicId() {
         return picId;
     }
@@ -86,6 +106,30 @@ public class IeDc001 {
 
     public void setCreatedId(String createdId) {
         this.createdId = createdId;
+    }
+
+    public String getLine() {
+        return line;
+    }
+
+    public void setLine(String line) {
+        this.line = line;
+    }
+
+    public String getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(String supplier) {
+        this.supplier = supplier;
+    }
+
+    public String getTactTime() {
+        return tactTime;
+    }
+
+    public void setTactTime(String tactTime) {
+        this.tactTime = tactTime;
     }
 
     public Date getCreatedAt() {

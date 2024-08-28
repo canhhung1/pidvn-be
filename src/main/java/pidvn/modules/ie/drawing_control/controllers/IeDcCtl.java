@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pidvn.commons.dto.ApiResponse;
 import pidvn.entities.one.IeDc001;
+import pidvn.entities.one.Product;
 import pidvn.modules.ie.drawing_control.models.*;
 import pidvn.modules.ie.drawing_control.services.IeDcSvcImpl;
 import reactor.util.annotation.Nullable;
@@ -28,8 +29,15 @@ public class IeDcCtl {
     @Autowired
     private IeDcSvcImpl ieDcSvc;
 
+    @GetMapping("Products")
+    private ResponseEntity<ApiResponse<?>> getProducts() {
+        ApiResponse<List<Product>> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(this.ieDcSvc.getProducts());
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
     @GetMapping("Users")
-    private ResponseEntity<?> getUsers() {
+    private ResponseEntity<ApiResponse<?>> getUsers() {
         List<Integer> userIds = Arrays.asList(13, 32);
         ApiResponse<List<UserDto>> apiResponse = new ApiResponse<>();
         apiResponse.setResult(this.ieDcSvc.getUsers(userIds));
@@ -69,6 +77,13 @@ public class IeDcCtl {
     public ResponseEntity<ApiResponse<?>> createProject(@RequestBody ProjectDto projectDto) {
         ApiResponse<ProjectDto> apiResponse = new ApiResponse<>();
         apiResponse.setResult(this.ieDcSvc.createProject(projectDto));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @PutMapping("Project")
+    public ResponseEntity<ApiResponse<?>> updateProject(@RequestBody ProjectDto projectDto) {
+        ApiResponse<ProjectDto> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(this.ieDcSvc.updateProject(projectDto));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 

@@ -1,6 +1,7 @@
 package pidvn.modules.ie.drawing_control.services;
 
 import org.springframework.web.multipart.MultipartFile;
+import pidvn.entities.one.Product;
 import pidvn.modules.ie.drawing_control.models.*;
 
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.util.Map;
 public interface IeDcSvc {
     List<UserDto> getUsers(List<Integer> subsectionIds);
     ProjectDto createProject(ProjectDto projectDto);
+    ProjectDto updateProject(ProjectDto projectDto);
     List<ProjectDto> getProjects();
     ProjectDto getProject(Integer id);
     List<ProjectTypeDto> getProjectTypes();
@@ -24,4 +26,6 @@ public interface IeDcSvc {
     List<ProjectActivityDto> getProjectActivities(Integer projectId);
     List<ProcessRecordDto> getProcessRecordByProject(Integer projectId);
     ProcessRecordDto saveProcessRecord(ProcessRecordDto processRecordDto);
+
+    List<Product> getProducts();
 }

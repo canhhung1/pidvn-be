@@ -8,21 +8,23 @@
         <result column="control_no" property="controlNo" javaType="String"/>
         <result column="type_id" property="typeId" javaType="Integer"/>
         <result column="type_name" property="typeName" javaType="String"/>
+        <result column="product_name" property="productName" javaType="String"/>
         <result column="pic_id" property="picId" javaType="String"/>
         <result column="pic_name" property="picName" javaType="String"/>
         <result column="created_id" property="createdId" javaType="String"/>
+        <result column="tact_time" property="tactTime" javaType="String"/>
         <result column="created_name" property="createdName" javaType="String"/>
         <result column="created_at" property="createdAt" javaType="Date"/>
-
     </resultMap>
     <select id="getProjects" resultMap="getProjects-result">
         SELECT
             A.*, B.name type_name, U1.name pic_name,
-            U2.name created_name
+            U2.name created_name, C.description product_name
         from ie_dc_001 A
         left join ie_dc_002 B on A.type_id = B.id
         left join users U1 on A.pic_id = U1.username
         left join users U2 on A.created_id = U2.username
+        left join product C on A.product_id = C.id
         order by A.id desc
     </select>
 
@@ -66,6 +68,7 @@
             A.start_action, A.end_action, A.progress_percent, A.created_at, A.updated_at
         from T01
         left join ie_dc_008 A on (T01.process_id = A.process_id and A.project_id = #{projectId})
+        order by T01.process_id asc
     </select>
 
 </mapper>

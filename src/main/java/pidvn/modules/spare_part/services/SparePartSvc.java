@@ -361,7 +361,7 @@ public class SparePartSvc implements ISparePartSvc {
                 row.getCell(1).setCellValue(item.getPartName());
                 row.getCell(2).setCellValue(item.getPartNumber());
                 row.getCell(3).setCellValue(item.getUnit());
-                row.getCell(4).setCellValue(item.getRequestQty());
+                row.getCell(4).setCellValue(item.getRequestQty() == null ? 0 : item.getRequestQty());
                 row.getCell(5).setCellValue(item.getIssuedQty() == null ? 0 : item.getIssuedQty());
             }
 

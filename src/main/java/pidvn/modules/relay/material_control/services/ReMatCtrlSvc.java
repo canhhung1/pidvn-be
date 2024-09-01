@@ -266,6 +266,7 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
         Map result = new HashMap();
         String message = null;
         String warning = null;
+        String information = null;
         String[] recordTypes = new String[]{"RNP", "RDC", "CDL", "LTC", "CTR", "MRTW"};
         List<MaterialVo> materialHistories = this.reMatCtrlMapper.getMaterialHistories(materialVo.getLotNo(), Arrays.asList(recordTypes));
 
@@ -343,6 +344,19 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
                 result.put("message", message);
                 result.put("warning", warning);
                 materialVo.setRemark(MessageFormat.format("Còn {0} ngày sẽ hết hạn. Ngày hết hạn: {1}", diffDays*(-1), expiredDateString));
+                result.put("data", materialVo);
+                return result;
+            }
+
+            /**
+             * Còn hạn thì sẽ hiển thị thông tin ngày hết hạn
+             */
+            if (diffDays < -30) {
+                message = "Có thể nhập NVL vào LINE";
+                information = MessageFormat.format("Lot: {0} có thể sử dụng. Ngày hết hạn: {1}" , materialVo.getLotNo(), expiredDateString);
+                result.put("status", "OK");
+                result.put("message", message);
+                result.put("information", information);
                 result.put("data", materialVo);
                 return result;
             }

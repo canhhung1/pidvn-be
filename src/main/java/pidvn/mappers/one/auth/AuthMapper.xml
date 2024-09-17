@@ -61,18 +61,21 @@
     <select id="getRoleAndPermissionByUsernameV2"
             resultMap="getRoleAndPermissionByUsernameV2-result">
 
-        select * from (
-        select
-        R.name as role,
-        nvl(REGEXP_REPLACE(R.permission,'(")|(\\[)|(\\])',''),'') permission
-        , U.username
-        from role_user RU
-        inner join (select  distinct A.name, A.permission, A.id FROM pidvn.roles A left join permissions B
-        on A.permission like concat('%',B.name,'%') where (B.name like '%_find' or B.name like '%_action' ) or A.name ='super_admin') R
-        on RU.role_id = R.id
-        right join users U on RU.user_id = U.id
+        select group_concat(role) role, permission from (
+            select
+                R.name as role,
+                nvl(REGEXP_REPLACE(R.permission,'(")|(\\[)|(\\])',''),'') permission
+                    , U.username
+            from role_user RU
+                inner join (
+                        select  distinct A.name, A.permission, A.id FROM pidvn.roles A left join permissions B
+                        on A.permission like concat('%',B.name,'%') where (B.name like '%_find' or B.name like '%_action'
+                    ) or A.name ='super_admin') R
+                on RU.role_id = R.id
+            right join users U on RU.user_id = U.id
         )A
         where 1=1 and role is not null and username = #{username}
+        group by permission
 
     </select>
 

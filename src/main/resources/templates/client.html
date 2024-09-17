@@ -51,69 +51,94 @@
         background-color: #f1f1f1;
         cursor: pointer;
       }
-    .moving-button {
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: transform 0.15s;
-    }
-
-    .moving-button:hover {
-        transform: translateX(500px); /* Di chuyển button khi hover */
-    }
-
     </style>
   </head>
   <body style="font:small / 1.5 Arial, Helvetica, sans-serif;">
     <div class="wapper">
       <div class="content">
-        <div class="header">
-            <img src="https://seeklogo.com/images/P/Panasonic-logo-3FF2D6EBDF-seeklogo.com.png" alt="" width="135px">
-        </div>
+<!--        <div class="header">-->
+<!--            <img src="https://seeklogo.com/images/P/Panasonic-logo-3FF2D6EBDF-seeklogo.com.png" alt="" width="135px">-->
+<!--        </div>-->
         <div class="main">
-            <h1>Thông tin vé ăn tháng 07-2024</h1>
-            <b>Dear anh/chị: </b><b th:text="${name}"></b>
-            <p>Phòng Nhân sự gửi dữ liệu vé ăn chi tiết như sau:</p>
+            <h1>THÔNG TIN XÁC NHẬN TRỪ VÉ ĂN THÁNG 8/2024</h1>
+            <b>Dear anh/chị: </b><b th:text="${name}"></b><span>Nguyễn Thị Thảo (3000198)</span>
+            <p>Phòng Nhân sự gửi dữ liệu trừ vé ăn chi tiết như sau:</p>
+            <p>Anh/Chị vui lòng kiểm tra kỹ số lượng vé và tổng tiền bị trừ và phản hồi trước ngày 20 hàng tháng.</p>
+            <table style="font-size: 15px; width: 100%; text-align: center">
 
-            <table style="font-size: 15px; width: 100%;">
                 <tr>
-                    <td>Vé chính (Time sheet): </td>
-                    <td class="value"><span>22</span> (coupon)</td>
+                    <th colspan="3" style="background: #ededed">VÉ CHÍNH (VÉ)</th>
+                    <th colspan="3" style="background: #ededed">VÉ PHỤ (VÉ)</th>
+                    <th colspan="3" style="background: #fff486">TỔNG TRỪ (VÉ)</th>
                 </tr>
                 <tr>
-                    <td>Vé phụ (Time sheet): </td>
-                    <td class="value"><span>0</span> (coupon)</td>
+                    <td style="width: 10%; background: #ededed">
+                        <span>Số vé tiêu chuẩn</span><br/>
+                        <span>(1)</span>
+                    </td>
+                    <td style="width: 10%; background: #ededed">
+                        <span>Số vé đã quẹt</span><br>
+                        <span>(2)</span>
+                    </td>
+                    <td style="width: 10%; background: #ededed">
+                        <span>Chênh lệch</span><br>
+                        <span>(3)</span>
+                    </td>
+                    <td style="width: 10%; background: #ededed">
+                        <span>Số vé tiêu chuẩn</span><br/>
+                        <span>(4)</span>
+                    </td>
+                    <td style="width: 10%; background: #ededed">
+                        <span>Số vé đã quẹt</span><br>
+                        <span>(5)</span>
+                    </td>
+                    <td style="width: 10%; background: #ededed">
+                        <span>Chênh lệch</span><br>
+                        <span>(6)</span>
+                    </td>
+                    <td style="background: #fff486">
+                        <span>Vé chính</span><br>
+                        <span>(7)=(3)</span>
+                    </td>
+                    <td style="background: #fff486">
+                        <span>Vé phụ</span><br>
+                        <span>(8)=(6)</span>
+                    </td>
+                    <td style="background: #fff486">
+                        <span>Tổng trừ</span><br>
+                        <span>(7)+(8)</span>
+                    </td>
                 </tr>
-                <tr>
-                    <td>Vé chính (Thực tế): </td>
-                    <td class="value"><span>22</span> (coupon)</td>
-                </tr>
-                <tr>
-                    <td>Vé phụ (Thực tế): </td>
-                    <td class="value"><span>0</span> (coupon)</td>
-                </tr>
-                <tr>
-                    <td>Chênh lệch vé chính: </td>
-                    <td class="value"><span>0</span> (coupon)</td>
-                </tr>
-                <tr>
-                    <td>Chênh lệch vé phụ: </td>
-                    <td class="value"><span>0</span> (coupon)</td>
+                <tr style="font-weight: bold;">
+                    <td style="background: #ededed">38</td>
+                    <td style="background: #ededed">38</td>
+                    <td style="background: #ededed">0</td>
+                    <td style="background: #ededed">19</td>
+                    <td style="background: #ededed">21</td>
+                    <td style="background: #ededed">-2</td>
+                    <td style="background: #fff486">0</td>
+                    <td style="background: #fff486">30000</td>
+                    <td style="background: #fff486">30000</td>
                 </tr>
             </table>
-            <br />
-            <br />
-            <button class="moving-button">
-                Click để xem dữ liệu
-            </button>
-            <br />
-            <br />
+            <p>* Ghi chú: </p>
+            <ul style="color: red; font-weight: bold; font-style: italic">
+                <li>
+                    Sau 3 ngày kể từ ngày nhận được E-mail này, nếu có ý kiến khác vui lòng liên hệ Ms Huyền- phòng HCNS theo máy lẻ: 3222 hoặc E-mail.
+                </li>
+                <li>
+                    TH không phản hồi trong vòng 3 ngày, phòng HCNS sẽ tự động trừ vào lương của tháng theo số vé chênh lệch nêu trên.
+                </li>
+                <li>
+                    Vé chính: 23,000vnd, Vé Phụ: 15,000vnd
+                </li>
+            </ul>
             <br />
             <hr />
 
             <div class="sign" style="width: 100%;">
                 <p>Trân trọng !</p>
-                <p>Phòng Nhân sự</p>
+                <p>Phòng Hành Chính Nhân Sự</p>
                 <p>Đây là email gửi từ hệ thống, vui lòng không phản hồi lại !</p>
 
             </div>

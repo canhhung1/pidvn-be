@@ -45,7 +45,7 @@
     </resultMap>
     <select id="getQaCards" resultMap="getQaCards-result">
         select L.lot_no, L.created_at from lots L
-        where L.label_type = 'QA'
+        where L.label_type = 'QA' and L.type = 'Q'
         and L.date between DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND CURDATE()
         order by L.date desc
     </select>

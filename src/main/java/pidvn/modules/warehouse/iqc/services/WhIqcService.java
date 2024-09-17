@@ -43,7 +43,10 @@ public class WhIqcService implements IWhIqcService {
 
     @Override
     public List<IqcRequestDetailVo> getIqcRequestDetail(IqcRequestSearchVo searchVo) {
-        return this.whIqcMapper.getIqcRequestDetail(searchVo);
+
+        List<IqcRequestDetailVo> result = this.whIqcMapper.getIqcRequestDetail(searchVo);
+
+        return result;
     }
 
     @Override

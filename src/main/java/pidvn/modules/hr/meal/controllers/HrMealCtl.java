@@ -4,10 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import pidvn.modules.hr.meal.models.EmailDataVo;
 import pidvn.modules.hr.meal.models.SearchVo;
 import pidvn.modules.hr.meal.services.HrMealSvc;
+import reactor.util.annotation.Nullable;
 
+import javax.mail.MessagingException;
+import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -34,6 +40,21 @@ public class HrMealCtl {
     @PostMapping("Balance")
     public ResponseEntity<?> getBalance(@RequestBody Date month) {
         return new ResponseEntity<>(this.hrMealSvc.getBalance(month), HttpStatus.OK);
+    }
+
+    /**
+     *
+     * @param
+     * @return
+     */
+    @PostMapping("GetUserSendEmail")
+    public ResponseEntity<?> getUserSendEmail(@RequestPart("file") @Nullable MultipartFile file) throws IOException {
+        return new ResponseEntity<>(this.hrMealSvc.getUserSendEmail(file), HttpStatus.OK);
+    }
+
+    @PostMapping("SendEmail")
+    public ResponseEntity<?> sendEmail(@RequestBody List<EmailDataVo> data) throws IOException, MessagingException {
+        return new ResponseEntity<>(this.hrMealSvc.sendEmail(data), HttpStatus.OK);
     }
 
 }

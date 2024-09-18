@@ -61,7 +61,7 @@
 <!--        </div>-->
         <div class="main">
             <h1>THÔNG TIN XÁC NHẬN TRỪ VÉ ĂN THÁNG 8/2024</h1>
-            <b>Dear anh/chị: </b><b th:text="${name}"></b><span>Nguyễn Thị Thảo (3000198)</span>
+            <b>Dear anh/chị: </b><b th:text="${user.fullName}"></b> - <b th:text="${user.username}"></b>
             <p>Phòng Nhân sự gửi dữ liệu trừ vé ăn chi tiết như sau:</p>
             <p>Anh/Chị vui lòng kiểm tra kỹ số lượng vé và tổng tiền bị trừ và phản hồi trước ngày 20 hàng tháng.</p>
             <table style="font-size: 15px; width: 100%; text-align: center">
@@ -110,15 +110,17 @@
                     </td>
                 </tr>
                 <tr style="font-weight: bold;">
-                    <td style="background: #ededed">38</td>
-                    <td style="background: #ededed">38</td>
-                    <td style="background: #ededed">0</td>
-                    <td style="background: #ededed">19</td>
-                    <td style="background: #ededed">21</td>
-                    <td style="background: #ededed">-2</td>
-                    <td style="background: #fff486">0</td>
-                    <td style="background: #fff486">30000</td>
-                    <td style="background: #fff486">30000</td>
+                    <td style="background: #ededed"><b th:text="${user.veChinhTimesheet}"></b></td>
+                    <td style="background: #ededed"><b th:text="${user.veChinhThucTe}"></b></td>
+                    <td style="background: #ededed"><b th:text="${user.veChinhChenhLech}"></b></td>
+                    <td style="background: #ededed"><b th:text="${user.vePhuTimesheet}"></b></td>
+                    <td style="background: #ededed"><b th:text="${user.vePhuThucTe}"></b></td>
+                    <td style="background: #ededed"><b th:text="${user.vePhuChenhLech}"></b></td>
+                    <td style="background: #fff486"><b th:text="${#numbers.formatDecimal(user.tienVeChinh, 1, 'COMMA', 0, 'POINT')}"></b></td>
+                    <td style="background: #fff486"><b th:text="${#numbers.formatDecimal(user.tienVePhu, 1, 'COMMA', 0, 'POINT')}"></b></td>
+                    <td style="background: #fff486"><b th:text="${#numbers.formatDecimal(user.tienChenhLech, 1, 'COMMA', 0, 'POINT')}"></b></td>
+
+
                 </tr>
             </table>
             <p>* Ghi chú: </p>

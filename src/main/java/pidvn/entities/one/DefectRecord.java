@@ -41,7 +41,7 @@ public class DefectRecord {
     private String remark;
     @CreatedDate
     @Column(name = "created_at")
-    private Date createAt;
+    private Date createdAt;
     @LastModifiedDate
     @Column(name = "updated_at")
     private Date updatedAt;
@@ -148,12 +148,12 @@ public class DefectRecord {
         this.remark = remark;
     }
 
-    public Date getCreateAt() {
-        return createAt;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreateAt(Date createAt) {
-        this.createAt = createAt;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Date getUpdatedAt() {
@@ -186,5 +186,22 @@ public class DefectRecord {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "DefectRecord{" +
+                "id=" + id +
+                ", model='" + model + '\'' +
+                ", line='" + line + '\'' +
+                ", date=" + date +
+                ", shift='" + shift + '\'' +
+                ", lotNo='" + lotNo + '\'' +
+                ", defectCode='" + defectCode + '\'' +
+                ", qty=" + qty +
+                ", remark='" + remark + '\'' +
+                ", createAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }

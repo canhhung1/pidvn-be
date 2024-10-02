@@ -8,8 +8,7 @@ public class DefectRecordDto {
     private String line;
     private String model;
     private String defectCode;
-    private Integer qty;
-    private String employeeId;
+    private Float qty;
     private int userId;
     private String shift;
     private String lotNo;
@@ -17,6 +16,8 @@ public class DefectRecordDto {
     private String remark;
     private Date createdAt;
     private Date updatedAt;
+    private String recordType;
+    private String username;
 
     public Integer getId() {
         return id;
@@ -50,20 +51,12 @@ public class DefectRecordDto {
         this.defectCode = defectCode;
     }
 
-    public Integer getQty() {
+    public Float getQty() {
         return qty;
     }
 
-    public void setQty(Integer qty) {
+    public void setQty(Float qty) {
         this.qty = qty;
-    }
-
-    public String getEmployeeId() {
-        return employeeId;
-    }
-
-    public void setEmployeeId(String employeeId) {
-        this.employeeId = employeeId;
     }
 
     public int getUserId() {
@@ -130,4 +123,19 @@ public class DefectRecordDto {
         this.updatedAt = updatedAt;
     }
 
+    public String getRecordType() {
+        return recordType;
+    }
+
+    public void setRecordType(String recordType) {
+        this.recordType = recordType;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 }

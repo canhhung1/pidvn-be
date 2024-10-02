@@ -29,7 +29,7 @@ public class RelayDefectRecordSvc {
 
     private static final String FILE_NAME = "D:\\PIDVN\\WorkSpace\\1. RelayDefectRecord\\NKSX 6.xlsx";
 
-    @Scheduled(fixedRate = 3600000)
+    // @Scheduled(fixedRate = 3600000)
     public void readExcel() throws IOException {
 
         int START_ROW = 8;
@@ -71,14 +71,15 @@ public class RelayDefectRecordSvc {
                     obj.setModel(row.getCell(MODEL_COL).getStringCellValue());
                     obj.setLotNo(row.getCell(DATE_CODE_COL).getStringCellValue());
                     obj.setCustomerCode(row.getCell(CUSTOMER_CODE_COL).getStringCellValue());
-                    obj.setEmployeeId(row.getCell(EMPLOYEE_ID_COL).getStringCellValue());
+                    obj.setUsername(row.getCell(EMPLOYEE_ID_COL).getStringCellValue());
                     obj.setShift(row.getCell(SHIFT_COL).getStringCellValue());
                     obj.setRemark(row.getCell(INPUT_TIME_COL).getStringCellValue());
                     obj.setDefectCode(sheet.getRow(DEFECT_CODE_ROW).getCell(j).getStringCellValue());
-                    obj.setQty((int) row.getCell(j).getNumericCellValue());
+                    obj.setQty((float) row.getCell(j).getNumericCellValue());
                     obj.setUserId(665);
                     obj.setCreatedAt(new Date());
                     obj.setUpdatedAt(new Date());
+                    obj.setRecordType("RELAY");
 
                     defectRecords.add(obj);
 
@@ -91,6 +92,10 @@ public class RelayDefectRecordSvc {
         }
 
         List<DefectRecord> data = defectRecords.stream().map(item -> modelMapper.map(item, DefectRecord.class)).collect(Collectors.toList());
+
+        for (DefectRecord obj : data) {
+            System.out.println(obj.toString());
+        }
 
         this.defectRecordRepo.saveAll(data);
     }

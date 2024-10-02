@@ -51,6 +51,10 @@ public class DefectRecord {
     private String defectRemark;
     @Column(name = "status")
     private String status;
+    @Column(name = "record_type")
+    private String recordType;
+    @Column(name = "username")
+    private String username;
 
     public Integer getId() {
         return id;
@@ -188,20 +192,19 @@ public class DefectRecord {
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        return "DefectRecord{" +
-                "id=" + id +
-                ", model='" + model + '\'' +
-                ", line='" + line + '\'' +
-                ", date=" + date +
-                ", shift='" + shift + '\'' +
-                ", lotNo='" + lotNo + '\'' +
-                ", defectCode='" + defectCode + '\'' +
-                ", qty=" + qty +
-                ", remark='" + remark + '\'' +
-                ", createAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
+    public String getRecordType() {
+        return recordType;
+    }
+
+    public void setRecordType(String recordType) {
+        this.recordType = recordType;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

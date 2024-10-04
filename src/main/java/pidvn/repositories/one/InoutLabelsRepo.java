@@ -12,6 +12,8 @@ import java.util.List;
 @Repository
 public interface InoutLabelsRepo extends JpaRepository<InoutLabels, Integer> {
 
+    List<InoutLabels> findByOuterLotNo(@Param("outerLotNo") String outerLotNo);
+
     @Query("SELECT e FROM InoutLabels e WHERE e.outerLotNo IN (:outerLotNos)")
     List<InoutLabels> findByOuterLotNoIn(@Param("outerLotNos")List<String> outerLotNos);
 }

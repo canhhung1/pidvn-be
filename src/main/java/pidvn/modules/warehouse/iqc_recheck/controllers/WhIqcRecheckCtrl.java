@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pidvn.commons.dto.ApiResponse;
+import pidvn.entities.one.IqcRequest;
 import pidvn.entities.one.Lots;
 import pidvn.modules.warehouse.iqc_recheck.models.LabelDto;
+import pidvn.modules.warehouse.iqc_recheck.models.RequestDto;
 import pidvn.modules.warehouse.iqc_recheck.services.WhIqcRecheckSvc;
 
 import java.util.List;
@@ -22,16 +24,18 @@ public class WhIqcRecheckCtrl {
     private WhIqcRecheckSvc whIqcRecheckSvc;
 
     @PostMapping("Request")
-    private ResponseEntity<ApiResponse<?>> createIqcRecheckRequest(@RequestBody List<Lots> lots) {
-
-        return new ResponseEntity<>(null, HttpStatus.OK);
+    public ResponseEntity<ApiResponse<?>> createIqcRecheckRequest(@RequestBody RequestDto requestDto) {
+        ApiResponse<IqcRequest> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(this.whIqcRecheckSvc.createIqcRecheckRequest(requestDto));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
     @PostMapping("ScanLabel")
-    private ResponseEntity<ApiResponse<?>> scanLabel(@RequestBody LabelDto labelDto) {
+    public ResponseEntity<ApiResponse<?>> scanLabel(@RequestBody LabelDto labelDto) {
         ApiResponse<List<Lots>> apiResponse = new ApiResponse<>();
         apiResponse.setResult(this.whIqcRecheckSvc.scanLabel(labelDto));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
+
 
 }

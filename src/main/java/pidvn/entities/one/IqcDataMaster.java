@@ -26,6 +26,9 @@ public class IqcDataMaster {
     @Column(name = "lot_group")
     private String lotGroup;
 
+    @Column(name = "lot_no")
+    private String lotNo;
+
     @Column(name = "model")
     private String model;
 
@@ -88,6 +91,14 @@ public class IqcDataMaster {
 
     public void setLotGroup(String lotGroup) {
         this.lotGroup = lotGroup;
+    }
+
+    public String getLotNo() {
+        return lotNo;
+    }
+
+    public void setLotNo(String lotNo) {
+        this.lotNo = lotNo;
     }
 
     public String getModel() {

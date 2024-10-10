@@ -63,7 +63,7 @@ public class WhIqcRecheckSvc implements IWhIqcRecheckSvc {
         obj.setRequestNo("RC-" + date + "-" + sequence);
         obj.setRemark("IT test");
 
-        IqcRequest request = this.iqcRequestRepo.save(obj);
+         IqcRequest request = this.iqcRequestRepo.save(obj);
 
         /**
          * B2: Tạo dữ liệu bảng master
@@ -71,24 +71,30 @@ public class WhIqcRecheckSvc implements IWhIqcRecheckSvc {
 
         List<LotDto> lots = this.whIqcRecheckMapper.getLotsIqcOver6Month(requestDto.getLotGroups());
 
+        if (requestDto.getGoodsType().equals("OUTSIDE")) {
+            List<IqcDataMaster> iqcDataMasters = new ArrayList<>();
+            for (LotDto lot : lots) {
+                IqcDataMaster obj1 = new IqcDataMaster();
+                obj1.setRequestNo(request.getRequestNo());
+                obj1.setModel(lot.getModel());
+                obj1.setLotGroup(lot.getLotGroup());
+                obj1.setLotNo(lot.getLotNo());
+                obj1.setCreatedAt(new Date());
+                obj1.setUpdatedAt(new Date());
+                iqcDataMasters.add(obj1);
+            }
+            this.iqcDataMasterRepo.saveAll(iqcDataMasters);
 
-        List<IqcDataMaster> iqcDataMasters = new ArrayList<>();
-        List<IqcResults> iqcResults = new ArrayList<>();
-        for (LotDto lot : lots) {
+        } else if (requestDto.getGoodsType().equals("INSIDE")) {
 
-            IqcDataMaster obj1 = new IqcDataMaster();
-            obj1.setRequestNo(request.getRequestNo());
-            obj1.setModel(lot.getModel());
-            obj1.setLotGroup(lot.getLotGroup());
-            obj1.setLotNo(lot.getLotNo());
-            obj1.setCreatedAt(new Date());
-            obj1.setUpdatedAt(new Date());
-            iqcDataMasters.add(obj1);
-
+            List<IqcResults> iqcResults = new ArrayList<>();
 
         }
 
-        this.iqcDataMasterRepo.saveAll(iqcDataMasters);
+
+
+
+
 
 
         return request;

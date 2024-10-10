@@ -5,6 +5,7 @@ public class LotDto {
     private String lotGroup;
     private String lotNo;
     private Integer amount;
+    private String classified;
 
     public String getModel() {
         return model;
@@ -36,5 +37,13 @@ public class LotDto {
 
     public void setAmount(Integer amount) {
         this.amount = amount;
+    }
+
+    public String getClassified() {
+        return classified;
+    }
+
+    public void setClassified(String classified) {
+        this.classified = classified;
     }
 }

@@ -27,11 +27,15 @@
             select * from pih_stores where wh > 0
         ),
         T03 as (
-            SELECT T02.model, A.lot_group, T02.lot_no FROM T02
+            SELECT T02.model, A.lot_group, T02.lot_no, B.classified FROM T02
             left join lots A on T02.lot_no = A.lot_no
+            left join model B on T02.model = B.name
             WHERE T02.lot_no NOT IN (SELECT lot_no FROM T01)
         )
-        SELECT T03.model, T03.lot_group, count(T03.lot_no) amount FROM T03 group by T03.lot_group
+        SELECT
+            T03.model, T03.lot_group, count(T03.lot_no) amount,
+            if(T03.classified != 'R' , 'INSIDE', 'OUTSIDE') classified
+        FROM T03 group by T03.lot_group order by T03.model asc, T03.lot_group asc
 
 
     </select>
@@ -46,14 +50,15 @@
     <select id="getLotsIqcOver6Month" resultMap="getLotsIqcOver6Month-result">
         with
         T01 as (
-            select * from pur_wh_inventories A where lot_no in (
+            select * from pih_stores A
+            where A.wh > 0
+            and A.lot_no in (
                 select lot_no from lots
                 where lot_group in
                 <foreach item="item" collection="lotGroups" open="(" separator="," close=")">
                     #{item}
                 </foreach>
             )
-        and A.date >= DATE_FORMAT(NOW() - INTERVAL 1 MONTH, '%Y-%m-01') AND A.date <![CDATA[<]]> DATE_FORMAT(NOW(), '%Y-%m-01')
         ),
         T02 as (
             select T01.model, L.lot_group, T01.lot_no from T01

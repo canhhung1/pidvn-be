@@ -22,4 +22,16 @@ public class ActualDppDataCtrl {
 
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
+
+    @GetMapping("GetAndWriteExcelActualDppVrEnc")
+    public ResponseEntity<?> getAndWriteActualDppVrEnc() {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://10.92.176.57:8890/pidvn-schedule-task/ActualDppVrEnc/GetAndWriteActualDppVrEnc";
+
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+
+        String data = response.getBody();
+
+        return new ResponseEntity<>(data, HttpStatus.OK);
+    }
 }

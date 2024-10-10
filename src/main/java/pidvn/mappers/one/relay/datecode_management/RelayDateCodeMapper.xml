@@ -26,8 +26,10 @@
         <result column="qa_card" property="qaCard" javaType="String"/>
         <result column="date_code" property="dateCode" javaType="String"/>
         <result column="user_code" property="userCode" javaType="Integer"/>
+        <result column="record_type" property="recordType" javaType="String"/>
         <result column="employee_name" property="employeeName" javaType="String"/>
         <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="customer_code" property="customerCode" javaType="String"/>
     </resultMap>
     <select id="getAllDateCode" resultMap="getAllDateCode-result">
         SELECT D.*, U.name employee_name FROM relay_date_code D

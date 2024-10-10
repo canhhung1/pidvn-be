@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.warehouse.iqc_recheck.WhIqcRecheckMapper">
+
+    <resultMap id="getLotGroupsIqcOver6Month-result"
+               type="pidvn.modules.warehouse.iqc_recheck.models.LotDto">
+        <result column="lot_group" property="lotGroup" javaType="String"/>
+    </resultMap>
+
+    <select id="getLotGroupsIqcOver6Month" resultMap="getLotGroupsIqcOver6Month-result">
+
+        with
+        T01 as (
+            select lot_no from lots where lot_group in (
+                SELECT A.lot_group FROM iqc_data_master A
+                WHERE A.updated_at >= NOW() - INTERVAL 6 MONTH
+                AND A.result1 is not null
+                AND A.result2 is not null
+                AND A.result2 is not null
+            )
+            union
+            SELECT DISTINCT A.lot_no
+            FROM iqc_results A
+            WHERE A.updated_at >= NOW() - INTERVAL 6 MONTH
+        ),
+        T02 as (
+            select * from pih_stores where wh > 0
+        ),
+        T03 as (
+            SELECT T02.model, A.lot_group, T02.lot_no FROM T02
+            left join lots A on T02.lot_no = A.lot_no
+            WHERE T02.lot_no NOT IN (SELECT lot_no FROM T01)
+        )
+        SELECT T03.model, T03.lot_group, count(T03.lot_no) amount FROM T03 group by T03.lot_group
+
+
+    </select>
+
+
+
+    <resultMap id="getLotsIqcOver6Month-result"
+               type="pidvn.modules.warehouse.iqc_recheck.models.LotDto">
+        <result column="lot_group" property="lotGroup" javaType="String"/>
+        <result column="lot_no" property="lotNo" javaType="String"/>
+    </resultMap>
+    <select id="getLotsIqcOver6Month" resultMap="getLotsIqcOver6Month-result">
+        with
+        T01 as (
+            select * from pur_wh_inventories A where lot_no in (
+                select lot_no from lots
+                where lot_group in
+                <foreach item="item" collection="lotGroups" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            )
+        and A.date >= DATE_FORMAT(NOW() - INTERVAL 1 MONTH, '%Y-%m-01') AND A.date <![CDATA[<]]> DATE_FORMAT(NOW(), '%Y-%m-01')
+        ),
+        T02 as (
+            select T01.model, L.lot_group, T01.lot_no from T01
+            left join lots L on T01.lot_no = L.lot_no
+        )
+        select * from T02
+
+    </select>
+
+
+</mapper>

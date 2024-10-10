@@ -2,11 +2,10 @@ package pidvn.modules.warehouse.iqc_recheck.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pidvn.entities.one.InoutLabels;
-import pidvn.entities.one.IqcDataMaster;
-import pidvn.entities.one.IqcRequest;
-import pidvn.entities.one.Lots;
+import pidvn.entities.one.*;
+import pidvn.mappers.one.warehouse.iqc_recheck.WhIqcRecheckMapper;
 import pidvn.modules.warehouse.iqc_recheck.models.LabelDto;
+import pidvn.modules.warehouse.iqc_recheck.models.LotDto;
 import pidvn.modules.warehouse.iqc_recheck.models.RequestDto;
 import pidvn.repositories.one.InoutLabelsRepo;
 import pidvn.repositories.one.IqcDataMasterRepo;
@@ -18,6 +17,9 @@ import java.util.*;
 
 @Service
 public class WhIqcRecheckSvc implements IWhIqcRecheckSvc {
+
+    @Autowired
+    private WhIqcRecheckMapper whIqcRecheckMapper;
 
     @Autowired
     private InoutLabelsRepo inoutLabelsRepo;
@@ -59,25 +61,43 @@ public class WhIqcRecheckSvc implements IWhIqcRecheckSvc {
         obj.setType(requestDto.getType());
         obj.setRequestedBy(requestDto.getRequestedBy());
         obj.setRequestNo("RC-" + date + "-" + sequence);
+        obj.setRemark("IT test");
 
         IqcRequest request = this.iqcRequestRepo.save(obj);
 
         /**
-         * B2: lưu dữ liệu vào iqc_data_master
+         * B2: Tạo dữ liệu bảng master
          */
-        List<IqcDataMaster> dataMasters = new ArrayList<>();
-        for (Lots item: requestDto.getLots()) {
-            IqcDataMaster master = new IqcDataMaster();
-            master.setRequestNo(request.getRequestNo());
-            master.setModel(item.getModel());
-            master.setLotGroup(item.getLotGroup());
-            master.setLotNo(item.getLotNo());
-            dataMasters.add(master);
+
+        List<LotDto> lots = this.whIqcRecheckMapper.getLotsIqcOver6Month(requestDto.getLotGroups());
+
+
+        List<IqcDataMaster> iqcDataMasters = new ArrayList<>();
+        List<IqcResults> iqcResults = new ArrayList<>();
+        for (LotDto lot : lots) {
+
+            IqcDataMaster obj1 = new IqcDataMaster();
+            obj1.setRequestNo(request.getRequestNo());
+            obj1.setModel(lot.getModel());
+            obj1.setLotGroup(lot.getLotGroup());
+            obj1.setLotNo(lot.getLotNo());
+            obj1.setCreatedAt(new Date());
+            obj1.setUpdatedAt(new Date());
+            iqcDataMasters.add(obj1);
+
+
         }
 
-        List<IqcDataMaster> masters = this.iqcDataMasterRepo.saveAll(dataMasters);
+        this.iqcDataMasterRepo.saveAll(iqcDataMasters);
+
 
         return request;
+    }
+
+
+    @Override
+    public List<LotDto> getLotGroupsIqcOver6Month() {
+        return this.whIqcRecheckMapper.getLotGroupsIqcOver6Month();
     }
 
 

@@ -1,11 +1,13 @@
 package pidvn.modules.qa.iqc_recheck.services;
 
-import org.springframework.stereotype.Service;
-import pidvn.entities.one.IqcRequest;
+
+import pidvn.modules.qa.iqc_recheck.models.LotDto;
 
 import java.util.List;
 
 
 public interface IqcRecheckSvc {
-    List<IqcRequest> getIqcRequests();
+
+
+    List<LotDto> getLotsInRequest(String requestNo);
 }

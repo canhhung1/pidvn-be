@@ -16,8 +16,8 @@ public class DateCodeVo {
     private String shift;
     private Date createdAt;
     private Date updatedAt;
-
     private String customerCode;
+    private String recordType;
 
     public Integer getId() {
         return id;
@@ -121,5 +121,13 @@ public class DateCodeVo {
 
     public void setCustomerCode(String customerCode) {
         this.customerCode = customerCode;
+    }
+
+    public String getRecordType() {
+        return recordType;
+    }
+
+    public void setRecordType(String recordType) {
+        this.recordType = recordType;
     }
 }

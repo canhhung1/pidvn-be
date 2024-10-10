@@ -8,7 +8,7 @@ public class RequestDto {
 
     private String requestedBy;
     private String type;
-    private List<Lots> lots;
+    private List<String> lotGroups;
 
     public String getRequestedBy() {
         return requestedBy;
@@ -26,11 +26,11 @@ public class RequestDto {
         this.type = type;
     }
 
-    public List<Lots> getLots() {
-        return lots;
+    public List<String> getLotGroups() {
+        return lotGroups;
     }
 
-    public void setLots(List<Lots> lots) {
-        this.lots = lots;
+    public void setLotGroups(List<String> lotGroups) {
+        this.lotGroups = lotGroups;
     }
 }

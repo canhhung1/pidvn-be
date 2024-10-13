@@ -21,8 +21,8 @@ public class IqcRecheckSvcImpl implements IqcRecheckSvc {
      * @return
      */
     @Override
-    public List<LotDto> getLotsInRequest(String requestNo) {
-        return null;
+    public List<LotDto> getLotsInRequest(String requestNo, String goodsType) {
+            return this.iqcRecheckMapper.getLotsInRequest(requestNo,goodsType);
     }
 
 

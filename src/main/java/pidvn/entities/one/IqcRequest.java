@@ -48,6 +48,9 @@ public class IqcRequest {
     @Column(name = "remark")
     private String remark;
 
+    @Column(name = "goods_type")
+    private String goodsType;
+
     public Integer getId() {
         return id;
     }
@@ -134,5 +137,13 @@ public class IqcRequest {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getGoodsType() {
+        return goodsType;
+    }
+
+    public void setGoodsType(String goodsType) {
+        this.goodsType = goodsType;
     }
 }

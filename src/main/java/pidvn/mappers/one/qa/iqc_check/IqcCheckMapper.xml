@@ -10,13 +10,14 @@
         <result column="requested_by_name" property="requestedByName" javaType="String"/>
         <result column="created_at" property="createdAt" javaType="Date"/>
         <result column="type_name" property="typeName" javaType="String"/>
+        <result column="goods_type" property="goodsType" javaType="String"/>
     </resultMap>
     <select id="getIqcRequests" resultMap="getIqcRequests-result">
         SELECT
             R.*, S.name AS status_name, U.name requested_by_name,
             case
                 when R.type = 'sorting' then 'Hàng sorting'
-                when R.type = 'over6month' then 'Hàng quá 6 tháng'
+                when R.type = '6Month' then 'Hàng quá 6 tháng'
             end as type_name
         FROM
             iqc_request R

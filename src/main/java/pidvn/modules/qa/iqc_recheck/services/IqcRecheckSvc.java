@@ -9,5 +9,5 @@ import java.util.List;
 public interface IqcRecheckSvc {
 
 
-    List<LotDto> getLotsInRequest(String requestNo);
+    List<LotDto> getLotsInRequest(String requestNo, String goodsType);
 }

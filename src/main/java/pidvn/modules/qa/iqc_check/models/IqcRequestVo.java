@@ -18,6 +18,7 @@ public class IqcRequestVo {
     private String type;
 
     private String typeName;
+    private String goodsType;
 
     public String getRequestNo() {
         return requestNo;
@@ -113,5 +114,13 @@ public class IqcRequestVo {
 
     public void setTypeName(String typeName) {
         this.typeName = typeName;
+    }
+
+    public String getGoodsType() {
+        return goodsType;
+    }
+
+    public void setGoodsType(String goodsType) {
+        this.goodsType = goodsType;
     }
 }

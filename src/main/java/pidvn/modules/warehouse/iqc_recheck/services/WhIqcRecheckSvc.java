@@ -61,6 +61,8 @@ public class WhIqcRecheckSvc implements IWhIqcRecheckSvc {
         obj.setType(requestDto.getType());
         obj.setRequestedBy(requestDto.getRequestedBy());
         obj.setRequestNo("RC-" + date + "-" + sequence);
+        obj.setGoodsType(requestDto.getGoodsType());
+        obj.setStatus(1);
         obj.setRemark("IT test");
 
          IqcRequest request = this.iqcRequestRepo.save(obj);

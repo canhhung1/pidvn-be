@@ -2,13 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="pidvn.mappers.one.qa.iqc_recheck.IqcRecheckMapper">
 
-    <resultMap id="getIqcRequests-result"
-               type="pidvn.modules.qa.iqc_check.models.IqcRequestVo">
-
+    <resultMap id="getLotsInRequest-result"
+               type="pidvn.modules.qa.iqc_recheck.models.LotDto">
+        <result column="lot_group" property="lotGroup" javaType="String"/>
+        <result column="lot_no" property="lotNo" javaType="String"/>
     </resultMap>
-    <select id="getIqcRequests" resultMap="getIqcRequests-result">
+    <select id="getLotsInRequest" resultMap="getLotsInRequest-result">
+        <if test="goodsType != null and goodsType == 'INSIDE'">
+            SELECT A.*, B.lot_group FROM iqc_results A
+            left join lots B on A.lot_no = B.lot_no
+            where request_no = #{requestNo}
+        </if>
+        <if test="goodsType != null and goodsType == 'OUTSIDE'">
+            select * from iqc_data_master where request_no = #{requestNo}
+        </if>
 
     </select>
+
+
 
 
 

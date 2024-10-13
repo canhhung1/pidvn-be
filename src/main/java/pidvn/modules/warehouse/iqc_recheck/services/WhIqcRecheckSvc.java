@@ -7,10 +7,7 @@ import pidvn.mappers.one.warehouse.iqc_recheck.WhIqcRecheckMapper;
 import pidvn.modules.warehouse.iqc_recheck.models.LabelDto;
 import pidvn.modules.warehouse.iqc_recheck.models.LotDto;
 import pidvn.modules.warehouse.iqc_recheck.models.RequestDto;
-import pidvn.repositories.one.InoutLabelsRepo;
-import pidvn.repositories.one.IqcDataMasterRepo;
-import pidvn.repositories.one.IqcRequestRepo;
-import pidvn.repositories.one.LotsRepo;
+import pidvn.repositories.one.*;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -32,6 +29,9 @@ public class WhIqcRecheckSvc implements IWhIqcRecheckSvc {
 
     @Autowired
     private IqcDataMasterRepo iqcDataMasterRepo;
+
+    @Autowired
+    private IqcResultsRepo iqcResultsRepo;
 
     @Override
     public List<Lots> scanLabel(LabelDto labelDto) {
@@ -71,6 +71,9 @@ public class WhIqcRecheckSvc implements IWhIqcRecheckSvc {
 
         List<LotDto> lots = this.whIqcRecheckMapper.getLotsIqcOver6Month(requestDto.getLotGroups());
 
+        /**
+         * Trường hợp là hàng mua bên ngoài
+         */
         if (requestDto.getGoodsType().equals("OUTSIDE")) {
             List<IqcDataMaster> iqcDataMasters = new ArrayList<>();
             for (LotDto lot : lots) {
@@ -81,21 +84,35 @@ public class WhIqcRecheckSvc implements IWhIqcRecheckSvc {
                 obj1.setLotNo(lot.getLotNo());
                 obj1.setCreatedAt(new Date());
                 obj1.setUpdatedAt(new Date());
+
                 iqcDataMasters.add(obj1);
             }
             this.iqcDataMasterRepo.saveAll(iqcDataMasters);
 
-        } else if (requestDto.getGoodsType().equals("INSIDE")) {
-
-            List<IqcResults> iqcResults = new ArrayList<>();
-
         }
 
+        /**
+         * Trường hợp không phải hàng mua ngoài
+         */
+        if (requestDto.getGoodsType().equals("INSIDE")) {
+            List<IqcResults> iqcResults = new ArrayList<>();
 
-
-
-
-
+            for (LotDto lot : lots) {
+                IqcResults obj1 = new IqcResults();
+                obj1.setRequestNo(request.getRequestNo());
+                obj1.setClassCol("P");
+                obj1.setLotNo(lot.getLotNo());
+                obj1.setLine(lot.getLine());
+                obj1.setModel(lot.getModel());
+                obj1.setShift(lot.getShift());
+                obj1.setpDate(new Date());
+                obj1.setDate(new Date());
+                obj1.setUserId(requestDto.getUserId());
+                obj1.setKeyInId(requestDto.getUserId());
+                iqcResults.add(obj1);
+            }
+            this.iqcResultsRepo.saveAll(iqcResults);
+        }
 
         return request;
     }

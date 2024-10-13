@@ -8,31 +8,64 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "pur_wh_inventories")
+@Table(name = "iqc_results")
 @EntityListeners(AuditingEntityListener.class)
 public class IqcResults {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Id")
+    @Column(name = "id")
     private Integer id;
 
-    @Column(name = "month")
-    private String month;
-
-    @Column(name = "date")
-    private Date date;
-
-    @Column(name = "model")
-    private String model;
+    @Column(name = "class")
+    private String classCol;
 
     @Column(name = "lot_no")
     private String lotNo;
 
-    @Column(name = "qty")
-    private Float qty;
+    @Column(name = "line")
+    private String line;
 
-    @Column(name = "adjust_qty")
-    private Float adjustQty;
+    @Column(name = "model")
+    private String model;
+
+    @Column(name = "shift")
+    private String shift;
+
+    @Column(name = "p_date")
+    private Date pDate;
+
+    @Column(name = "date")
+    private Date date;
+
+    @Column(name = "result1")
+    private String result1;
+
+    @Column(name = "result2")
+    private String result2;
+
+    @Column(name = "check_result")
+    private String checkResult;
+
+    @Column(name = "check_result2")
+    private String checkResult2;
+
+    @Column(name = "check_user")
+    private String checkUser;
+
+    @Column(name = "check_date")
+    private String checkDate;
+
+    @Column(name = "check_remark")
+    private String checkRemark;
+
+    @Column(name = "remark")
+    private String remark;
+
+    @Column(name = "user_id")
+    private Integer userId;
+
+    @Column(name = "key_in_id")
+    private Integer keyInId;
 
     @CreatedDate
     @Column(name = "created_at")
@@ -42,68 +75,175 @@ public class IqcResults {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    @Column(name = "remark")
-    private String remark;
+    @Column(name = "request_no")
+    private String requestNo;
 
-    @Column(name = "user_code")
-    private String userCode;
 
-    @Column(name = "status")
-    private String status;
-
-    @Column(name = "iqc")
-    private String iqc;
+    public Integer getId() {
+        return id;
+    }
 
     public void setId(Integer id) {
         this.id = id;
     }
 
-    public void setMonth(String month) {
-        this.month = month;
+    public String getClassCol() {
+        return classCol;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setClassCol(String classCol) {
+        this.classCol = classCol;
     }
 
-    public void setModel(String model) {
-        this.model = model;
+    public String getLotNo() {
+        return lotNo;
     }
 
     public void setLotNo(String lotNo) {
         this.lotNo = lotNo;
     }
 
-    public void setQty(Float qty) {
-        this.qty = qty;
+    public String getLine() {
+        return line;
     }
 
-    public void setAdjustQty(Float adjustQty) {
-        this.adjustQty = adjustQty;
+    public void setLine(String line) {
+        this.line = line;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public String getModel() {
+        return model;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public String getShift() {
+        return shift;
+    }
+
+    public void setShift(String shift) {
+        this.shift = shift;
+    }
+
+    public Date getpDate() {
+        return pDate;
+    }
+
+    public void setpDate(Date pDate) {
+        this.pDate = pDate;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getResult1() {
+        return result1;
+    }
+
+    public void setResult1(String result1) {
+        this.result1 = result1;
+    }
+
+    public String getResult2() {
+        return result2;
+    }
+
+    public void setResult2(String result2) {
+        this.result2 = result2;
+    }
+
+    public String getCheckResult() {
+        return checkResult;
+    }
+
+    public void setCheckResult(String checkResult) {
+        this.checkResult = checkResult;
+    }
+
+    public String getCheckResult2() {
+        return checkResult2;
+    }
+
+    public void setCheckResult2(String checkResult2) {
+        this.checkResult2 = checkResult2;
+    }
+
+    public String getCheckUser() {
+        return checkUser;
+    }
+
+    public void setCheckUser(String checkUser) {
+        this.checkUser = checkUser;
+    }
+
+    public String getCheckDate() {
+        return checkDate;
+    }
+
+    public void setCheckDate(String checkDate) {
+        this.checkDate = checkDate;
+    }
+
+    public String getCheckRemark() {
+        return checkRemark;
+    }
+
+    public void setCheckRemark(String checkRemark) {
+        this.checkRemark = checkRemark;
+    }
+
+    public String getRemark() {
+        return remark;
     }
 
     public void setRemark(String remark) {
         this.remark = remark;
     }
 
-    public void setUserCode(String userCode) {
-        this.userCode = userCode;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
-    public void setIqc(String iqc) {
-        this.iqc = iqc;
+    public Integer getKeyInId() {
+        return keyInId;
     }
 
+    public void setKeyInId(Integer keyInId) {
+        this.keyInId = keyInId;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getRequestNo() {
+        return requestNo;
+    }
+
+    public void setRequestNo(String requestNo) {
+        this.requestNo = requestNo;
+    }
 }

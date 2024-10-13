@@ -22,6 +22,8 @@
             SELECT DISTINCT A.lot_no
             FROM iqc_results A
             WHERE A.updated_at >= NOW() - INTERVAL 6 MONTH
+            AND A.result1 is not null
+            AND A.result2 is not null
         ),
         T02 as (
             select * from pih_stores where wh > 0
@@ -61,7 +63,7 @@
             )
         ),
         T02 as (
-            select T01.model, L.lot_group, T01.lot_no from T01
+            select T01.model, L.lot_group, T01.lot_no, L.shift, L.line from T01
             left join lots L on T01.lot_no = L.lot_no
         )
         select * from T02

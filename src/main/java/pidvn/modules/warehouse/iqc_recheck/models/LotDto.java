@@ -6,6 +6,8 @@ public class LotDto {
     private String lotNo;
     private Integer amount;
     private String classified;
+    private String shift;
+    private String line;
 
     public String getModel() {
         return model;
@@ -45,5 +47,21 @@ public class LotDto {
 
     public void setClassified(String classified) {
         this.classified = classified;
+    }
+
+    public String getShift() {
+        return shift;
+    }
+
+    public void setShift(String shift) {
+        this.shift = shift;
+    }
+
+    public String getLine() {
+        return line;
+    }
+
+    public void setLine(String line) {
+        this.line = line;
     }
 }

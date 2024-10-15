@@ -1,5 +1,7 @@
 package pidvn.modules.qa.iqc_recheck.models;
 
+import java.util.Date;
+
 public class LotDto {
     private Integer id;
     private String requestNo;
@@ -13,6 +15,8 @@ public class LotDto {
     private String createdBy;
     private String levelOfControlNgoaiQuan;
     private String levelOfControlKichThuoc;
+    private Date createdAt;
+    private Date updatedAt;
 
     public Integer getId() {
         return id;
@@ -108,5 +112,21 @@ public class LotDto {
 
     public void setLevelOfControlKichThuoc(String levelOfControlKichThuoc) {
         this.levelOfControlKichThuoc = levelOfControlKichThuoc;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

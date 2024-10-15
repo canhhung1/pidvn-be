@@ -57,8 +57,8 @@ public class IqcDataMaster {
 
     @Column(name = "level_of_control_ngoai_quan")
     private String levelOfControlNgoaiQuan;
-    @Column(name = "level_of_control_kich_thuoc")
 
+    @Column(name = "level_of_control_kich_thuoc")
     private String levelOfControlKichThuoc;
 
     public Integer getId() {

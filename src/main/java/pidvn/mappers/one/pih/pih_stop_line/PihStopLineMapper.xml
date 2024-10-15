@@ -16,6 +16,7 @@
         )
         select I.id, I.name item_name, T01.group_name, T01.type_name from stop_items I
         left join T01 on I.stop_group_id = T01.id
+        where 1=1 and I.disable is null
     </select>
 
 

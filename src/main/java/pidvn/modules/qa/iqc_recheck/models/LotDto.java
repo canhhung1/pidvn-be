@@ -1,7 +1,7 @@
 package pidvn.modules.qa.iqc_recheck.models;
 
 public class LotDto {
-
+    private Integer id;
     private String requestNo;
     private String model;
     private String lotGroup;
@@ -13,6 +13,14 @@ public class LotDto {
     private String createdBy;
     private String levelOfControlNgoaiQuan;
     private String levelOfControlKichThuoc;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getRequestNo() {
         return requestNo;

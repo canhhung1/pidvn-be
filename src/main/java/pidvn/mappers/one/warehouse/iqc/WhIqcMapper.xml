@@ -28,6 +28,7 @@
         <result column="requested_by" property="requestedBy" javaType="String"/>
         <result column="requested_by_name" property="requestedByName" javaType="String"/>
         <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="goods_type" property="goodsType" javaType="String"/>
     </resultMap>
     <select id="getIqcRequests" resultMap="getIqcRequests-result">
         SELECT

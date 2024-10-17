@@ -12,10 +12,9 @@ public class IqcRequestVo {
     private String requestedByName;
     private Date createdAt;
     private Date updatedAt;
-
     private String remark;
-
     private String type;
+    private String goodsType;
 
     public String getRequestNo() {
         return requestNo;
@@ -103,5 +102,13 @@ public class IqcRequestVo {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getGoodsType() {
+        return goodsType;
+    }
+
+    public void setGoodsType(String goodsType) {
+        this.goodsType = goodsType;
     }
 }

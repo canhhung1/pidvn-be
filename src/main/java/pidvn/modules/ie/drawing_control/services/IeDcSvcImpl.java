@@ -54,8 +54,8 @@ public class IeDcSvcImpl implements IeDcSvc {
     @Autowired
     private ProductRepo productRepo;
 
-//    public final String ROOT_FOLDER = "\\\\10.92.176.10\\DataSharePIDVN\\4. IE Drawing\\DRAWING-CONTROL\\IE-Project\\";
-     public final String ROOT_FOLDER = "D:\\DataSharePIDVN\\4. IE Drawing\\DRAWING-CONTROL\\IE-Project\\";
+    public final String ROOT_FOLDER = "\\\\10.92.176.10\\DataSharePIDVN\\4. IE Drawing\\DRAWING-CONTROL\\IE-Project\\";
+//     public final String ROOT_FOLDER = "D:\\DataSharePIDVN\\4. IE Drawing\\DRAWING-CONTROL\\IE-Project\\";
 
 
     @Override
@@ -93,6 +93,14 @@ public class IeDcSvcImpl implements IeDcSvc {
     @Override
     public ProjectDto updateProject(ProjectDto projectDto) {
         IeDc001 data = this.ieDc001Repo.save(modelMapper.map(projectDto, IeDc001.class));
+        return this.modelMapper.map(data, ProjectDto.class);
+    }
+
+    @Override
+    public ProjectDto deleteProject(Integer projectId) {
+        IeDc001 ieDc001 = this.ieDc001Repo.findById(projectId).get();
+        ieDc001.setDisable(1);
+        IeDc001 data = this.ieDc001Repo.save(ieDc001);
         return this.modelMapper.map(data, ProjectDto.class);
     }
 

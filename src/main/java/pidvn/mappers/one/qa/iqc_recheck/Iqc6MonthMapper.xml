@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="pidvn.mappers.one.qa.iqc_recheck.IqcRecheckMapper">
+<mapper namespace="pidvn.mappers.one.qa.iqc_recheck.Iqc6MonthMapper">
 
     <resultMap id="getLotsInRequest-result"
                type="pidvn.modules.qa.iqc_recheck.models.LotDto">
@@ -11,9 +11,8 @@
         <result column="updated_at" property="updatedAt" javaType="Date"/>
         <result column="level_of_control_ngoai_quan" property="levelOfControlNgoaiQuan" javaType="String"/>
         <result column="level_of_control_kich_thuoc" property="levelOfControlKichThuoc" javaType="String"/>
-
-
     </resultMap>
+
     <select id="getLotsInRequest" resultMap="getLotsInRequest-result">
         <if test="goodsType != null and goodsType == 'INSIDE'">
             SELECT A.*, B.lot_group FROM iqc_results A

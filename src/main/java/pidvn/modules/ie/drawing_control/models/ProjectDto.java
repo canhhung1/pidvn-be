@@ -20,6 +20,7 @@ public class ProjectDto {
     private String tactTime;
     private Date createdAt;
     private Date updatedAt;
+    private Integer disable;
 
     public Integer getId() {
         return id;
@@ -147,5 +148,13 @@ public class ProjectDto {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Integer getDisable() {
+        return disable;
+    }
+
+    public void setDisable(Integer disable) {
+        this.disable = disable;
     }
 }

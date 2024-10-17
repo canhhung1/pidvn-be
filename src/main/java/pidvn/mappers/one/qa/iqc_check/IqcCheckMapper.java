@@ -14,8 +14,6 @@ public interface IqcCheckMapper {
     List<IqcDataVo> getIqcDataDetail(IqcDataSearchVo searchVo);
     List<IqcDataVo> getIqcDataSortingMaster(String requestNo);
     List<IqcDataVo> getIqcDataSortingDetail(String requestNo, String lotGroup);
-
     List<IqcRequestSortingDetail> getIqcRequestSortingDetails(String requestNo, String lotGroup);
-
     List<IqcDataMaster> getMucDoKiemSoat(String model);
 }

@@ -87,6 +87,13 @@ public class IeDcCtl {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
+    @DeleteMapping("Project/{projectId}")
+    public ResponseEntity<ApiResponse<?>> deleteProject(@PathVariable Integer projectId) {
+        ApiResponse<ProjectDto> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(this.ieDcSvc.deleteProject(projectId));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
     /**
      * Lấy ra các loại project (Project Type)
      * @return

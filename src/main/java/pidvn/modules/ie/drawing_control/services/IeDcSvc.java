@@ -12,6 +12,7 @@ public interface IeDcSvc {
     List<UserDto> getUsers(List<Integer> subsectionIds);
     ProjectDto createProject(ProjectDto projectDto);
     ProjectDto updateProject(ProjectDto projectDto);
+    ProjectDto deleteProject(Integer projectId);
     List<ProjectDto> getProjects();
     ProjectDto getProject(Integer id);
     List<ProjectTypeDto> getProjectTypes();

@@ -1,24 +1,27 @@
 package pidvn.modules.qa.iqc_recheck.services;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pidvn.entities.one.IqcDataMaster;
-import pidvn.mappers.one.qa.iqc_recheck.IqcRecheckMapper;
+import pidvn.mappers.one.qa.iqc_recheck.Iqc6MonthMapper;
 import pidvn.modules.qa.iqc_recheck.models.LotDto;
 import pidvn.repositories.one.IqcDataMasterRepo;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 public class IqcRecheckSvcImpl implements IqcRecheckSvc {
 
+    Logger logger = LoggerFactory.getLogger(IqcRecheckSvcImpl.class);
+
     @Autowired
-    private IqcRecheckMapper iqcRecheckMapper;
+    private Iqc6MonthMapper iqc6MonthMapper;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -35,7 +38,8 @@ public class IqcRecheckSvcImpl implements IqcRecheckSvc {
      */
     @Override
     public List<LotDto> getLotsInRequest(String requestNo, String goodsType) {
-            return this.iqcRecheckMapper.getLotsInRequest(requestNo,goodsType);
+        logger.debug("========>>>>>>> getLotsInRequest");
+        return this.iqc6MonthMapper.getLotsInRequest(requestNo,goodsType);
     }
 
     @Override

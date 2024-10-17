@@ -25,6 +25,7 @@ public class IqcRecheckCtrl {
      */
     @GetMapping("Requests/{requestNo}")
     public ResponseEntity<ApiResponse<?>> getRequest(@PathVariable String requestNo, @RequestParam String goodsType) {
+
         ApiResponse<List<LotDto>> apiResponse = new ApiResponse<>();
         apiResponse.setResult(this.iqcRecheckSvc.getLotsInRequest(requestNo, goodsType));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);

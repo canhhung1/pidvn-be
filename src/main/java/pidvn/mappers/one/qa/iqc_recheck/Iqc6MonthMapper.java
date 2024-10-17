@@ -7,7 +7,7 @@ import pidvn.modules.qa.iqc_recheck.models.LotDto;
 import java.util.List;
 
 @Mapper
-public interface IqcRecheckMapper {
+public interface Iqc6MonthMapper {
 
-    public List<LotDto> getLotsInRequest(@Param("requestNo") String requestNo, @Param("goodsType") String goodsType);
+    List<LotDto> getLotsInRequest(@Param("requestNo") String requestNo, @Param("goodsType") String goodsType);
 }

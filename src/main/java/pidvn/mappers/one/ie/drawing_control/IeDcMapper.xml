@@ -25,6 +25,8 @@
         left join users U1 on A.pic_id = U1.username
         left join users U2 on A.created_id = U2.username
         left join product C on A.product_id = C.id
+        where 1=1
+        and A.disable is null
         order by A.id desc
     </select>
 

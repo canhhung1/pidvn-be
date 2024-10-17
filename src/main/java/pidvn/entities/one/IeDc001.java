@@ -52,6 +52,9 @@ public class IeDc001 {
     @Column(name = "updated_at")
     private Date updatedAt;
 
+    @Column(name = "disable")
+    private Integer disable;
+
     public Integer getId() {
         return id;
     }
@@ -146,5 +149,13 @@ public class IeDc001 {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Integer getDisable() {
+        return disable;
+    }
+
+    public void setDisable(Integer disable) {
+        this.disable = disable;
     }
 }

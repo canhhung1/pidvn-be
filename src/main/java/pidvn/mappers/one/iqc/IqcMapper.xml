@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.iqc.IqcMapper">
+
+    <resultMap id="getIqcRequests-result"
+               type="pidvn.modules.iqc.models.IqcRequestDto">
+        <result column="request_no" property="requestNo" javaType="String"/>
+        <result column="requested_by_name" property="requestedByName" javaType="String"/>
+        <result column="status_name" property="statusName" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+    </resultMap>
+    <select id="getIqcRequests" resultMap="getIqcRequests-result">
+        SELECT A.*, B.name requested_by_name, C.name status_name
+        FROM iqc_request A
+        left join users B on A.requested_by = B.username
+        left join iqc_request_status C on A.status = C.id
+        where 1=1
+        <if test="dateRange != null and dateRange.size != 0">
+            and A.created_at between #{dateRange[0]} and #{dateRange[1]}
+        </if>
+        order by A.id desc
+    </select>
+
+
+    <resultMap id="getSlipNo-result"
+               type="pidvn.modules.iqc.models.PurWhRecordDto">
+        <result column="slip_no" property="slipNo" javaType="String"/>
+    </resultMap>
+    <select id="getSlipNo" resultMap="getSlipNo-result">
+        SELECT distinct slip_no, invoice
+        FROM pur_wh_records
+        where 1=1
+          AND record_type = 'IM'
+          AND date >= NOW() - INTERVAL 20 MONTH
+        order by id desc
+    </select>
+</mapper>

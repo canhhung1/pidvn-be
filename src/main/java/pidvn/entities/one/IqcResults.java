@@ -78,6 +78,9 @@ public class IqcResults {
     @Column(name = "request_no")
     private String requestNo;
 
+    @Column(name = "lot_group")
+    private String lotGroup;
+
 
     public Integer getId() {
         return id;
@@ -245,5 +248,13 @@ public class IqcResults {
 
     public void setRequestNo(String requestNo) {
         this.requestNo = requestNo;
+    }
+
+    public String getLotGroup() {
+        return lotGroup;
+    }
+
+    public void setLotGroup(String lotGroup) {
+        this.lotGroup = lotGroup;
     }
 }

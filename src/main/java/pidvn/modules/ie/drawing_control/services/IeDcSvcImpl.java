@@ -140,6 +140,12 @@ public class IeDcSvcImpl implements IeDcSvc {
     @Override
     public List<DrawingDto> uploadDrawingStructure(MultipartFile file, Integer projectId) throws IOException {
 
+
+        // Xóa dữ liệu drawing tree cũ
+        this.ieDc006Repo.deleteByProjectId(projectId);
+
+
+        // Đọc dữ liệu, và insert drawing tree
         XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
         XSSFSheet sheet = workbook.getSheetAt(0);
 

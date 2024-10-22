@@ -104,6 +104,7 @@ public class WhIqcRecheckSvc implements IWhIqcRecheckSvc {
                 obj1.setRequestNo(request.getRequestNo());
                 obj1.setClassCol("P");
                 obj1.setLotNo(lot.getLotNo());
+                obj1.setLotGroup(lot.getLotGroup());
                 obj1.setLine(lot.getLine());
                 obj1.setModel(lot.getModel());
                 obj1.setShift(lot.getShift());

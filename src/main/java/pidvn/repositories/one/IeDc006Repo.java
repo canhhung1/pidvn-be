@@ -10,4 +10,6 @@ import java.util.List;
 public interface IeDc006Repo extends JpaRepository<IeDc006, String> {
     List<IeDc006> findAllByProjectIdOrderByOrdinalAsc(Integer projectId);
     List<IeDc006> findAllByProjectIdAndDrawingNoIn(Integer projectId, List<String> drawingNoList);
+    void deleteByProjectId(Integer projectId);
+
 }

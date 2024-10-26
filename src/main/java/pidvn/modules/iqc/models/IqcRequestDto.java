@@ -7,15 +7,19 @@ public class IqcRequestDto {
     private Integer id;
     private String requestNo;
     private String invoice;
+    private String slipNo;
     private Integer status;
     private String statusName;
     private String supplier;
     private String type;
+    private String typeName;
     private String requestedBy;
+    private Integer requestedById;
     private String requestedByName;
     private String remark;
     private Date createdAt;
     private Date updatedAt;
+    public String classified;
 
     public Integer getId() {
         return id;
@@ -39,6 +43,14 @@ public class IqcRequestDto {
 
     public void setInvoice(String invoice) {
         this.invoice = invoice;
+    }
+
+    public String getSlipNo() {
+        return slipNo;
+    }
+
+    public void setSlipNo(String slipNo) {
+        this.slipNo = slipNo;
     }
 
     public Integer getStatus() {
@@ -73,12 +85,28 @@ public class IqcRequestDto {
         this.type = type;
     }
 
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
+
     public String getRequestedBy() {
         return requestedBy;
     }
 
     public void setRequestedBy(String requestedBy) {
         this.requestedBy = requestedBy;
+    }
+
+    public Integer getRequestedById() {
+        return requestedById;
+    }
+
+    public void setRequestedById(Integer requestedById) {
+        this.requestedById = requestedById;
     }
 
     public String getRequestedByName() {
@@ -111,5 +139,13 @@ public class IqcRequestDto {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getClassified() {
+        return classified;
+    }
+
+    public void setClassified(String classified) {
+        this.classified = classified;
     }
 }

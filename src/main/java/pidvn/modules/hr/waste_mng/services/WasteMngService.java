@@ -372,6 +372,7 @@ public class WasteMngService implements IWasteMngService {
             row.createCell(3).setCellValue(item.getNetWeight());
             row.createCell(4).setCellValue(item.getSealNo());
             row.createCell(5).setCellValue(item.getPackagingNo());
+            row.createCell(7).setCellValue(item.getRemark());
         }
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();

@@ -102,7 +102,7 @@ public class WhIqcRecheckSvc implements IWhIqcRecheckSvc {
             for (LotDto lot : lots) {
                 IqcResults obj1 = new IqcResults();
                 obj1.setRequestNo(request.getRequestNo());
-                obj1.setClassCol("P");
+                obj1.setClassParam("P");
                 obj1.setLotNo(lot.getLotNo());
                 obj1.setLotGroup(lot.getLotGroup());
                 obj1.setLine(lot.getLine());

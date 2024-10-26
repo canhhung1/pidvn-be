@@ -5,12 +5,20 @@
     <resultMap id="getIqcRequests-result"
                type="pidvn.modules.iqc.models.IqcRequestDto">
         <result column="request_no" property="requestNo" javaType="String"/>
+        <result column="slip_no" property="slipNo" javaType="String"/>
+        <result column="requested_by" property="requestedBy" javaType="String"/>
         <result column="requested_by_name" property="requestedByName" javaType="String"/>
         <result column="status_name" property="statusName" javaType="String"/>
         <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="type_name" property="typeName" javaType="String"/>
     </resultMap>
     <select id="getIqcRequests" resultMap="getIqcRequests-result">
-        SELECT A.*, B.name requested_by_name, C.name status_name
+        SELECT A.*, B.name requested_by_name, C.name status_name,
+        case
+            when A.type = 'N' then 'OUTSIDE'
+            when A.type = 'S' then 'SORTING'
+            when A.type = 'R' then 'RECHECK'
+        end as type_name
         FROM iqc_request A
         left join users B on A.requested_by = B.username
         left join iqc_request_status C on A.status = C.id
@@ -18,6 +26,7 @@
         <if test="dateRange != null and dateRange.size != 0">
             and A.created_at between #{dateRange[0]} and #{dateRange[1]}
         </if>
+        and A.disable is null
         order by A.id desc
     </select>
 
@@ -33,5 +42,74 @@
           AND record_type = 'IM'
           AND date >= NOW() - INTERVAL 20 MONTH
         order by id desc
+    </select>
+
+
+    <resultMap id="getPurWhRecords-result"
+               type="pidvn.modules.iqc.models.PurWhRecordDto">
+        <result column="lot_no" property="lotNo" javaType="String"/>
+        <result column="lot_group" property="lotGroup" javaType="String"/>
+    </resultMap>
+    <select id="getPurWhRecords" resultMap="getPurWhRecords-result">
+        select
+            A.model,B.lot_group, A.lot_no, A.qty, A.date
+        from pur_wh_records A
+        left join lots B on A.lot_no = B.lot_no
+        where 1=1
+        <if test="slipNo != null">
+            and A.slip_no = #{slipNo}
+        </if>
+        <if test="invoice != null">
+            and A.invoice = #{invoice}
+        </if>
+
+
+    </select>
+
+
+    <resultMap id="getIqcResults-result"
+               type="pidvn.modules.iqc.models.IqcResultDto">
+        <result column="lot_no" property="lotNo" javaType="String"/>
+        <result column="class" property="classParam" javaType="String"/>
+        <result column="lot_group" property="lotGroup" javaType="String"/>
+        <result column="check_date" property="checkDate" javaType="Date"/>
+        <result column="check_user_code" property="checkUserCode" javaType="String"/>
+        <result column="check_user_name" property="checkUserName" javaType="String"/>
+        <result column="key_in_id" property="keyInId" javaType="Integer"/>
+        <result column="p_date" property="pDate" javaType="Date"/>
+        <result column="user_id" property="userId" javaType="Integer"/>
+        <result column="request_no" property="requestNo" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="updated_at" property="updatedAt" javaType="Date"/>
+        <result column="level_of_control_1" property="levelOfControl1" javaType="String"/>
+        <result column="level_of_control_2" property="levelOfControl2" javaType="String"/>
+    </resultMap>
+    <select id="getIqcResults" resultMap="getIqcResults-result">
+        select
+            A.*, B.name check_user_name, B.username check_user_code
+        from iqc_results A
+        left join users B on A.check_user = B.id
+        where request_no = #{requestNo} order by id desc
+    </select>
+
+
+
+    <resultMap id="getIqcRequest-result"
+               type="pidvn.modules.iqc.models.IqcRequestDto">
+        <result column="request_no" property="requestNo" javaType="String"/>
+        <result column="slip_no" property="slipNo" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="requested_by" property="requestedBy" javaType="String"/>
+        <result column="requested_by_name" property="requestedByName" javaType="String"/>
+        <result column="status_name" property="statusName" javaType="String"/>
+    </resultMap>
+    <select id="getIqcRequest" resultMap="getIqcRequest-result">
+        select
+            A.*, B.name requested_by_name, A.status, C.name status_name
+        from iqc_request A
+        left join users B on A.requested_by = B.username
+        left join iqc_request_status C on A.status = C.id
+        where request_no = #{requestNo}
+
     </select>
 </mapper>

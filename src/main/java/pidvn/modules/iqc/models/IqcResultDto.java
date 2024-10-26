@@ -1,98 +1,37 @@
-package pidvn.entities.one;
+package pidvn.modules.iqc.models;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name = "iqc_results")
-@EntityListeners(AuditingEntityListener.class)
-public class IqcResults {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+public class IqcResultDto {
     private Integer id;
-
-    @Column(name = "class")
     private String classParam;
-
-    @Column(name = "lot_no")
-    private String lotNo;
-
-    @Column(name = "line")
-    private String line;
-
-    @Column(name = "model")
+    private String type;
     private String model;
-
-    @Column(name = "shift")
-    private String shift;
-
-    @Column(name = "p_date")
-    private Date pDate;
-
-    @Column(name = "date")
-    private Date date;
-
-    @Column(name = "result1")
-    private String result1;
-
-    @Column(name = "result2")
-    private String result2;
-
-    @Column(name = "result3")
-    private String result3;
-
-    @Column(name = "check_result")
-    private String checkResult;
-
-    @Column(name = "check_result2")
-    private String checkResult2;
-
-    @Column(name = "check_user")
-    private String checkUser;
-
-    @Column(name = "check_date")
-    private Date checkDate;
-
-    @Column(name = "check_remark")
-    private String checkRemark;
-
-    @Column(name = "remark")
-    private String remark;
-
-    @Column(name = "user_id")
-    private Integer userId;
-
-    @Column(name = "key_in_id")
-    private Integer keyInId;
-
-    @CreatedDate
-    @Column(name = "created_at")
-    private Date createdAt;
-
-    @LastModifiedDate
-    @Column(name = "updated_at")
-    private Date updatedAt;
-
-    @Column(name = "request_no")
-    private String requestNo;
-
-    @Column(name = "lot_group")
     private String lotGroup;
-
-    @Column(name = "level_of_control_1")
+    private String lotNo;
+    private String line;
+    private String shift;
+    private Date pDate;
+    private Date date;
+    private String result1;
+    private String result2;
+    private String result3;
+    private String checkResult;
+    private String checkResult2;
+    private String checkUser;
+    private String checkUserName;
+    private String checkUserCode;
+    private Date checkDate;
+    private String checkRemark;
+    private String remark;
+    private Integer userId;
+    private Date createdAt;
+    private Date updatedAt;
+    private String requestNo;
+    private Integer keyInId;
     private String levelOfControl1;
-
-    @Column(name = "level_of_control_2")
     private String levelOfControl2;
-
-    @Column(name = "qty")
     private Float qty;
-
 
     public Integer getId() {
         return id;
@@ -110,6 +49,30 @@ public class IqcResults {
         this.classParam = classParam;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public String getLotGroup() {
+        return lotGroup;
+    }
+
+    public void setLotGroup(String lotGroup) {
+        this.lotGroup = lotGroup;
+    }
+
     public String getLotNo() {
         return lotNo;
     }
@@ -124,14 +87,6 @@ public class IqcResults {
 
     public void setLine(String line) {
         this.line = line;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
     }
 
     public String getShift() {
@@ -206,6 +161,22 @@ public class IqcResults {
         this.checkUser = checkUser;
     }
 
+    public String getCheckUserName() {
+        return checkUserName;
+    }
+
+    public void setCheckUserName(String checkUserName) {
+        this.checkUserName = checkUserName;
+    }
+
+    public String getCheckUserCode() {
+        return checkUserCode;
+    }
+
+    public void setCheckUserCode(String checkUserCode) {
+        this.checkUserCode = checkUserCode;
+    }
+
     public Date getCheckDate() {
         return checkDate;
     }
@@ -238,14 +209,6 @@ public class IqcResults {
         this.userId = userId;
     }
 
-    public Integer getKeyInId() {
-        return keyInId;
-    }
-
-    public void setKeyInId(Integer keyInId) {
-        this.keyInId = keyInId;
-    }
-
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -270,12 +233,12 @@ public class IqcResults {
         this.requestNo = requestNo;
     }
 
-    public String getLotGroup() {
-        return lotGroup;
+    public Integer getKeyInId() {
+        return keyInId;
     }
 
-    public void setLotGroup(String lotGroup) {
-        this.lotGroup = lotGroup;
+    public void setKeyInId(Integer keyInId) {
+        this.keyInId = keyInId;
     }
 
     public String getLevelOfControl1() {

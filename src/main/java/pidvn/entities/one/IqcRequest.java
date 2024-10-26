@@ -22,6 +22,9 @@ public class IqcRequest {
     @Column(name = "invoice")
     private String invoice;
 
+    @Column(name = "slip_no")
+    private String slipNo;
+
     @Column(name = "status")
     private Integer status;
 
@@ -51,6 +54,9 @@ public class IqcRequest {
     @Column(name = "goods_type")
     private String goodsType;
 
+    @Column(name = "classified")
+    public String classified;
+
     public Integer getId() {
         return id;
     }
@@ -73,6 +79,14 @@ public class IqcRequest {
 
     public void setInvoice(String invoice) {
         this.invoice = invoice;
+    }
+
+    public String getSlipNo() {
+        return slipNo;
+    }
+
+    public void setSlipNo(String slipNo) {
+        this.slipNo = slipNo;
     }
 
     public Integer getStatus() {
@@ -145,5 +159,13 @@ public class IqcRequest {
 
     public void setGoodsType(String goodsType) {
         this.goodsType = goodsType;
+    }
+
+    public String getClassified() {
+        return classified;
+    }
+
+    public void setClassified(String classified) {
+        this.classified = classified;
     }
 }

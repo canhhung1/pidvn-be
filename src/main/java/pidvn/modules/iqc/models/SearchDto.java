@@ -8,6 +8,7 @@ public class SearchDto {
     private String requestNo;
     private String invoice;
     private String supplier;
+    private String type;
 
 
     public List<Date> getDateRange() {
@@ -40,5 +41,13 @@ public class SearchDto {
 
     public void setSupplier(String supplier) {
         this.supplier = supplier;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

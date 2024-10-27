@@ -1,6 +1,7 @@
 package pidvn.modules.iqc.models;
 
 import java.util.Date;
+import java.util.List;
 
 public class IqcRequestDto {
 
@@ -20,6 +21,7 @@ public class IqcRequestDto {
     private Date createdAt;
     private Date updatedAt;
     public String classified;
+    public List<IqcResultDto> iqcResults;
 
     public Integer getId() {
         return id;
@@ -147,5 +149,13 @@ public class IqcRequestDto {
 
     public void setClassified(String classified) {
         this.classified = classified;
+    }
+
+    public List<IqcResultDto> getIqcResults() {
+        return iqcResults;
+    }
+
+    public void setIqcResults(List<IqcResultDto> iqcResults) {
+        this.iqcResults = iqcResults;
     }
 }

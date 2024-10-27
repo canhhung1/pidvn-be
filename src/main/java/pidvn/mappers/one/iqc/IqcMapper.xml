@@ -112,4 +112,43 @@
         where request_no = #{requestNo}
 
     </select>
+
+
+
+    <resultMap id="getLotsInventory-result"
+               type="pidvn.modules.iqc.models.PihStoreDto">
+        <result column="lot_group" property="lotGroup" javaType="String"/>
+        <result column="lot_no" property="lotNo" javaType="String"/>
+        <result column="iqc_date" property="iqcDate" javaType="Date"/>
+        <result column="day_since_iqc" property="daySinceIqc" javaType="Integer"/>
+    </resultMap>
+    <select id="getLotsInventory" resultMap="getLotsInventory-result">
+    with
+    T01 as (
+        SELECT t1.model, t1.lot_no, t1.check_date,
+            DATEDIFF(CURRENT_DATE, check_date) AS day_since_iqc
+        FROM iqc_results AS t1
+        WHERE t1.updated_at = (
+            SELECT MAX(t2.updated_at)
+            FROM iqc_results AS t2
+            WHERE t2.lot_no = t1.lot_no
+        )
+                  and YEAR(t1.check_date) = YEAR(CURDATE())
+        order by t1.id desc
+    ),
+    T02 as (
+        select
+            A.*, B.lot_group, T01.check_date, T01.day_since_iqc
+        from pih_stores A
+        left join T01 on A.lot_no = T01.lot_no
+        left join lots B on A.lot_no = B.lot_no
+        where A.wh > 0
+    )
+    select
+        T02.model, T02.lot_group, T02.lot_no, T02.wh,
+        T02.check_date iqc_date, T02.day_since_iqc, A.classified
+    from T02
+    left join model A on T02.model = A.name
+    order by day_since_iqc desc, T02.lot_group asc
+    </select>
 </mapper>

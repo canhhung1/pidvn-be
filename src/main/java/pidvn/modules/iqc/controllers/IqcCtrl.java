@@ -6,10 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pidvn.commons.dto.ApiResponse;
 import pidvn.entities.one.IqcLevelOfControl;
-import pidvn.modules.iqc.models.IqcRequestDto;
-import pidvn.modules.iqc.models.IqcResultDto;
-import pidvn.modules.iqc.models.PurWhRecordDto;
-import pidvn.modules.iqc.models.SearchDto;
+import pidvn.modules.iqc.models.*;
 import pidvn.modules.iqc.services.IqcSvcImpl;
 
 import java.util.List;
@@ -76,6 +73,14 @@ public class IqcCtrl {
     public ResponseEntity<ApiResponse<?>> evaluateLotNos(@RequestBody List<IqcResultDto> iqcResults) {
         ApiResponse<List<IqcResultDto>> apiResponse = new ApiResponse<>();
         apiResponse.setResult(this.iqcSvc.evaluateLotNos(iqcResults));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+
+    @GetMapping("InventoryLots")
+    public ResponseEntity<ApiResponse<?>> getLotsInventory() {
+        ApiResponse<List<PihStoreDto>> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(this.iqcSvc.getLotsInventory());
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 

@@ -7,10 +7,7 @@ import pidvn.entities.one.IqcLevelOfControl;
 import pidvn.entities.one.IqcRequest;
 import pidvn.entities.one.IqcResults;
 import pidvn.mappers.one.iqc.IqcMapper;
-import pidvn.modules.iqc.models.IqcRequestDto;
-import pidvn.modules.iqc.models.IqcResultDto;
-import pidvn.modules.iqc.models.PurWhRecordDto;
-import pidvn.modules.iqc.models.SearchDto;
+import pidvn.modules.iqc.models.*;
 import pidvn.repositories.one.IqcLevelOfControlRepo;
 import pidvn.repositories.one.IqcRequestRepo;
 import pidvn.repositories.one.IqcResultsRepo;
@@ -63,6 +60,7 @@ public class IqcSvcImpl implements IqcSvc {
             return this.createIqcRequestOutSide(iqcRequestDto);
         } else if (iqcRequestDto.getType().equals("R")) {
             // TODO: tạo request hàng 6 tháng
+            return this.createIqcRequestRecheck(iqcRequestDto);
         } else if (iqcRequestDto.getType().equals("S")) {
             // TODO: tạo request hàng sorting
         }
@@ -92,6 +90,22 @@ public class IqcSvcImpl implements IqcSvc {
         return iqcResults;
     }
 
+    @Override
+    public List<PihStoreDto> getLotsInventory() {
+        return this.iqcMapper.getLotsInventory();
+    }
+
+    /**
+     * Tạo mã RequestNo
+     * @return
+     */
+    private String generateIqcRequestNo() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+        String date = formatter.format(new Date());
+        int sequence = this.iqcRequestRepo.getTotalRequestInDay() + 1;
+        return "IQC-" + date + "-" + String.format("%02d", sequence);
+    }
+
     /**
      * Tạo request Iqc hàng OUTSIDE
      *
@@ -105,11 +119,8 @@ public class IqcSvcImpl implements IqcSvc {
         /**
          * Lưu thông tin Iqc Request vào bảng iqc_request
          */
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-        String date = formatter.format(new Date());
-        int sequence = this.iqcRequestRepo.getTotalRequestInDay() + 1;
-        iqcRequestDto.setRequestNo("IQC-" + date + "-" + String.format("%02d", sequence));
 
+        iqcRequestDto.setRequestNo(this.generateIqcRequestNo());
         IqcRequest iqcRequest = this.iqcRequestRepo.save(this.modelMapper.map(iqcRequestDto, IqcRequest.class));
 
         /**
@@ -134,6 +145,20 @@ public class IqcSvcImpl implements IqcSvc {
 
         result.put("request", iqcRequest);
         result.put("data", iqcResults);
+
+
+        return result;
+    }
+
+    /**
+     * Tạo request Iqc (RECHECK)
+     * @param iqcRequestDto
+     * @return
+     */
+    private Map<Object, Object> createIqcRequestRecheck(IqcRequestDto iqcRequestDto){
+        Map<Object, Object> result = new HashMap<Object, Object>();
+        iqcRequestDto.setRequestNo(this.generateIqcRequestNo());
+
 
 
         return result;

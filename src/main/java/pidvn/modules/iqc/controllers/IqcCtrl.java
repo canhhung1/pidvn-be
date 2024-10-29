@@ -79,10 +79,25 @@ public class IqcCtrl {
 
     @GetMapping("InventoryLots")
     public ResponseEntity<ApiResponse<?>> getLotsInventory() {
-        ApiResponse<List<PihStoreDto>> apiResponse = new ApiResponse<>();
+        ApiResponse<Map<String, Object>> apiResponse = new ApiResponse<>();
         apiResponse.setResult(this.iqcSvc.getLotsInventory());
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
+
+
+    /**
+     * Chuẩn bị data để tạo rquest IQC
+     * @param searchDto
+     * @return
+     */
+    @PostMapping("PrepareDataCreateRequest")
+    public ResponseEntity<ApiResponse<?>> prepareDataCreateRequest(@RequestBody SearchDto searchDto) {
+        ApiResponse<List<PihStoreDto>> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(this.iqcSvc.prepareDataCreateRequest(searchDto));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+
 
 
 

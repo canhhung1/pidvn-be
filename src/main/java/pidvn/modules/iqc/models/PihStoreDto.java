@@ -10,6 +10,9 @@ public class PihStoreDto {
     private Date iqcDate;
     private Integer daySinceIqc;
     private String classified;
+    private String classParam;
+    private Date expiredDate;
+    private String factoryCode;
 
     public String getModel() {
         return model;
@@ -65,5 +68,29 @@ public class PihStoreDto {
 
     public void setClassified(String classified) {
         this.classified = classified;
+    }
+
+    public String getClassParam() {
+        return classParam;
+    }
+
+    public void setClassParam(String classParam) {
+        this.classParam = classParam;
+    }
+
+    public Date getExpiredDate() {
+        return expiredDate;
+    }
+
+    public void setExpiredDate(Date expiredDate) {
+        this.expiredDate = expiredDate;
+    }
+
+    public String getFactoryCode() {
+        return factoryCode;
+    }
+
+    public void setFactoryCode(String factoryCode) {
+        this.factoryCode = factoryCode;
     }
 }

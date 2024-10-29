@@ -54,8 +54,8 @@ public class IqcRequest {
     @Column(name = "goods_type")
     private String goodsType;
 
-    @Column(name = "classified")
-    public String classified;
+    @Column(name = "class")
+    private String classParam;
 
     public Integer getId() {
         return id;
@@ -161,11 +161,11 @@ public class IqcRequest {
         this.goodsType = goodsType;
     }
 
-    public String getClassified() {
-        return classified;
+    public String getClassParam() {
+        return classParam;
     }
 
-    public void setClassified(String classified) {
-        this.classified = classified;
+    public void setClassParam(String classParam) {
+        this.classParam = classParam;
     }
 }

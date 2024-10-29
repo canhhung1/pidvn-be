@@ -17,5 +17,7 @@ public interface IqcSvc {
     List<IqcResultDto> getIqcResults(String requestNo);
     List<IqcLevelOfControl> getIqcLevelOfControls();
     List<IqcResultDto> evaluateLotNos(List<IqcResultDto> iqcResults);
-    List<PihStoreDto> getLotsInventory();
+    Map<String, Object> getLotsInventory();
+
+    List<PihStoreDto> prepareDataCreateRequest(SearchDto searchDto);
 }

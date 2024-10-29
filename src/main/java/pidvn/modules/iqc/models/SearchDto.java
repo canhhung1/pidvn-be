@@ -9,7 +9,7 @@ public class SearchDto {
     private String invoice;
     private String supplier;
     private String type;
-
+    private List<String> lotGroups;
 
     public List<Date> getDateRange() {
         return dateRange;
@@ -49,5 +49,13 @@ public class SearchDto {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public List<String> getLotGroups() {
+        return lotGroups;
+    }
+
+    public void setLotGroups(List<String> lotGroups) {
+        this.lotGroups = lotGroups;
     }
 }

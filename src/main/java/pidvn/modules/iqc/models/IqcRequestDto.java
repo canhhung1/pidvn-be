@@ -20,8 +20,11 @@ public class IqcRequestDto {
     private String remark;
     private Date createdAt;
     private Date updatedAt;
-    public String classified;
+    public String classParam;
     public List<IqcResultDto> iqcResults;
+    public List<String> lotGroups;
+    public List<String> lotNos;
+
 
     public Integer getId() {
         return id;
@@ -143,14 +146,6 @@ public class IqcRequestDto {
         this.updatedAt = updatedAt;
     }
 
-    public String getClassified() {
-        return classified;
-    }
-
-    public void setClassified(String classified) {
-        this.classified = classified;
-    }
-
     public List<IqcResultDto> getIqcResults() {
         return iqcResults;
     }
@@ -158,4 +153,30 @@ public class IqcRequestDto {
     public void setIqcResults(List<IqcResultDto> iqcResults) {
         this.iqcResults = iqcResults;
     }
+
+    public String getClassParam() {
+        return classParam;
+    }
+
+    public void setClassParam(String classParam) {
+        this.classParam = classParam;
+    }
+
+    public List<String> getLotGroups() {
+        return lotGroups;
+    }
+
+    public void setLotGroups(List<String> lotGroups) {
+        this.lotGroups = lotGroups;
+    }
+
+    public List<String> getLotNos() {
+        return lotNos;
+    }
+
+    public void setLotNos(List<String> lotNos) {
+        this.lotNos = lotNos;
+    }
+
+
 }

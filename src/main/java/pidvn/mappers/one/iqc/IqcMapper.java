@@ -13,5 +13,10 @@ public interface IqcMapper {
     List<PurWhRecordDto> getSlipNo();
     List<PurWhRecordDto> getPurWhRecords(IqcRequestDto iqcRequestDto);
     List<IqcResultDto> getIqcResults(String requestNo);
-    List<PihStoreDto> getLotsInventory();
+    List<PihStoreDto> getLotsInventory(String type);
+    List<PihStoreDto> prepareDataCreateRequest(SearchDto searchDto);
+    List<IqcResultDto> getPihStore(List<String> lotNos);
+
+
+
 }

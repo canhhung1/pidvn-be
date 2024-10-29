@@ -91,9 +91,28 @@ public class IqcSvcImpl implements IqcSvc {
     }
 
     @Override
-    public List<PihStoreDto> getLotsInventory() {
-        return this.iqcMapper.getLotsInventory();
+    public Map<String, Object> getLotsInventory() {
+
+        Map<String, Object> result = new HashMap<>();
+
+        // Masters
+        List<PihStoreDto> masters = this.iqcMapper.getLotsInventory("master");
+
+        // Details
+        List<PihStoreDto> Details = this.iqcMapper.getLotsInventory("detail");
+
+        result.put("masters", masters);
+        result.put("details", Details);
+
+        return result;
     }
+
+    @Override
+    public List<PihStoreDto> prepareDataCreateRequest(SearchDto searchDto) {
+        return this.iqcMapper.prepareDataCreateRequest(searchDto);
+    }
+
+
 
     /**
      * Tạo mã RequestNo
@@ -121,6 +140,7 @@ public class IqcSvcImpl implements IqcSvc {
          */
 
         iqcRequestDto.setRequestNo(this.generateIqcRequestNo());
+        iqcRequestDto.setClassParam("O");
         IqcRequest iqcRequest = this.iqcRequestRepo.save(this.modelMapper.map(iqcRequestDto, IqcRequest.class));
 
         /**
@@ -152,14 +172,33 @@ public class IqcSvcImpl implements IqcSvc {
 
     /**
      * Tạo request Iqc (RECHECK)
+     * Có 2 loại (Hàng 6 tháng check lại và hàng Sorting)
      * @param iqcRequestDto
      * @return
      */
     private Map<Object, Object> createIqcRequestRecheck(IqcRequestDto iqcRequestDto){
         Map<Object, Object> result = new HashMap<Object, Object>();
         iqcRequestDto.setRequestNo(this.generateIqcRequestNo());
+        iqcRequestDto.setClassParam(iqcRequestDto.getClassParam());
+
+        IqcRequest iqcRequest = this.iqcRequestRepo.save(this.modelMapper.map(iqcRequestDto, IqcRequest.class));
 
 
+        List<IqcResultDto> records = this.iqcMapper.getPihStore(iqcRequestDto.getLotNos());
+        for (IqcResultDto item : records) {
+            item.setId(null);
+            item.setClassParam(iqcRequestDto.getClassParam());
+            item.setType(iqcRequestDto.getType());
+            item.setUserId(iqcRequestDto.getRequestedById());
+            item.setKeyInId(iqcRequestDto.getRequestedById());
+            item.setRequestNo(iqcRequestDto.getRequestNo());
+        }
+
+        List<IqcResults> iqcResults = records.stream().map(item -> modelMapper.map(item, IqcResults.class)).collect(Collectors.toList());
+        List<IqcResults> data = this.iqcResultsRepo.saveAll(iqcResults);
+
+        result.put("request", iqcRequest);
+        result.put("data", iqcResults);
 
         return result;
     }

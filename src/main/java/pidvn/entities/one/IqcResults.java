@@ -93,6 +93,9 @@ public class IqcResults {
     @Column(name = "qty")
     private Float qty;
 
+    @Column(name = "type")
+    private String type;
+
 
     public Integer getId() {
         return id;
@@ -300,5 +303,13 @@ public class IqcResults {
 
     public void setQty(Float qty) {
         this.qty = qty;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

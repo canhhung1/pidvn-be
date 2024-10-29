@@ -11,6 +11,7 @@
         <result column="status_name" property="statusName" javaType="String"/>
         <result column="created_at" property="createdAt" javaType="Date"/>
         <result column="type_name" property="typeName" javaType="String"/>
+        <result column="class" property="classParam" javaType="String"/>
     </resultMap>
     <select id="getIqcRequests" resultMap="getIqcRequests-result">
         SELECT A.*, B.name requested_by_name, C.name status_name,
@@ -102,6 +103,7 @@
         <result column="requested_by" property="requestedBy" javaType="String"/>
         <result column="requested_by_name" property="requestedByName" javaType="String"/>
         <result column="status_name" property="statusName" javaType="String"/>
+        <result column="class" property="classParam" javaType="String"/>
     </resultMap>
     <select id="getIqcRequest" resultMap="getIqcRequest-result">
         select
@@ -121,6 +123,9 @@
         <result column="lot_no" property="lotNo" javaType="String"/>
         <result column="iqc_date" property="iqcDate" javaType="Date"/>
         <result column="day_since_iqc" property="daySinceIqc" javaType="Integer"/>
+        <result column="class_param" property="classParam" javaType="String"/>
+        <result column="expired_date" property="expiredDate" javaType="Date"/>
+        <result column="factory_code" property="factoryCode" javaType="String"/>
     </resultMap>
     <select id="getLotsInventory" resultMap="getLotsInventory-result">
     with
@@ -133,22 +138,100 @@
             FROM iqc_results AS t2
             WHERE t2.lot_no = t1.lot_no
         )
-                  and YEAR(t1.check_date) = YEAR(CURDATE())
+        and YEAR(t1.check_date) = YEAR(CURDATE())
         order by t1.id desc
     ),
     T02 as (
         select
-            A.*, B.lot_group, T01.check_date, T01.day_since_iqc
+            A.*, B.lot_group, T01.check_date, T01.day_since_iqc, B.expired_date,
+        ifnull(B.lot_group, SUBSTRING_INDEX(B.lot_no, '*', LENGTH(B.lot_no) - LENGTH(REPLACE(B.lot_no, '*', ''))))  AS lot_group_temp
         from pih_stores A
         left join T01 on A.lot_no = T01.lot_no
         left join lots B on A.lot_no = B.lot_no
         where A.wh > 0
+    ),
+    T03 as (
+    -- Danh sách model
+        select A.name, A.classified, B.factory_code from model A
+        left join (
+            select A.id, A.name, B.factory_code from product_type A left join product B on A.product_id = B.id
+        ) B on A.product_type_id = B.id
     )
     select
-        T02.model, T02.lot_group, T02.lot_no, T02.wh,
-        T02.check_date iqc_date, T02.day_since_iqc, A.classified
+        T02.model, Upper(T02.lot_group) lot_group, T02.lot_group_temp, T02.lot_no,
+        T02.check_date iqc_date, T02.day_since_iqc, T03.classified, T03.factory_code,
+        if(T03.classified = 'R','O','P') class_param,
+        <if test="type == 'master'">
+            sum(T02.wh) wh
+        </if>
+        <if test="type == 'detail'">
+            T02.wh
+        </if>
     from T02
-    left join model A on T02.model = A.name
-    order by day_since_iqc desc, T02.lot_group asc
+    left join T03 on T02.model = T03.name
+    <if test="type == 'master'">
+        group by T02.model, T02.lot_group, T02.lot_group_temp
+    </if>
+    order by T02.lot_group asc, T02.day_since_iqc desc
     </select>
+
+    <resultMap id="prepareDataCreateRequest-result"
+               type="pidvn.modules.iqc.models.PihStoreDto">
+        <result column="lot_group" property="lotGroup" javaType="String"/>
+        <result column="lot_no" property="lotNo" javaType="String"/>
+        <result column="expired_date" property="expiredDate" javaType="Date"/>
+        <result column="class_param" property="classParam" javaType="String"/>
+
+    </resultMap>
+    <select id="prepareDataCreateRequest" resultMap="prepareDataCreateRequest-result">
+        with
+        T01 as (
+            select A.lot_no from lots A
+            where A.lot_group in
+            <foreach item="item" index="index" collection="lotGroups"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        )
+        select A.*, B.lot_group
+        from pih_stores A
+        left join lots B on A.lot_no = B.lot_no
+        where 1=1
+        AND A.lot_no in (select * from T01)
+        AND A.wh > 0
+
+    </select>
+
+
+
+    <resultMap id="getPihStore-result"
+               type="pidvn.modules.iqc.models.IqcResultDto">
+        <result column="lot_no" property="lotNo" javaType="String"/>
+        <result column="lot_group" property="lotGroup" javaType="String"/>
+        <result column="p_date" property="pDate" javaType="Date"/>
+    </resultMap>
+    <select id="getPihStore" resultMap="getPihStore-result">
+        with
+        T01 as (
+            select * from pih_stores A
+            where 1=1
+            and A.lot_no in
+            <foreach item="item" index="index" collection="lotNos"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        ),
+        T02 as (
+            select
+                T01.model, A.lot_group, T01.lot_no,
+                T01.wh as qty, ifnull(A.expired_date, CURDATE()) date,
+                ifnull(A.date, CURDATE()) p_date
+            from T01
+            left join lots A on T01.lot_no = A.lot_no
+        )
+        select * from T02
+    </select>
+
+
+
 </mapper>

@@ -112,6 +112,10 @@ public class IqcSvcImpl implements IqcSvc {
         return this.iqcMapper.prepareDataCreateRequest(searchDto);
     }
 
+    @Override
+    public List<IqcResultDto> getHistoryLevelOfControls(String model) {
+        return this.iqcMapper.getHistoryLevelOfControls(model);
+    }
 
 
     /**

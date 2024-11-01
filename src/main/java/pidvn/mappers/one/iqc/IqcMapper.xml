@@ -87,10 +87,11 @@
     </resultMap>
     <select id="getIqcResults" resultMap="getIqcResults-result">
         select
-            A.*, B.name check_user_name, B.username check_user_code
+            A.*, B.name check_user_name, B.username check_user_code,C.request_no, C.invoice, C.slip_no, C.supplier
         from iqc_results A
         left join users B on A.check_user = B.id
-        where request_no = #{requestNo} order by id desc
+        left join iqc_request C on A.request_no = C.request_no
+        where A.request_no = #{requestNo} order by id desc
     </select>
 
 
@@ -232,6 +233,24 @@
         select * from T02
     </select>
 
+
+
+    <resultMap id="getHistoryLevelOfControls-result"
+               type="pidvn.modules.iqc.models.IqcResultDto">
+        <result column="level_of_control_1" property="levelOfControl1" javaType="String"/>
+        <result column="level_of_control_2" property="levelOfControl2" javaType="String"/>
+        <result column="updated_at" property="updatedAt" javaType="Date"/>
+        <result column="check_user" property="checkUser" javaType="String"/>
+    </resultMap>
+    <select id="getHistoryLevelOfControls" resultMap="getHistoryLevelOfControls-result">
+        SELECT distinct A.model, A.level_of_control_1, A.level_of_control_2, A.updated_at, concat(B.name, ' - ', B.username ) check_user
+        FROM iqc_results A
+        LEFT JOIN users B on A.check_user = B.id
+        WHERE level_of_control_1 is not null
+        AND A.model = #{model}
+        order by A.updated_at desc
+        limit 10;
+    </select>
 
 
 </mapper>

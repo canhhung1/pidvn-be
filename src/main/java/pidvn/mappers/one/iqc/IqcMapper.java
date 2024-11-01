@@ -16,7 +16,7 @@ public interface IqcMapper {
     List<PihStoreDto> getLotsInventory(String type);
     List<PihStoreDto> prepareDataCreateRequest(SearchDto searchDto);
     List<IqcResultDto> getPihStore(List<String> lotNos);
-
+    List<IqcResultDto> getHistoryLevelOfControls(String model);
 
 
 }

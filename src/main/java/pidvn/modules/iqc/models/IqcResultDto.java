@@ -32,6 +32,8 @@ public class IqcResultDto {
     private String levelOfControl1;
     private String levelOfControl2;
     private Float qty;
+    private String invoice;
+    private String supplier;
 
     public Integer getId() {
         return id;
@@ -263,5 +265,21 @@ public class IqcResultDto {
 
     public void setQty(Float qty) {
         this.qty = qty;
+    }
+
+    public String getInvoice() {
+        return invoice;
+    }
+
+    public void setInvoice(String invoice) {
+        this.invoice = invoice;
+    }
+
+    public String getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(String supplier) {
+        this.supplier = supplier;
     }
 }

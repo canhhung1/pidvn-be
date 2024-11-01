@@ -21,7 +21,7 @@ public class IqcCtrl {
 
     @PostMapping("IqcRequests")
     public ResponseEntity<ApiResponse<?>> getIqcRequests(@RequestBody SearchDto searchDto) {
-        searchDto.setDateRange(null);
+        // searchDto.setDateRange(null);
         ApiResponse<List<IqcRequestDto>> apiResponse = new ApiResponse<>();
         apiResponse.setResult(this.iqcSvc.getIqcRequests(searchDto));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
@@ -66,6 +66,13 @@ public class IqcCtrl {
     public ResponseEntity<ApiResponse<?>> getIqcLevelOfControls() {
         ApiResponse<List<IqcLevelOfControl>> apiResponse = new ApiResponse<>();
         apiResponse.setResult(this.iqcSvc.getIqcLevelOfControls());
+        return new ResponseEntity<>(apiResponse,HttpStatus.OK);
+    }
+
+    @GetMapping("HistoryLevelOfControls")
+    public ResponseEntity<ApiResponse<?>> getHistoryLevelOfControls(@RequestParam String model) {
+        ApiResponse<List<IqcResultDto>> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(this.iqcSvc.getHistoryLevelOfControls(model));
         return new ResponseEntity<>(apiResponse,HttpStatus.OK);
     }
 

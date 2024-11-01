@@ -20,4 +20,6 @@ public interface IqcSvc {
     Map<String, Object> getLotsInventory();
 
     List<PihStoreDto> prepareDataCreateRequest(SearchDto searchDto);
+    List<IqcResultDto> getHistoryLevelOfControls(String model);
+
 }

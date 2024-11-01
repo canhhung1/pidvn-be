@@ -53,7 +53,7 @@ public class IqcSvcImpl implements IqcSvc {
     }
 
     @Override
-    public Map<Object, Object> createIqcRequest(IqcRequestDto iqcRequestDto) {
+    public Map<Object, Object> createIqcRequest(IqcRequestDto iqcRequestDto) throws Exception {
         Map<Object, Object> result = new HashMap<Object, Object>();
         if (iqcRequestDto.getType().equals("N")) {
             // TODO: tạo request IQC hàng OUTSIDE
@@ -117,6 +117,11 @@ public class IqcSvcImpl implements IqcSvc {
         return this.iqcMapper.getHistoryLevelOfControls(model);
     }
 
+    @Override
+    public List<IqcResultDto> getIqcResultsExportExcel(String iqcRequest) {
+        return this.iqcMapper.getIqcResultsExportExcel(iqcRequest);
+    }
+
 
     /**
      * Tạo mã RequestNo
@@ -135,7 +140,15 @@ public class IqcSvcImpl implements IqcSvc {
      * @param iqcRequestDto
      * @return
      */
-    private Map<Object, Object> createIqcRequestOutSide(IqcRequestDto iqcRequestDto) {
+    private Map<Object, Object> createIqcRequestOutSide(IqcRequestDto iqcRequestDto) throws Exception {
+
+        /**
+         * Check request đã đựo tạo chưa
+         */
+        IqcRequest request = this.iqcRequestRepo.findByInvoiceAndSlipNo(iqcRequestDto.getInvoice(), iqcRequestDto.getSlipNo());
+        if (request != null) {
+            throw new Exception("Request already exists");
+        }
 
         Map<Object, Object> result = new HashMap<Object, Object>();
 

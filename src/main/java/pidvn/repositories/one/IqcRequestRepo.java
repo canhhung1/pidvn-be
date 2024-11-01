@@ -25,4 +25,6 @@ public interface IqcRequestRepo extends JpaRepository<IqcRequest, Integer> {
 
     @Query(value = "select count(R.id) from iqc_request R where DATE_FORMAT(R.created_at, '%Y-%m-%d') = CURDATE()", nativeQuery = true)
     Integer getTotalRequestInDay();
+
+    IqcRequest findByInvoiceAndSlipNo(String invoice, String slipNo);
 }

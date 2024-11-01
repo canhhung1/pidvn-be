@@ -253,4 +253,25 @@
     </select>
 
 
+
+    <resultMap id="getIqcResultsExportExcel-result"
+               type="pidvn.modules.iqc.models.IqcResultDto">
+        <result column="lot_group" property="lotGroup" javaType="String"/>
+        <result column="check_date" property="checkDate" javaType="Date"/>
+        <result column="request_no" property="requestNo" javaType="String"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+    </resultMap>
+    <select id="getIqcResultsExportExcel" resultMap="getIqcResultsExportExcel-result">
+        select
+            B.supplier, B.invoice, A.request_no, B.created_at, A.check_date, A.model,
+            A.lot_group, sum(A.qty) qty, A.result1, A.result2, A.result3, A.remark
+        from iqc_results A
+        left join iqc_request B on A.request_no = B.request_no
+        where 1=1
+          and A.request_no = #{requestNo}
+        group by A.lot_group
+    </select>
+
+
+
 </mapper>

@@ -1,6 +1,8 @@
 package pidvn.modules.iqc.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,7 +10,10 @@ import pidvn.commons.dto.ApiResponse;
 import pidvn.entities.one.IqcLevelOfControl;
 import pidvn.modules.iqc.models.*;
 import pidvn.modules.iqc.services.IqcSvcImpl;
+import pidvn.modules.iqc.utils.IqcExporter;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +40,7 @@ public class IqcCtrl {
     }
 
     @PostMapping("IqcRequest")
-    public ResponseEntity<ApiResponse<?>> createIqcRequest(@RequestBody IqcRequestDto iqcRequestDto) {
+    public ResponseEntity<ApiResponse<?>> createIqcRequest(@RequestBody IqcRequestDto iqcRequestDto) throws Exception {
         ApiResponse<Map> apiResponse = new ApiResponse<>();
         apiResponse.setResult(this.iqcSvc.createIqcRequest(iqcRequestDto));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
@@ -104,6 +109,19 @@ public class IqcCtrl {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
+
+    @PostMapping("ExportExcel")
+    public ResponseEntity<?> exportExcel(@RequestBody IqcRequestDto iqcRequestDto) throws IOException {
+
+        List<IqcResultDto> data = this.iqcSvc.getIqcResultsExportExcel(iqcRequestDto.getRequestNo());
+        IqcExporter exporter = new IqcExporter(data);
+        ByteArrayInputStream inputStream = exporter.export();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename=IqcData.xlsx");
+        return ResponseEntity.ok().headers(headers).body(new InputStreamResource(inputStream));
+
+    }
 
 
 

@@ -10,7 +10,7 @@ public interface IqcSvc {
     List<IqcRequestDto> getIqcRequests(SearchDto searchDto);
     IqcRequestDto getIqcRequest(String requestNo);
     List<PurWhRecordDto> getSlipNo();
-    Map<Object, Object> createIqcRequest(IqcRequestDto iqcRequestDto);
+    Map<Object, Object> createIqcRequest(IqcRequestDto iqcRequestDto) throws Exception;
     IqcRequestDto updateIqcRequest(IqcRequestDto iqcRequestDto);
 
 
@@ -21,5 +21,5 @@ public interface IqcSvc {
 
     List<PihStoreDto> prepareDataCreateRequest(SearchDto searchDto);
     List<IqcResultDto> getHistoryLevelOfControls(String model);
-
+    List<IqcResultDto> getIqcResultsExportExcel(String iqcRequest);
 }

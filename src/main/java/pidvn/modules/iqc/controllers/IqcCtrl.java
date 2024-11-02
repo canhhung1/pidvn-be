@@ -26,7 +26,7 @@ public class IqcCtrl {
 
     @PostMapping("IqcRequests")
     public ResponseEntity<ApiResponse<?>> getIqcRequests(@RequestBody SearchDto searchDto) {
-        // searchDto.setDateRange(null);
+//         searchDto.setDateRange(null);
         ApiResponse<List<IqcRequestDto>> apiResponse = new ApiResponse<>();
         apiResponse.setResult(this.iqcSvc.getIqcRequests(searchDto));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);

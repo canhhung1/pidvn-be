@@ -25,7 +25,7 @@
         left join iqc_request_status C on A.status = C.id
         where 1=1
         <if test="dateRange != null and dateRange.size != 0">
-            and A.created_at between #{dateRange[0]} and #{dateRange[1]}
+            and DATE_FORMAT(A.created_at, '%Y-%m-%d') between DATE_FORMAT(#{dateRange[0]}, '%Y-%m-%d') and DATE_FORMAT(#{dateRange[1]}, '%Y-%m-%d')
         </if>
         and A.disable is null
         order by A.id desc

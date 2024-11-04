@@ -5,12 +5,17 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import pidvn.commons.dto.ApiResponse;
 import pidvn.entities.one.IqcLevelOfControl;
+import pidvn.entities.one.Users;
 import pidvn.modules.iqc.models.*;
 import pidvn.modules.iqc.services.IqcSvcImpl;
 import pidvn.modules.iqc.utils.IqcExporter;
+import pidvn.repositories.one.UsersRepo;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -26,7 +31,6 @@ public class IqcCtrl {
 
     @PostMapping("IqcRequests")
     public ResponseEntity<ApiResponse<?>> getIqcRequests(@RequestBody SearchDto searchDto) {
-//         searchDto.setDateRange(null);
         ApiResponse<List<IqcRequestDto>> apiResponse = new ApiResponse<>();
         apiResponse.setResult(this.iqcSvc.getIqcRequests(searchDto));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);

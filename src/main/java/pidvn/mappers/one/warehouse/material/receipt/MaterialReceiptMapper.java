@@ -15,4 +15,7 @@ public interface MaterialReceiptMapper {
     List<InvoiceDetailVo> getInvoiceDetail(InvoiceSearchVo searchVo);
 
     List<PurWhRecordsVo> getPurWhRecordsByInvoice(String invoice);
+
+    // Dữ liệu thêm vào request đã tồn tại
+    List<IqcResultDto> dataAddToIqcRequest(String slipNo, Integer userId, List<String> lotNos);
 }

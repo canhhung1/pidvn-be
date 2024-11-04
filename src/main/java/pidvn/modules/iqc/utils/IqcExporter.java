@@ -35,7 +35,7 @@ public class IqcExporter {
         CreationHelper creationHelper = workbook.getCreationHelper();
 
         String[] columns = {
-            "Nhà cung cấp","Invoice","RequestNo","Ngày Request", "Ngày IQC", "Lot Group", "Model","Qty", "GP","Ngoại quan", "Kích thước", "Thông tin NG or CA"
+            "Nhà cung cấp","Invoice","RequestNo","SlipNo","Ngày Request", "Ngày IQC", "Lot Group", "Model","Qty", "GP","Ngoại quan", "Kích thước", "Thông tin NG or CA"
         };
 
         this.createHeader(columns);
@@ -52,22 +52,23 @@ public class IqcExporter {
             row.createCell(0).setCellValue(dataVo.getSupplier());
             row.createCell(1).setCellValue(dataVo.getInvoice());
             row.createCell(2).setCellValue(dataVo.getRequestNo());
+            row.createCell(3).setCellValue(dataVo.getSlipNo());
 
-            Cell requestedDate = row.createCell(3);
+            Cell requestedDate = row.createCell(4);
             requestedDate.setCellValue(dataVo.getCreatedAt());
             requestedDate.setCellStyle(dateCellStyle);
 
-            Cell iqcDate = row.createCell(4);
+            Cell iqcDate = row.createCell(5);
             iqcDate.setCellValue(dataVo.getCheckDate());
             iqcDate.setCellStyle(dateCellStyle);
 
-            row.createCell(5).setCellValue(dataVo.getLotGroup());
-            row.createCell(6).setCellValue(dataVo.getModel());
-            row.createCell(7).setCellValue(dataVo.getQty());
-            row.createCell(8).setCellValue(dataVo.getResult1());
-            row.createCell(9).setCellValue(dataVo.getResult2());
-            row.createCell(10).setCellValue(dataVo.getResult3());
-            row.createCell(11).setCellValue(dataVo.getRemark());
+            row.createCell(6).setCellValue(dataVo.getLotGroup());
+            row.createCell(7).setCellValue(dataVo.getModel());
+            row.createCell(8).setCellValue(dataVo.getQty());
+            row.createCell(9).setCellValue(dataVo.getResult1());
+            row.createCell(10).setCellValue(dataVo.getResult2());
+            row.createCell(11).setCellValue(dataVo.getResult3());
+            row.createCell(12).setCellValue(dataVo.getRemark());
 
 
         }

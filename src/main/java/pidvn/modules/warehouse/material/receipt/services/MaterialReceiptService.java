@@ -1,6 +1,10 @@
 package pidvn.modules.warehouse.material.receipt.services;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import pidvn.entities.one.*;
 import pidvn.mappers.one.warehouse.material.receipt.MaterialReceiptMapper;
@@ -8,6 +12,7 @@ import pidvn.modules.warehouse.material.receipt.models.*;
 import pidvn.repositories.one.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -34,6 +39,15 @@ public class MaterialReceiptService implements IMaterialReceiptService {
 
     @Autowired
     private IqcRequestRepo iqcRequestRepo;
+
+    @Autowired
+    private UsersRepo usersRepo;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
+    @Autowired
+    private IqcResultsRepo iqcResultsRepo;
 
     /**
      * Lưu data vào bảng pur_wh_records
@@ -121,13 +135,30 @@ public class MaterialReceiptService implements IMaterialReceiptService {
 
         /**
          * Trường hợp scan thêm hàng vào request
+         * 1. Kiểm tra IQC request đã được tạo chưa,
+         *    Nếu đã tồn tại request thì cập nhật lại trạng thái
+         * 2. Thêm data vào bảng iqc_result nếu đã tồn tại IQC request
+         *    Thêm những lotNo chưa có trong request
          */
         String slipNo = materials.get(0).getSlipNo();
         IqcRequest request = this.iqcRequestRepo.findByRequestNo(slipNo);
-        // Nếu đã tồn tại request thì cập nhật trạng thái request thành 1 (st)
+
         if (request != null) {
+            /**
+             * 1. Nếu đã tồn tại IQC request thì cập nhật trạng thái request thành 1 (st)
+             */
             request.setStatus(1);
             this.iqcRequestRepo.save(request);
+
+            /**
+             * 2. Thêm data vào iqc_result
+             * - lấy dữ liệu trong bảng iqc_request theo slipNo và requestNo
+             *
+             */
+            List<IqcResults> data = this.addToIqcRequest(slipNo, materials);
+//            this.iqcResultsRepo.saveAll(data);
+
+            System.out.println(data);
         }
 
         return response;
@@ -191,13 +222,27 @@ public class MaterialReceiptService implements IMaterialReceiptService {
 
         /**
          * Trường hợp scan thêm hàng vào request
+         * 1. Kiểm tra IQC request đã được tạo chưa,
+         *    Nếu đã tồn tại request thì cập nhật lại trạng thái
+         * 2. Thêm data vào bảng iqc_result nếu đã tồn tại IQC request
+         *    Thêm những lotNo chưa có trong request
          */
         String slipNo = materials.get(0).getSlipNo();
-        IqcRequest request = this.iqcRequestRepo.findByRequestNo(slipNo);
-        // Nếu đã tồn tại request thì cập nhật trạng thái request thành 1 (st)
+        String invoiceNo = materials.get(0).getInvoiceNo();
+        IqcRequest request = this.iqcRequestRepo.findByInvoiceAndSlipNo(invoiceNo, slipNo);
         if (request != null) {
+            /**
+             * 1. Nếu đã tồn tại IQC request thì cập nhật trạng thái request thành 1 (st)
+             */
             request.setStatus(1);
             this.iqcRequestRepo.save(request);
+
+            /**
+             * 2. Thêm data vào iqc_result
+             * - lấy dữ liệu trong bảng iqc_request theo slipNo và requestNo
+             */
+            List<IqcResults> data = this.addToIqcRequest(slipNo, materials);
+             this.iqcResultsRepo.saveAll(data);
         }
 
         return response;
@@ -264,6 +309,30 @@ public class MaterialReceiptService implements IMaterialReceiptService {
         }
 
         return data;
+    }
+
+
+    /**
+     * Thêm dữ liệu vào bảng iqc_results
+     * @param slipNo
+     * @return
+     */
+    private List<IqcResults> addToIqcRequest(String slipNo, List<MaterialVo> materials) {
+
+        List<String> lotNos = new ArrayList<>();
+        for (MaterialVo materialVo : materials) {
+            lotNos.add(materialVo.getLotNo());
+        }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        Users user = this.usersRepo.findByUsername(userDetails.getUsername());
+        Integer userId = user.getId();
+
+        List<IqcResultDto> data = this.materialReceiptMapper.dataAddToIqcRequest(slipNo, userId, lotNos);
+        List<IqcResults> results = data.stream().map(item -> modelMapper.map(item, IqcResults.class)).collect(Collectors.toList());
+
+        return this.iqcResultsRepo.saveAll(results);
     }
 
     /**

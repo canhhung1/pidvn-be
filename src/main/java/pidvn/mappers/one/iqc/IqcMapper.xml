@@ -260,16 +260,17 @@
         <result column="check_date" property="checkDate" javaType="Date"/>
         <result column="request_no" property="requestNo" javaType="String"/>
         <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="slip_no" property="slipNo" javaType="String"/>
     </resultMap>
     <select id="getIqcResultsExportExcel" resultMap="getIqcResultsExportExcel-result">
         select
-            B.supplier, B.invoice, A.request_no, B.created_at, A.check_date, A.model,
-            A.lot_group, sum(A.qty) qty, A.result1, A.result2, A.result3, A.remark
+            B.supplier, B.invoice, A.request_no, B.slip_no, B.created_at, A.check_date,
+            A.model, A.lot_group, sum(A.qty) qty, A.result1, A.result2, A.result3, A.remark
         from iqc_results A
         left join iqc_request B on A.request_no = B.request_no
         where 1=1
-          and A.request_no = #{requestNo}
-        group by A.lot_group
+            and A.request_no = #{requestNo}
+        group by  A.lot_group, A.model
     </select>
 
 

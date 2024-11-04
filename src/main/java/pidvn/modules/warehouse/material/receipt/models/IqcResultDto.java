@@ -1,4 +1,4 @@
-package pidvn.modules.iqc.models;
+package pidvn.modules.warehouse.material.receipt.models;
 
 import java.util.Date;
 
@@ -34,7 +34,6 @@ public class IqcResultDto {
     private Float qty;
     private String invoice;
     private String supplier;
-    private String slipNo;
 
     public Integer getId() {
         return id;
@@ -282,13 +281,5 @@ public class IqcResultDto {
 
     public void setSupplier(String supplier) {
         this.supplier = supplier;
-    }
-
-    public String getSlipNo() {
-        return slipNo;
-    }
-
-    public void setSlipNo(String slipNo) {
-        this.slipNo = slipNo;
     }
 }

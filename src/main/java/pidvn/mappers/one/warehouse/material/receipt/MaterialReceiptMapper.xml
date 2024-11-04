@@ -132,4 +132,52 @@
         and R.slip_no != ''
     </select>
 
+
+
+    <resultMap id="dataAddToIqcRequest-result"
+               type="pidvn.modules.warehouse.material.receipt.models.IqcResultDto">
+        <result column="p_date" property="pDate" javaType="Date"/>
+        <result column="lot_group" property="lotGroup" javaType="String"/>
+        <result column="lot_no" property="lotNo" javaType="String"/>
+        <result column="request_no" property="requestNo" javaType="String"/>
+        <result column="user_id" property="userId" javaType="Integer"/>
+        <result column="key_in_id" property="keyInId" javaType="Integer"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="updated_at" property="updatedAt" javaType="Date"/>
+        <result column="class_param" property="classParam" javaType="String"/>
+    </resultMap>
+    <select id="dataAddToIqcRequest" resultMap="dataAddToIqcRequest-result">
+
+        with
+        T01 as (
+            -- Các lot đã có trong request
+            select A.request_no from iqc_request A where A.slip_no = #{slipNo}
+        ),
+        T02 as (
+            -- Các lot đã nhận và có trong iqc_result
+            select A.lot_no from iqc_results A where request_no = (select * from T01)
+        ),
+        T03 as (
+            -- Tìm các lot trong pur_wh_records theo lotNo đc truyền vào
+            select
+                'O' class_param, 'N' type, A.date p_date, A.date, A.model, B.lot_group, A.lot_no, A.qty,
+                (select * from T01) request_no,  (#{userId}) user_id, (#{userId}) key_in_id,
+                NOW() created_at, NOW() updated_at
+            from pur_wh_records A
+                     left join lots B on A.lot_no = B.lot_no
+            where 1=1
+              and A.slip_no = #{slipNo}
+              and A.lot_no in
+                <foreach item="item" index="index" collection="lotNos" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+        )
+        select * from T03
+        where 1=1
+        and T03.lot_no not in (select * from T02)
+
+
+    </select>
+
+
 </mapper>

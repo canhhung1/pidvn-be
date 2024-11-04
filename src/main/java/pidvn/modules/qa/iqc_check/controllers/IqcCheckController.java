@@ -5,6 +5,9 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import pidvn.modules.qa.iqc_check.models.IqcDataSearchVo;
 import pidvn.modules.qa.iqc_check.models.IqcDataVo;
@@ -12,6 +15,7 @@ import pidvn.modules.qa.iqc_check.models.IqcRequestSearchVo;
 import pidvn.modules.qa.iqc_check.models.IqcRequestVo;
 import pidvn.modules.qa.iqc_check.services.IqcCheckService;
 import pidvn.modules.qa.iqc_check.utils.IqcCheckExporter;
+import pidvn.repositories.one.UsersRepo;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -95,11 +99,6 @@ public class IqcCheckController {
     public ResponseEntity<?> changeConfigAudit(@RequestParam String configValue) {
         return new ResponseEntity<>(this.iqcCheckSvc.changeConfigAudit(configValue), HttpStatus.OK);
     }
-
-    /**
-     *
-     */
-
 
     @GetMapping("IqcDataSortingMaster/{requestNo}")
     public ResponseEntity<?> getIqcDataSortingMaster(@PathVariable String requestNo) {

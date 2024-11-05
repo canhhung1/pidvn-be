@@ -41,4 +41,8 @@ public interface IReMatCtrlSvc {
 
     PurWhRecords deletePurWhRecordById(Integer id);
 
+    PurWhHeaders lockRequest(String regNo);
+
+    PurWhHeaders getPurWhHeader(String regNo);
+
 }

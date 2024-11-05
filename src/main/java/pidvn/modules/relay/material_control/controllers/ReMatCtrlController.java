@@ -172,4 +172,16 @@ public class ReMatCtrlController {
     public ResponseEntity<?> deletePurWhRecordById(@PathVariable Integer id) {
         return new ResponseEntity<>(this.reMatCtrlSvc.deletePurWhRecordById(id), HttpStatus.OK);
     }
+
+    @PutMapping("LockRequest/{regNo}")
+    public ResponseEntity<?> lockRequest(@PathVariable String regNo) {
+        return new ResponseEntity<>(this.reMatCtrlSvc.lockRequest(regNo), HttpStatus.OK);
+    }
+
+    @GetMapping("PurWhHeader/{regNo}")
+    public ResponseEntity<?> getPurWhHeader(@PathVariable String regNo) {
+        return new ResponseEntity<>(this.reMatCtrlSvc.getPurWhHeader(regNo), HttpStatus.OK);
+    }
+
+
 }

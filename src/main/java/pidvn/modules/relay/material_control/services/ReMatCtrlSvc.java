@@ -843,6 +843,18 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
         return obj;
     }
 
+    @Override
+    public PurWhHeaders lockRequest(String regNo) {
+        PurWhHeaders request = this.purWhHeadersRepo.findByRegNo(regNo);
+        request.setStatus("1");
+        return this.purWhHeadersRepo.save(request);
+    }
+
+    @Override
+    public PurWhHeaders getPurWhHeader(String regNo) {
+        return this.purWhHeadersRepo.findByRegNo(regNo);
+    }
+
     private ByteArrayInputStream exportMaterialInLine(MaterialSearchVo searchVo) throws IOException {
         List<MaterialExport> data = this.reMatCtrlMapper.exportMaterialData(searchVo);
 

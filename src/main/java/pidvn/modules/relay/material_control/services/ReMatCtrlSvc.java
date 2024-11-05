@@ -317,6 +317,9 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
 
         Lots lot = this.lotsRepo.findByLotNo(materialVo.getLotNo());
 
+        materialVo.setQty(lot.getQty());
+        materialVo.setRemainingQty(lot.getQty());
+
         // Kiểm tra hàng hết hạn
         if (lot.getExpiredDate() != null) {
 
@@ -362,11 +365,6 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
             }
 
         }
-
-
-        materialVo.setQty(lot.getQty());
-        materialVo.setRemainingQty(lot.getQty());
-
 
         message = "Có thể nhập NVL vào LINE";
         result.put("status", "OK");

@@ -190,13 +190,21 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
         String[] recordTypes = new String[]{"RNP", "RDC", "CDL", "LTC", "CTR", "MRTW"};
         List<MaterialVo> materialHistories = this.reMatCtrlMapper.getMaterialHistories(materialVo.getLotNo(), Arrays.asList(recordTypes));
 
-        if (materialHistories.size() <= 0) {
+        if (materialHistories.isEmpty()) {
             message = "Lot: " + materialVo.getLotNo() + " chưa được nhập kho RE-WH ";
             result.put("status", "ERROR");
             result.put("message", message);
             result.put("data", materialVo);
             return result;
         }
+
+        /**
+         * Nếu đã được scan nhận
+         * Kiểm tra lot thuộc phiếu nào, và phiếu phải được nhận đủ NVL thì mới cho scan vào line
+         */
+
+
+
 
         MaterialVo recordLatest = materialHistories.get(0);
 
@@ -270,7 +278,8 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
         String[] recordTypes = new String[]{"RNP", "RDC", "CDL", "LTC", "CTR", "MRTW"};
         List<MaterialVo> materialHistories = this.reMatCtrlMapper.getMaterialHistories(materialVo.getLotNo(), Arrays.asList(recordTypes));
 
-        if (materialHistories.size() <= 0) {
+        // Trường hợp chưa nhập kho
+        if (materialHistories.isEmpty()) {
             message = "Lot: " + materialVo.getLotNo() + " chưa được nhập kho RE-WH ";
             result.put("status", "ERROR");
             result.put("message", message);
@@ -844,15 +853,8 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
     }
 
     @Override
-    public PurWhHeaders lockRequest(String regNo) {
-        PurWhHeaders request = this.purWhHeadersRepo.findByRegNo(regNo);
-        request.setStatus("1");
-        return this.purWhHeadersRepo.save(request);
-    }
-
-    @Override
-    public PurWhHeaders getPurWhHeader(String regNo) {
-        return this.purWhHeadersRepo.findByRegNo(regNo);
+    public MaterialVo getLotRequestAndLotReceive(String requestNo) {
+        return this.reMatCtrlMapper.getLotRequestAndLotReceive(requestNo);
     }
 
     private ByteArrayInputStream exportMaterialInLine(MaterialSearchVo searchVo) throws IOException {

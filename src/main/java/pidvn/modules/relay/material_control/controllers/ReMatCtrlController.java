@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pidvn.commons.dto.ApiResponse;
 import pidvn.entities.one.MaterialControls;
 import pidvn.entities.one.PurWhRecords;
 import pidvn.modules.relay.material_control.models.MaterialSearchVo;
@@ -15,6 +16,7 @@ import pidvn.modules.relay.material_control.services.ReMatCtrlSvc;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -173,14 +175,17 @@ public class ReMatCtrlController {
         return new ResponseEntity<>(this.reMatCtrlSvc.deletePurWhRecordById(id), HttpStatus.OK);
     }
 
-    @PutMapping("LockRequest/{regNo}")
-    public ResponseEntity<?> lockRequest(@PathVariable String regNo) {
-        return new ResponseEntity<>(this.reMatCtrlSvc.lockRequest(regNo), HttpStatus.OK);
-    }
-
-    @GetMapping("PurWhHeader/{regNo}")
-    public ResponseEntity<?> getPurWhHeader(@PathVariable String regNo) {
-        return new ResponseEntity<>(this.reMatCtrlSvc.getPurWhHeader(regNo), HttpStatus.OK);
+    /**
+     * Mục đích để check số lot đã nhận đủ so với request không
+     * Nếu đủ thì trạng thái của request là đã được khóa
+     *
+     * @return
+     */
+    @GetMapping("GetLotRequestAndLotReceive")
+    public ResponseEntity<ApiResponse<?>> getLotRequestAndLotReceive(@RequestParam String requestNo) {
+        ApiResponse<MaterialVo> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(this.reMatCtrlSvc.getLotRequestAndLotReceive(requestNo));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
 

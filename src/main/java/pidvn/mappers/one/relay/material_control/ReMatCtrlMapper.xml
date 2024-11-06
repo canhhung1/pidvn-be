@@ -472,4 +472,26 @@
     </update>
 
 
+
+    <resultMap id="getLotRequestAndLotReceive-result"
+               type="pidvn.modules.relay.material_control.models.MaterialVo">
+        <result column="total_lot_request" property="totalLotRequest" javaType="Integer"/>
+        <result column="total_lot_receive" property="totalLotReceive" javaType="Integer"/>
+    </resultMap>
+    <select id="getLotRequestAndLotReceive" resultMap="getLotRequestAndLotReceive-result">
+        with
+        T01 as (
+            select * from pur_wh_records where 1=1 and record_type = 'XPA' and slip_no = #{requestNo}
+        ),
+        T02 as (
+            select * from pur_wh_records where 1=1 and record_type = 'RNP' and req_no = #{requestNo}
+        )
+        select count(T01.lot_no) total_lot_request, count(T02.lot_no) total_lot_receive
+        from T01
+        left join T02 on T01.lot_no = T02.lot_no
+
+
+    </select>
+
+
 </mapper>

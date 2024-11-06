@@ -32,6 +32,8 @@ public class MaterialVo {
     private Float remainingQty;
     private Integer ordinal;
     private String remark;
+    private Integer totalLotRequest;
+    private Integer totalLotReceive;
 
     public Integer getId() {
         return id;
@@ -263,5 +265,21 @@ public class MaterialVo {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Integer getTotalLotRequest() {
+        return totalLotRequest;
+    }
+
+    public void setTotalLotRequest(Integer totalLotRequest) {
+        this.totalLotRequest = totalLotRequest;
+    }
+
+    public Integer getTotalLotReceive() {
+        return totalLotReceive;
+    }
+
+    public void setTotalLotReceive(Integer totalLotReceive) {
+        this.totalLotReceive = totalLotReceive;
     }
 }

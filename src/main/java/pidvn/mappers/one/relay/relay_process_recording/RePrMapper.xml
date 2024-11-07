@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pidvn.mappers.one.relay.relay_process_recording.RePrMapper">
+
+    <resultMap id="getRequests-result"
+               type="pidvn.modules.relay.relay_process_recording.models.RequestDto">
+        <result column="request_no" property="requestNo" javaType="String"/>
+        <result column="total_lot_request" property="totalLotRequest" javaType="Integer"/>
+        <result column="total_lot_receive" property="totalLotReceive" javaType="Integer"/>
+        <result column="created_at" property="createdAt" javaType="Date"/>
+    </resultMap>
+
+    <select id="getRequests" resultMap="getRequests-result">
+        with
+        T01 as (
+            -- Danh sách xuất kho ra MA
+            select * from pur_wh_records A
+            where 1=1
+              and A.record_type = 'XPA'
+              and A.date >= CURDATE() - INTERVAL 10 DAY
+        ),
+        T02 as (
+        -- Danh sách đã nhận
+            select * from pur_wh_records A where  A.record_type  = 'RNP'
+        ),
+        T03 as (
+            select T01.slip_no, T01.lot_no lot_no_request, T02.lot_no lot_no_receive
+            from T01
+            left join T02 on T01.lot_no = T02.lot_no
+        ),
+        T04 as (
+            select
+            T03.slip_no, count(T03.lot_no_request) total_lot_request,
+            count(T03.lot_no_receive) total_lot_receive
+            from T03
+            group by T03.slip_no
+        )
+        select
+            A.id, T04.slip_no request_no, T04.total_lot_request,
+            T04.total_lot_receive, A.created_at, A.line, A.parent
+        from T04
+        left join pur_wh_headers A on T04.slip_no = A.reg_no
+        order by A.date desc
+    </select>
+
+
+    <resultMap id="getRequestDetail-result"
+               type="pidvn.modules.relay.relay_process_recording.models.LotDto">
+        <result column="lot_group" property="lotGroup" javaType="String"/>
+        <result column="lot_no" property="lotNo" javaType="String"/>
+        <result column="status_name" property="statusName" javaType="String"/>
+    </resultMap>
+    <select id="getRequestDetail" resultMap="getRequestDetail-result">
+
+        with
+        T01 as (
+            -- Danh sách xuất kho ra MA
+            select * from pur_wh_records A
+            where 1=1
+            and A.record_type = 'XPA'
+            and A.slip_no = #{requestNo}
+        ),
+        T02 as (
+            -- Danh sách đã nhận
+            select * from pur_wh_records A where  A.record_type  = 'RNP'
+        ),
+        T03 as (
+            select
+                T02.id, T01.parent, T01.model, A.lot_group, T01.lot_no, ABS(T01.qty) qty,
+                T01.wh_user_code, T02.lot_no lot_no_receive
+            from T01
+            left join T02 on T01.lot_no = T02.lot_no
+            left join lots A on T01.lot_no = A.lot_no
+        )
+        select
+            T03.id, T03.model, T03.lot_group, T03.lot_no, T03.qty,
+            if(T03.lot_no_receive is null,0,1) status,
+            if(T03.lot_no_receive is null, 'Not yet','Received') status_name
+        from T03;
+
+
+
+
+
+    </select>
+
+
+</mapper>

@@ -9,4 +9,8 @@ public interface RePrSvc {
 
     List<RequestDto> getRequests();
     List<LotDto> getRequestDetail(String requestNo);
+
+    List<LotDto> receiveMaterials(List<LotDto> lots);
+
+    LotDto validateLotReceive(LotDto lotDto);
 }

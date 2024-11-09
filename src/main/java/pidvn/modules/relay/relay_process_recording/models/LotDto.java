@@ -1,13 +1,23 @@
 package pidvn.modules.relay.relay_process_recording.models;
 
+import java.util.Date;
+
 public class LotDto {
     private Integer id;
     private String model;
     private String lotGroup;
     private String lotNo;
+    private Float firstQty;
     private Float qty;
+    private Float remainQty;
     private Integer status;
     private String statusName;
+    private String reqNo;
+    private String recordType;
+    private String flag;
+    private Date date;
+    private Date createdAt;
+    private Date updatedAt;
 
     public Integer getId() {
         return id;
@@ -41,12 +51,28 @@ public class LotDto {
         this.lotNo = lotNo;
     }
 
+    public Float getFirstQty() {
+        return firstQty;
+    }
+
+    public void setFirstQty(Float firstQty) {
+        this.firstQty = firstQty;
+    }
+
     public Float getQty() {
         return qty;
     }
 
     public void setQty(Float qty) {
         this.qty = qty;
+    }
+
+    public Float getRemainQty() {
+        return remainQty;
+    }
+
+    public void setRemainQty(Float remainQty) {
+        this.remainQty = remainQty;
     }
 
     public Integer getStatus() {
@@ -63,5 +89,53 @@ public class LotDto {
 
     public void setStatusName(String statusName) {
         this.statusName = statusName;
+    }
+
+    public String getReqNo() {
+        return reqNo;
+    }
+
+    public void setReqNo(String reqNo) {
+        this.reqNo = reqNo;
+    }
+
+    public String getRecordType() {
+        return recordType;
+    }
+
+    public void setRecordType(String recordType) {
+        this.recordType = recordType;
+    }
+
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import pidvn.commons.dto.ApiResponse;
 import pidvn.modules.relay.relay_process_recording.models.LotDto;
 import pidvn.modules.relay.relay_process_recording.models.RequestDto;
+import pidvn.modules.relay.relay_process_recording.models.SearchDto;
 import pidvn.modules.relay.relay_process_recording.services.RePrSvcImpl;
 
 import java.util.List;
@@ -25,10 +26,10 @@ public class RePrCtrl {
      * Danh sách các phiếu xuất kho cho MA
      * @return
      */
-    @GetMapping("Requests")
-    public ResponseEntity<ApiResponse<?>> getRequests() {
+    @PostMapping("Requests")
+    public ResponseEntity<ApiResponse<?>> getRequests(@RequestBody SearchDto searchDto) {
         ApiResponse<List<RequestDto>> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(this.rePrSvc.getRequests());
+        apiResponse.setResult(this.rePrSvc.getRequests(searchDto));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 

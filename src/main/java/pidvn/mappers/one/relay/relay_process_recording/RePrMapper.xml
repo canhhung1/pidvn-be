@@ -16,8 +16,8 @@
             -- Danh sách xuất kho ra MA
             select * from pur_wh_records A
             where 1=1
-              and A.record_type = 'XPA'
-              and A.date >= CURDATE() - INTERVAL 200 DAY
+            and A.record_type = 'XPA'
+            and A.date between date_format(#{dateRange[0]}, '%Y-%m-%d') and date_format(#{dateRange[1]}, '%Y-%m-%d')
         ),
         T02 as (
         -- Danh sách đã nhận

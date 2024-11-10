@@ -14,7 +14,7 @@ public class LotDto {
     private String statusName;
     private String reqNo;
     private String recordType;
-    private String type;
+//    private String type;
     private String flag;
     private Date date;
     private Date createdAt;
@@ -108,13 +108,13 @@ public class LotDto {
         this.recordType = recordType;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
+//    public String getType() {
+//        return type;
+//    }
+//
+//    public void setType(String type) {
+//        this.type = type;
+//    }
 
     public String getFlag() {
         return flag;

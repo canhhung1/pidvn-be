@@ -141,7 +141,8 @@ public class MaterialReceiptService implements IMaterialReceiptService {
          *    Thêm những lotNo chưa có trong request
          */
         String slipNo = materials.get(0).getSlipNo();
-        IqcRequest request = this.iqcRequestRepo.findByRequestNo(slipNo);
+        String invoiceNo = materials.get(0).getInvoiceNo();
+        IqcRequest request = this.iqcRequestRepo.findByInvoiceAndSlipNo(invoiceNo, slipNo);
 
         if (request != null) {
             /**
@@ -156,7 +157,7 @@ public class MaterialReceiptService implements IMaterialReceiptService {
              *
              */
             List<IqcResults> data = this.addToIqcRequest(slipNo, materials);
-//            this.iqcResultsRepo.saveAll(data);
+            this.iqcResultsRepo.saveAll(data);
 
             System.out.println(data);
         }

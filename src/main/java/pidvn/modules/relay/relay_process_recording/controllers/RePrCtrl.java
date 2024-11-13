@@ -12,6 +12,7 @@ import pidvn.modules.relay.relay_process_recording.models.SearchDto;
 import pidvn.modules.relay.relay_process_recording.services.RePrSvcImpl;
 
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -64,9 +65,21 @@ public class RePrCtrl {
      * @return
      */
     @PostMapping("ValidateLotReceive")
-    public ResponseEntity<ApiResponse<?>> validateLotReceive(@RequestBody LotDto lotDto) {
+    public ResponseEntity<ApiResponse<?>> scanLotReceive(@RequestBody LotDto lotDto) {
         ApiResponse<LotDto> apiResponse = new ApiResponse<>();
         apiResponse.setResult(this.rePrSvc.validateLotReceive(lotDto));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    /**
+     * Xóa lot đã nhận
+     * @param lotDto
+     * @return
+     */
+    @PutMapping("DeleteLotReceived")
+    public ResponseEntity<ApiResponse<?>> deleteLotReceived(@RequestBody LotDto lotDto) {
+        ApiResponse<Map<String, Object>> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(this.rePrSvc.deleteLotReceived(lotDto));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 

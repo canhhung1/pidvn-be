@@ -14,11 +14,13 @@ public class LotDto {
     private String statusName;
     private String reqNo;
     private String recordType;
-//    private String type;
+    private String type;
     private String flag;
     private Date date;
     private Date createdAt;
     private Date updatedAt;
+    private String receiver;
+    private String qrCode;
 
     public Integer getId() {
         return id;
@@ -108,13 +110,13 @@ public class LotDto {
         this.recordType = recordType;
     }
 
-//    public String getType() {
-//        return type;
-//    }
-//
-//    public void setType(String type) {
-//        this.type = type;
-//    }
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getFlag() {
         return flag;
@@ -146,5 +148,21 @@ public class LotDto {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
+    }
+
+    public String getQrCode() {
+        return qrCode;
+    }
+
+    public void setQrCode(String qrCode) {
+        this.qrCode = qrCode;
     }
 }

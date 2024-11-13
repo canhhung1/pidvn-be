@@ -48,8 +48,10 @@
                type="pidvn.modules.relay.relay_process_recording.models.LotDto">
         <result column="lot_group" property="lotGroup" javaType="String"/>
         <result column="lot_no" property="lotNo" javaType="String"/>
+        <result column="status" property="status" javaType="Integer"/>
         <result column="status_name" property="statusName" javaType="String"/>
         <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="req_no" property="reqNo" javaType="String"/>
     </resultMap>
     <select id="getRequestDetail" resultMap="getRequestDetail-result">
 
@@ -67,17 +69,25 @@
         ),
         T03 as (
             select
-                T02.id, T01.parent, T01.model, A.lot_group, T01.lot_no, ABS(T01.qty) qty,
-                T01.wh_user_code, T02.lot_no lot_no_receive, T02.created_at, T02.date
+                T02.id, T01.parent, T01.model, A.lot_group, T01.lot_no, ABS(T01.qty) qty, T02.req_no,
+                T01.wh_user_code, T02.lot_no lot_no_receive, T02.created_at, T02.date, T02.receiver
             from T01
             left join T02 on T01.lot_no = T02.lot_no
             left join lots A on T01.lot_no = A.lot_no
         )
         select
-            T03.id, T03.model, T03.lot_group, T03.lot_no, T03.qty,
-            if(T03.lot_no_receive is null,0,1) status,
-            if(T03.lot_no_receive is null, 'Not yet','Received') status_name,
-            T03.created_at, T03.date
+            T03.id, T03.model, T03.lot_group, T03.lot_no,T03.lot_no_receive,
+            T03.qty, T03.date, T03.receiver, T03.created_at, T03.req_no,
+            case
+                when T03.receiver is null then 0
+                when T03.receiver = "" then 0
+                else 1
+                end status,
+            case
+                when T03.receiver is null then 'Not yet'
+                when T03.receiver = "" then 'Not yet'
+                else 'Received'
+                end status_name
         from T03;
 
 

@@ -29,6 +29,7 @@ public class MaterialVo {
     private String whUserCode;
     private String username;
     private Date createdAt;
+    private Date updatedAt;
     private Float remainingQty;
     private Integer ordinal;
     private String remark;
@@ -241,6 +242,14 @@ public class MaterialVo {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public Float getRemainingQty() {

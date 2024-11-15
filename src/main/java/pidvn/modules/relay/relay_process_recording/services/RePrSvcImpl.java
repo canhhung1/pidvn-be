@@ -60,8 +60,27 @@ public class RePrSvcImpl implements RePrSvc {
         /**
          * Insert vào bảng pur_wh_record với record_type = 'RNP'
          */
-        List<PurWhRecords> data = lots.stream().map(item -> modelMapper.map(item, PurWhRecords.class)).collect(Collectors.toList());
-        this.purWhRecordsRepo.saveAll(data);
+//        List<PurWhRecords> data = lots.stream().map(item -> modelMapper.map(item, PurWhRecords.class)).collect(Collectors.toList());
+//        this.purWhRecordsRepo.saveAll(data);
+        List<PurWhRecords> receiveData = new ArrayList<>();
+
+        for (LotDto item : lots) {
+            PurWhRecords obj = new PurWhRecords();
+            obj.setLotNo(item.getLotNo());
+            obj.setModel(item.getModel());
+            obj.setLotNo(item.getLotNo());
+            obj.setQty(item.getQty());
+            obj.setFlag(item.getFlag());
+            obj.setReqNo(item.getReqNo());
+            obj.setRecordType(item.getRecordType());
+            obj.setDate(item.getDate());
+            obj.setWhUserCode(item.getWhUserCode());
+            obj.setReceiver(item.getReceiver());
+            receiveData.add(obj);
+        }
+
+        this.purWhRecordsRepo.saveAll(receiveData);
+
 
         /**
          * Cập nhật vào bảng pur_wh_record với record_type = 'XPA'
@@ -95,11 +114,14 @@ public class RePrSvcImpl implements RePrSvc {
     public LotDto validateLotReceive(LotDto lotDto) {
         Lots obj = this.lotsRepo.findByLotNo(lotDto.getLotNo());
         LotDto lot = this.modelMapper.map(obj, LotDto.class);
+        //lot.setId(null);
         lot.setReqNo(lotDto.getReqNo());
         lot.setRecordType(lotDto.getRecordType());
         lot.setFlag(lotDto.getFlag());
         lot.setRemainQty(obj.getQty());
         lot.setReceiver(lotDto.getReceiver());
+        lot.setSender(lotDto.getSender());
+        lot.setWhUserCode(lotDto.getWhUserCode());
         lot.setQrCode(lotDto.getQrCode());
         return lot;
     }

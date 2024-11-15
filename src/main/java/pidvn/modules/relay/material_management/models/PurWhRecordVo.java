@@ -28,6 +28,7 @@ public class PurWhRecordVo {
     private Date createdAt;
     private Date updatedAt;
     private String flag;
+    private String reqNo;
 
     public Integer getId() {
         return id;
@@ -219,5 +220,13 @@ public class PurWhRecordVo {
 
     public void setFlag(String flag) {
         this.flag = flag;
+    }
+
+    public String getReqNo() {
+        return reqNo;
+    }
+
+    public void setReqNo(String reqNo) {
+        this.reqNo = reqNo;
     }
 }

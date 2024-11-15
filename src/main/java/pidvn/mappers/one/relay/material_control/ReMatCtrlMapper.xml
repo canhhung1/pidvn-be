@@ -217,6 +217,8 @@
         <result column="record_type" property="recordType" javaType="String"/>
         <result column="qa_card" property="qaCard" javaType="String"/>
         <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="updated_at" property="updatedAt" javaType="Date"/>
+        <result column="req_no" property="reqNo" javaType="String"/>
     </resultMap>
     <select id="materialTraceability" resultMap="materialTraceability-result">
         <if test="recordType == 'CDL' or recordType == 'LTC'">
@@ -260,8 +262,8 @@
 
         <if test="recordType == 'RNP'">
             SELECT
-                R.parent model, R.model part_no, R.lot_no, R.qty, R.line,
-                R.shift, R.date, R.qa_card, R.receiver username, R.created_at
+                R.parent model, R.model part_no, R.lot_no, R.qty, R.line, R.req_no,
+                R.shift, R.date, R.qa_card, R.receiver username, R.created_at, R.updated_at
             FROM pidvn.pur_wh_records R
             where 1 = 1
             and R.record_type = 'RNP'

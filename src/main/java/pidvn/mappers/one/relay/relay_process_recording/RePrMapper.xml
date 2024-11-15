@@ -11,36 +11,35 @@
     </resultMap>
 
     <select id="getRequests" resultMap="getRequests-result">
-        with
-        T01 as (
-            -- Danh sách xuất kho ra MA
-            select * from pur_wh_records A
-            where 1=1
-            and A.record_type = 'XPA'
-            and A.date between date_format(#{dateRange[0]}, '%Y-%m-%d') and date_format(#{dateRange[1]}, '%Y-%m-%d')
-        ),
-        T02 as (
+
+    with
+    T01 as (
+        -- Danh sách xuất kho ra MA
+        select A.slip_no, count(A.lot_no) total_lot_request, A.created_at
+        from pur_wh_records A
+        where 1=1
+        and A.record_type = 'XPA'
+        and A.date between date_format(#{dateRange[0]}, '%Y-%m-%d') and date_format(#{dateRange[1]}, '%Y-%m-%d')
+        group by A.slip_no
+    ),
+    T02 as (
         -- Danh sách đã nhận
-            select * from pur_wh_records A where  A.record_type  = 'RNP'
-        ),
-        T03 as (
-            select T01.slip_no, T01.lot_no lot_no_request, T02.lot_no lot_no_receive
-            from T01
-            left join T02 on T01.lot_no = T02.lot_no
-        ),
-        T04 as (
-            select
-            T03.slip_no, count(T03.lot_no_request) total_lot_request,
-            count(T03.lot_no_receive) total_lot_receive
-            from T03
-            group by T03.slip_no
-        )
+        select A.req_no, count(A.lot_no) total_lot_receive from pur_wh_records A
+        where 1=1
+        and A.record_type  = 'RNP'
+        and A.date between date_format(#{dateRange[0]}, '%Y-%m-%d') and date_format(#{dateRange[1]}, '%Y-%m-%d')
+        group by A.req_no
+    ),
+    T03 as (
         select
-            A.id, T04.slip_no request_no, T04.total_lot_request,
-            T04.total_lot_receive, A.created_at, A.line, A.parent
-        from T04
-        left join pur_wh_headers A on T04.slip_no = A.reg_no
-        order by A.date desc
+            T01.slip_no request_no, T01.total_lot_request, T02.total_lot_receive, T01.created_at
+        from T01
+        left join T02 on T01.slip_no = T02.req_no
+    )
+    select T03.*, A.line, A.parent from T03
+    left join pur_wh_headers A on T03.request_no = A.reg_no
+    order by T03.created_at desc
+
     </select>
 
 
@@ -51,7 +50,11 @@
         <result column="status" property="status" javaType="Integer"/>
         <result column="status_name" property="statusName" javaType="String"/>
         <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="updated_at" property="updatedAt" javaType="Date"/>
         <result column="req_no" property="reqNo" javaType="String"/>
+        <result column="receiver_name" property="receiverName" javaType="String"/>
+        <result column="wh_user_code" property="whUserCode" javaType="String"/>
+
     </resultMap>
     <select id="getRequestDetail" resultMap="getRequestDetail-result">
 
@@ -65,19 +68,23 @@
         ),
         T02 as (
             -- Danh sách đã nhận
-            select * from pur_wh_records A where  A.record_type  = 'RNP'
+            select * from pur_wh_records A
+            where 1=1
+            and A.record_type  = 'RNP'
+            and A.req_no = #{requestNo}
         ),
         T03 as (
             select
-                T02.id, T01.parent, T01.model, A.lot_group, T01.lot_no, ABS(T01.qty) qty, T02.req_no,
-                T01.wh_user_code, T02.lot_no lot_no_receive, T02.created_at, T02.date, T02.receiver
+                T02.id, T01.parent, T01.model, A.lot_group, T01.lot_no, ABS(T01.qty) qty, T02.req_no, B.name receiver_name,
+                T01.wh_user_code, T02.lot_no lot_no_receive, T02.created_at, T02.updated_at, T02.date, T02.receiver, T01.sender
             from T01
             left join T02 on T01.lot_no = T02.lot_no
             left join lots A on T01.lot_no = A.lot_no
+            left join users B on T02.receiver = B.username
         )
         select
-            T03.id, T03.model, T03.lot_group, T03.lot_no,T03.lot_no_receive,
-            T03.qty, T03.date, T03.receiver, T03.created_at, T03.req_no,
+            T03.id, T03.model, T03.lot_group, T03.lot_no,T03.lot_no_receive, T03.receiver_name, T03.qty,
+            T03.date, T03.receiver, T03.created_at, T03.updated_at, T03.req_no, T03.sender, T03.wh_user_code,
             case
                 when T03.receiver is null then 0
                 when T03.receiver = "" then 0

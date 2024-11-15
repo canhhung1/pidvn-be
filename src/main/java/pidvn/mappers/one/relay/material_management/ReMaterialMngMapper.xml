@@ -122,12 +122,14 @@
         <result column="lot_no" property="lotNo" javaType="String"/>
         <result column="record_type_name" property="recordTypeName" javaType="String"/>
         <result column="created_at" property="createdAt" javaType="Date"/>
+        <result column="updated_at" property="updatedAt" javaType="Date"/>
+        <result column="req_no" property="reqNo" javaType="String"/>
     </resultMap>
     <select id="materialTraceability" resultMap="materialTraceability-result">
         select
             R.id, R.lot_no, R.qty, R.line, R.record_type, R.shift,
             R.sender, R.receiver, R.parent, R.model, R.date, R.created_at,
-            T.type, T.description as record_type_name
+            T.type, T.description as record_type_name, R.updated_at, R.req_no
         from pur_wh_records R
         left join pur_wh_record_types T on R.record_type = T.type
         where 1 = 1

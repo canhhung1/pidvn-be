@@ -306,23 +306,23 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
         }
         */
 
-        if (recordLatest.getRecordType().equals("CTR")) {
-            message = "Lot: " + materialVo.getLotNo() + " đã trả về kho trung chuyển (RE-WH); lúc: "
-                    + new SimpleDateFormat("yyyy-MM-dd HH:mm").format(recordLatest.getCreatedAt());
-            result.put("status", "ERROR");
-            result.put("message", message);
-            result.put("data", materialVo);
-            return result;
-        }
+//        if (recordLatest.getRecordType().equals("CTR")) {
+//            message = "Lot: " + materialVo.getLotNo() + " đã trả về kho trung chuyển (RE-WH); lúc: "
+//                    + new SimpleDateFormat("yyyy-MM-dd HH:mm").format(recordLatest.getCreatedAt());
+//            result.put("status", "ERROR");
+//            result.put("message", message);
+//            result.put("data", materialVo);
+//            return result;
+//        }
 
-        if (recordLatest.getRecordType().equals("MRTW")) {
-            message = "Lot: " + materialVo.getLotNo() + " đã trả về kho (PUR-WH); lúc: "
-                    + new SimpleDateFormat("yyyy-MM-dd HH:mm").format(recordLatest.getCreatedAt());
-            result.put("status", "ERROR");
-            result.put("message", message);
-            result.put("data", materialVo);
-            return result;
-        }
+//        if (recordLatest.getRecordType().equals("MRTW")) {
+//            message = "Lot: " + materialVo.getLotNo() + " đã trả về kho (PUR-WH); lúc: "
+//                    + new SimpleDateFormat("yyyy-MM-dd HH:mm").format(recordLatest.getCreatedAt());
+//            result.put("status", "ERROR");
+//            result.put("message", message);
+//            result.put("data", materialVo);
+//            return result;
+//        }
 
         Lots lot = this.lotsRepo.findByLotNo(materialVo.getLotNo());
 

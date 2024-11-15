@@ -83,4 +83,12 @@ public class RePrCtrl {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
+
+    @PostMapping("SendToLineWh")
+    public ResponseEntity<ApiResponse<?>> sendToLineWh(List<LotDto> lotDtos) {
+        ApiResponse<?> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(null);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
 }

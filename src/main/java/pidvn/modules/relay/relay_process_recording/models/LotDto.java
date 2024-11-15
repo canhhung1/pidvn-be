@@ -20,7 +20,11 @@ public class LotDto {
     private Date createdAt;
     private Date updatedAt;
     private String receiver;
+    private String sender;
+    private String whUserCode;
+    private String receiverName;
     private String qrCode;
+
 
     public Integer getId() {
         return id;
@@ -156,6 +160,30 @@ public class LotDto {
 
     public void setReceiver(String receiver) {
         this.receiver = receiver;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
+    public String getWhUserCode() {
+        return whUserCode;
+    }
+
+    public void setWhUserCode(String whUserCode) {
+        this.whUserCode = whUserCode;
+    }
+
+    public String getReceiverName() {
+        return receiverName;
+    }
+
+    public void setReceiverName(String receiverName) {
+        this.receiverName = receiverName;
     }
 
     public String getQrCode() {

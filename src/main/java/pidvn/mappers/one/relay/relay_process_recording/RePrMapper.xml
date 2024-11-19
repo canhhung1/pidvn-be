@@ -11,34 +11,43 @@
     </resultMap>
 
     <select id="getRequests" resultMap="getRequests-result">
-
-    with
-    T01 as (
-        -- Danh sách xuất kho ra MA
-        select A.slip_no, count(A.lot_no) total_lot_request, A.created_at
-        from pur_wh_records A
-        where 1=1
-        and A.record_type = 'XPA'
-        and A.date between date_format(#{dateRange[0]}, '%Y-%m-%d') and date_format(#{dateRange[1]}, '%Y-%m-%d')
-        group by A.slip_no
-    ),
-    T02 as (
-        -- Danh sách đã nhận
-        select A.req_no, count(A.lot_no) total_lot_receive from pur_wh_records A
-        where 1=1
-        and A.record_type  = 'RNP'
-        and A.date between date_format(#{dateRange[0]}, '%Y-%m-%d') and date_format(#{dateRange[1]}, '%Y-%m-%d')
-        group by A.req_no
-    ),
-    T03 as (
+        with
+        T01 as (
+            select A.reg_no, A.date, A.type, A.remark, A.line, A.parent, A.created_at
+            from pur_wh_headers A
+            where 1=1
+              and A.type = 'XPA'
+              and A.date between date_format(#{dateRange[0]},'%Y-%m-%d') and date_format(#{dateRange[1]}, '%Y-%m-%d')
+            order by A.date desc
+        ),
+        T02 as (
+            select A.lot_no, A.slip_no, A.date from pur_wh_records A
+            where 1=1
+              and A.record_type = 'XPA'
+              and A.date between date_format(#{dateRange[0]},'%Y-%m-%d') and date_format(#{dateRange[1]}, '%Y-%m-%d')
+            order by A.id desc
+        ),
+        T03 as (
+            -- Danh sách xuất kho ra MA
+            select T01.*, count(T02.lot_no) total_lot_request from T01
+            right join T02 on T01.reg_no = T02.slip_no
+            where T01.reg_no is not null
+            group by T01.reg_no
+        ),
+        T04 as (
+            -- Danh sách MA đã nhận
+            select A.req_no, count(A.lot_no) total_lot_receive from pur_wh_records A
+            where 1=1
+              and A.record_type = 'RNP'
+              and A.date between date_format(#{dateRange[0]},'%Y-%m-%d') and date_format(#{dateRange[1]}, '%Y-%m-%d')
+            group by A.req_no
+        )
         select
-            T01.slip_no request_no, T01.total_lot_request, T02.total_lot_receive, T01.created_at
-        from T01
-        left join T02 on T01.slip_no = T02.req_no
-    )
-    select T03.*, A.line, A.parent from T03
-    left join pur_wh_headers A on T03.request_no = A.reg_no
-    order by T03.created_at desc
+            T03.reg_no request_no, T03.date, T03.created_at, T03.line,
+            T03.parent, T03.total_lot_request, T04.total_lot_receive
+        from T03
+        left join T04 on T03.reg_no = T04.req_no
+        order by T03.created_at desc
 
     </select>
 
@@ -95,7 +104,8 @@
                 when T03.receiver = "" then 'Not yet'
                 else 'Received'
                 end status_name
-        from T03;
+        from T03
+        order by T03.lot_no asc
 
 
     </select>

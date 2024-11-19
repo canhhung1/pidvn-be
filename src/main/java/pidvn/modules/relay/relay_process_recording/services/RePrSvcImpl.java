@@ -14,9 +14,11 @@ import pidvn.repositories.one.LotsRepo;
 import pidvn.repositories.one.PurWhRecordsRepo;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -60,27 +62,8 @@ public class RePrSvcImpl implements RePrSvc {
         /**
          * Insert vào bảng pur_wh_record với record_type = 'RNP'
          */
-//        List<PurWhRecords> data = lots.stream().map(item -> modelMapper.map(item, PurWhRecords.class)).collect(Collectors.toList());
-//        this.purWhRecordsRepo.saveAll(data);
-        List<PurWhRecords> receiveData = new ArrayList<>();
-
-        for (LotDto item : lots) {
-            PurWhRecords obj = new PurWhRecords();
-            obj.setLotNo(item.getLotNo());
-            obj.setModel(item.getModel());
-            obj.setLotNo(item.getLotNo());
-            obj.setQty(item.getQty());
-            obj.setFlag(item.getFlag());
-            obj.setReqNo(item.getReqNo());
-            obj.setRecordType(item.getRecordType());
-            obj.setDate(item.getDate());
-            obj.setWhUserCode(item.getWhUserCode());
-            obj.setReceiver(item.getReceiver());
-            receiveData.add(obj);
-        }
-
-        this.purWhRecordsRepo.saveAll(receiveData);
-
+        List<PurWhRecords> data = lots.stream().map(item -> modelMapper.map(item, PurWhRecords.class)).collect(Collectors.toList());
+        this.purWhRecordsRepo.saveAll(data);
 
         /**
          * Cập nhật vào bảng pur_wh_record với record_type = 'XPA'
@@ -114,7 +97,7 @@ public class RePrSvcImpl implements RePrSvc {
     public LotDto validateLotReceive(LotDto lotDto) {
         Lots obj = this.lotsRepo.findByLotNo(lotDto.getLotNo());
         LotDto lot = this.modelMapper.map(obj, LotDto.class);
-        //lot.setId(null);
+        lot.setId(null);
         lot.setReqNo(lotDto.getReqNo());
         lot.setRecordType(lotDto.getRecordType());
         lot.setFlag(lotDto.getFlag());
@@ -123,6 +106,8 @@ public class RePrSvcImpl implements RePrSvc {
         lot.setSender(lotDto.getSender());
         lot.setWhUserCode(lotDto.getWhUserCode());
         lot.setQrCode(lotDto.getQrCode());
+        lot.setDate(lotDto.getDate());
+        lot.setQty(lotDto.getQty());
         return lot;
     }
 
@@ -158,6 +143,18 @@ public class RePrSvcImpl implements RePrSvc {
         result.put("Id Deleted", lotDto.getId());
         result.put("Lot updated", data);
         return result;
+    }
+
+    /**
+     * Chuyển NVL vào xe
+     * @param lots
+     * @return
+     */
+    @Override
+    public List<LotDto> sendToLineWh(List<LotDto> lots) {
+        List<PurWhRecords> data = lots.stream().map(item -> modelMapper.map(item, PurWhRecords.class)).collect(Collectors.toList());
+        this.purWhRecordsRepo.saveAll(data);
+        return lots;
     }
 
 

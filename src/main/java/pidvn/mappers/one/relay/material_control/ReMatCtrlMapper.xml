@@ -479,18 +479,38 @@
                type="pidvn.modules.relay.material_control.models.MaterialVo">
         <result column="total_lot_request" property="totalLotRequest" javaType="Integer"/>
         <result column="total_lot_receive" property="totalLotReceive" javaType="Integer"/>
+        <result column="lot_no" property="lotNo" javaType="String"/>
+        <result column="req_no" property="reqNo" javaType="String"/>
     </resultMap>
     <select id="getLotRequestAndLotReceive" resultMap="getLotRequestAndLotReceive-result">
         with
         T01 as (
-            select * from pur_wh_records where 1=1 and record_type = 'XPA' and slip_no = #{requestNo}
+            select A.lot_no, A.req_no from pur_wh_records A
+            where 1=1
+            and A.record_type = 'RNP'
+            and A.lot_no = #{lotNo}
+            order by id desc
+            limit 1
         ),
         T02 as (
-            select * from pur_wh_records where 1=1 and record_type = 'RNP' and req_no = #{requestNo}
+            select count(*) total_lot_request from pur_wh_records A
+            where 1=1
+            and A.record_type = 'XPA'
+            and A.slip_no = (select T01.req_no from T01)
+        ),
+        T03 as (
+            select count(*) total_lot_receive from pur_wh_records A
+            where 1=1
+            and A.record_type = 'RNP'
+            and A.req_no = (select T01.req_no from T01)
         )
-        select count(T01.lot_no) total_lot_request, count(T02.lot_no) total_lot_receive
+        select
+            T01.*,
+            (select * from T02) total_lot_request,
+            (select * from T03) total_lot_receive
         from T01
-        left join T02 on T01.lot_no = T02.lot_no
+
+
 
 
     </select>

@@ -24,6 +24,10 @@ public class LotDto {
     private String whUserCode;
     private String receiverName;
     private String qrCode;
+    private String qaCard;
+    private String line;
+    private String shift;
+    private String parent;
 
 
     public Integer getId() {
@@ -192,5 +196,37 @@ public class LotDto {
 
     public void setQrCode(String qrCode) {
         this.qrCode = qrCode;
+    }
+
+    public String getQaCard() {
+        return qaCard;
+    }
+
+    public void setQaCard(String qaCard) {
+        this.qaCard = qaCard;
+    }
+
+    public String getLine() {
+        return line;
+    }
+
+    public void setLine(String line) {
+        this.line = line;
+    }
+
+    public String getShift() {
+        return shift;
+    }
+
+    public void setShift(String shift) {
+        this.shift = shift;
+    }
+
+    public String getParent() {
+        return parent;
+    }
+
+    public void setParent(String parent) {
+        this.parent = parent;
     }
 }

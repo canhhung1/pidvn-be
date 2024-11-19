@@ -324,6 +324,32 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
 //            return result;
 //        }
 
+
+        /**
+         * Kiểm tra đã nhận đủ NVL chưa
+         * Nếu phiếu chưa nhận đủ NVL thì bắt buộc phải nhận đủ
+         */
+
+        MaterialVo data = this.reMatCtrlMapper.getLotRequestAndLotReceive(materialVo.getLotNo());
+        if ( data.getTotalLotReceive() < data.getTotalLotRequest()) {
+            message = MessageFormat.format(
+                "Lot: {0} không cho phép nhập vào Line. Phiếu: {1} cần nhận đủ số lượng NVL. Số lượng đã nhận: ({2}/{3}) lot",
+                data.getLotNo(),
+                data.getReqNo(),
+                data.getTotalLotReceive(),
+                data.getTotalLotRequest()
+            );
+            result.put("status", "ERROR");
+            result.put("message", message);
+            result.put("data", materialVo);
+            return result;
+        }
+
+
+
+
+
+
         Lots lot = this.lotsRepo.findByLotNo(materialVo.getLotNo());
 
         materialVo.setQty(lot.getQty());
@@ -852,10 +878,10 @@ public class ReMatCtrlSvc implements IReMatCtrlSvc {
         return obj;
     }
 
-    @Override
-    public MaterialVo getLotRequestAndLotReceive(String requestNo) {
-        return this.reMatCtrlMapper.getLotRequestAndLotReceive(requestNo);
-    }
+//    @Override
+//    public MaterialVo getLotRequestAndLotReceive(String requestNo) {
+//        return this.reMatCtrlMapper.getLotRequestAndLotReceive(requestNo);
+//    }
 
     private ByteArrayInputStream exportMaterialInLine(MaterialSearchVo searchVo) throws IOException {
         List<MaterialExport> data = this.reMatCtrlMapper.exportMaterialData(searchVo);

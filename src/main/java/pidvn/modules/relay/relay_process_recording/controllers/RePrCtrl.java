@@ -84,10 +84,15 @@ public class RePrCtrl {
     }
 
 
+    /**
+     * Chuyển vào xe NVL
+     * @param lots
+     * @return
+     */
     @PostMapping("SendToLineWh")
-    public ResponseEntity<ApiResponse<?>> sendToLineWh(List<LotDto> lotDtos) {
-        ApiResponse<?> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(null);
+    public ResponseEntity<ApiResponse<?>> sendToLineWh(@RequestBody List<LotDto> lots) {
+        ApiResponse<List<LotDto>> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(this.rePrSvc.sendToLineWh(lots));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 

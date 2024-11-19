@@ -8,6 +8,7 @@ public class RequestDto {
     private int totalLotRequest;
     private int totalLotReceive;
     private Date createdAt;
+    private Date date;
     private String line;
     private String parent;
 
@@ -49,6 +50,14 @@ public class RequestDto {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public String getLine() {

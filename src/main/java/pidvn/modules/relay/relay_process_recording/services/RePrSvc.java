@@ -16,4 +16,9 @@ public interface RePrSvc {
     LotDto validateLotReceive(LotDto lotDto);
 
     Map<String, Object> deleteLotReceived(LotDto lotDto);
+
+    List<LotDto> sendToLineWh(List<LotDto> lots);
+
+
+
 }

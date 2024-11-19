@@ -32,5 +32,5 @@ public interface ReMatCtrlMapper {
 
     void updateActualQtyUsedInLine(Integer id, Float qty);
 
-    MaterialVo getLotRequestAndLotReceive(String requestNo);
+    MaterialVo getLotRequestAndLotReceive(String lotNo);
 }

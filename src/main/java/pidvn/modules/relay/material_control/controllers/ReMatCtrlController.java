@@ -181,12 +181,12 @@ public class ReMatCtrlController {
      *
      * @return
      */
-    @GetMapping("GetLotRequestAndLotReceive")
-    public ResponseEntity<ApiResponse<?>> getLotRequestAndLotReceive(@RequestParam String requestNo) {
-        ApiResponse<MaterialVo> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(this.reMatCtrlSvc.getLotRequestAndLotReceive(requestNo));
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
-    }
+//    @GetMapping("GetLotRequestAndLotReceive")
+//    public ResponseEntity<ApiResponse<?>> getLotRequestAndLotReceive(@RequestParam String requestNo) {
+//        ApiResponse<MaterialVo> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(this.reMatCtrlSvc.getLotRequestAndLotReceive(requestNo));
+//        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+//    }
 
 
 }

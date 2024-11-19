@@ -41,5 +41,6 @@ public interface IReMatCtrlSvc {
 
     PurWhRecords deletePurWhRecordById(Integer id);
 
-    MaterialVo getLotRequestAndLotReceive(String requestNo);
+//    MaterialVo getLotRequestAndLotReceive(String requestNo);
+
 }

@@ -483,8 +483,9 @@
                 CONVERT(DATE, DateEnd, 103) AS DateEnd,
                 CONVERT(DATE, DateCreate, 103) AS DateCreate
             FROM PIDVN_LeaveDay
-            WHERE CONVERT(DATE, DateStart, 103) >= DATEADD(month, -1, DATEADD(day, 1-DAY(GETDATE()), GETDATE()))
-            AND CONVERT(DATE, DateStart, 103) < DATEADD(month, 1, DATEADD(day, 1-DAY(GETDATE()), GETDATE()))
+            WHERE 1=1
+            AND CONVERT(DATE, DateStart, 103)
+            BETWEEN CONVERT(DATE, DATEADD(MONTH, -1, DATEADD(DAY, 1 - DAY(GETDATE()), GETDATE()))) AND GETDATE()
         ]]>
     </select>
 

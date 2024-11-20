@@ -38,6 +38,12 @@ public class HrLeaveDay {
     @Column(name = "leave_hours")
     private Float leaveHours;
 
+    @Column(name = "duration_type")
+    private String durationType;
+
+    @Column(name = "status")
+    private String status;
+
     @Column(name = "date_create")
     private Date dateCreate;
 
@@ -48,4 +54,108 @@ public class HrLeaveDay {
     @CreatedDate
     @Column(name = "updated_at")
     private Date updatedAt;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getCodeEmp() {
+        return codeEmp;
+    }
+
+    public void setCodeEmp(String codeEmp) {
+        this.codeEmp = codeEmp;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getLeaveDayTypeName() {
+        return leaveDayTypeName;
+    }
+
+    public void setLeaveDayTypeName(String leaveDayTypeName) {
+        this.leaveDayTypeName = leaveDayTypeName;
+    }
+
+    public Date getDateStart() {
+        return dateStart;
+    }
+
+    public void setDateStart(Date dateStart) {
+        this.dateStart = dateStart;
+    }
+
+    public Date getDateEnd() {
+        return dateEnd;
+    }
+
+    public void setDateEnd(Date dateEnd) {
+        this.dateEnd = dateEnd;
+    }
+
+    public Float getLeaveDays() {
+        return leaveDays;
+    }
+
+    public void setLeaveDays(Float leaveDays) {
+        this.leaveDays = leaveDays;
+    }
+
+    public Float getLeaveHours() {
+        return leaveHours;
+    }
+
+    public void setLeaveHours(Float leaveHours) {
+        this.leaveHours = leaveHours;
+    }
+
+    public String getDurationType() {
+        return durationType;
+    }
+
+    public void setDurationType(String durationType) {
+        this.durationType = durationType;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Date getDateCreate() {
+        return dateCreate;
+    }
+
+    public void setDateCreate(Date dateCreate) {
+        this.dateCreate = dateCreate;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }

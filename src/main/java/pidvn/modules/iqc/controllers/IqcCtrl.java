@@ -1,5 +1,7 @@
 package pidvn.modules.iqc.controllers;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -13,6 +15,8 @@ import pidvn.modules.iqc.services.IqcSvcImpl;
 import pidvn.modules.iqc.utils.IqcExporter;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -128,6 +132,22 @@ public class IqcCtrl {
 
         return null;
     }
+
+    @PostMapping("ViewGuide")
+    public Object viewGuide() {
+        String url = "P:\\IS\\CanhHung\\Project\\IQC Check\\IQC.pdf";
+
+        File file = new File(url);
+        try {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            return IOUtils.toByteArray(fileInputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
 
 
 
